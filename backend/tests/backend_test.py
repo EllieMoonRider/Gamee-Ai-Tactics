@@ -204,3 +204,98 @@ def test_tasks_crud(auth_headers):
 
     d = requests.delete(f"{API}/tasks/{tid}", headers=auth_headers, timeout=10)
     assert d.status_code == 200
+
+
+
+# --- Deep Dive (CyphrAI vision) ---
+def _tiny_png_bytes():
+    """Returns 100x100 red PNG bytes (Anthropic vision rejects sub-tiny images)."""
+    import struct, zlib
+    w = h = 100
+    def chunk(t, d):
+        c = zlib.crc32(t + d)
+        return struct.pack(">I", len(d)) + t + d + struct.pack(">I", c)
+    sig = b"\x89PNG\r\n\x1a\n"
+    ihdr = struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0)
+    raw = b""
+    for _ in range(h):
+        raw += b"\x00" + bytes((255, 0, 0)) * w
+    idat = zlib.compress(raw)
+    return sig + chunk(b"IHDR", ihdr) + chunk(b"IDAT", idat) + chunk(b"IEND", b"")
+
+
+def test_deep_dive_unauth():
+    files = {"files": ("a.png", _tiny_png_bytes(), "image/png")}
+    data = {"game_slug": "puzzles-conquest", "title": "TEST_DD"}
+    r = requests.post(f"{API}/deep-dive", files=files, data=data, timeout=15)
+    assert r.status_code in (401, 403), r.text
+
+
+def test_deep_dive_bad_slug(auth_headers):
+    files = {"files": ("a.png", _tiny_png_bytes(), "image/png")}
+    data = {"game_slug": "not-a-game", "title": "TEST_DD"}
+    r = requests.post(f"{API}/deep-dive", headers=auth_headers, files=files, data=data, timeout=15)
+    assert r.status_code == 400
+
+
+def test_deep_dive_no_files(auth_headers):
+    data = {"game_slug": "puzzles-conquest", "title": "TEST_DD"}
+    r = requests.post(f"{API}/deep-dive", headers=auth_headers, data=data, timeout=15)
+    assert r.status_code == 422
+
+
+def test_deep_dive_full_lifecycle(auth_headers):
+    """Create baseline -> add followup -> list -> get -> delete."""
+    files = [("files", ("shot1.png", _tiny_png_bytes(), "image/png"))]
+    data = {"game_slug": "puzzles-conquest", "title": "TEST_DD_Lifecycle", "notes": "starter account"}
+    r = requests.post(f"{API}/deep-dive", headers=auth_headers, files=files, data=data, timeout=120)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert "id" in body
+    assert body["title"] == "TEST_DD_Lifecycle"
+    assert isinstance(body.get("baseline_analysis"), str) and len(body["baseline_analysis"]) > 20
+    assert body.get("shot_count") == 1
+    assert body.get("follow_ups") == []
+    did = body["id"]
+
+    try:
+        # Follow-up
+        f2 = [("files", ("shot2.png", _tiny_png_bytes(), "image/png"))]
+        d2 = {"notes": "one week later"}
+        rf = requests.post(f"{API}/deep-dive/{did}/followup", headers=auth_headers, files=f2, data=d2, timeout=120)
+        assert rf.status_code == 200, rf.text
+        block = rf.json()
+        assert "id" in block
+        assert isinstance(block.get("analysis"), str) and len(block["analysis"]) > 20
+
+        # List (no shots)
+        rl = requests.get(f"{API}/deep-dive", headers=auth_headers, timeout=15)
+        assert rl.status_code == 200
+        items = rl.json()
+        found = [i for i in items if i["id"] == did]
+        assert found, "Created dive not in list"
+        assert "baseline_shots" not in found[0]
+        # follow_ups should be present but without 'shots'
+        if found[0].get("follow_ups"):
+            assert "shots" not in found[0]["follow_ups"][0]
+
+        # Get one
+        rg = requests.get(f"{API}/deep-dive/{did}", headers=auth_headers, timeout=15)
+        assert rg.status_code == 200
+        one = rg.json()
+        assert one["id"] == did
+        assert "baseline_shots" not in one
+        assert len(one.get("follow_ups", [])) == 1
+
+        # Get with shots
+        rgs = requests.get(f"{API}/deep-dive/{did}?include_shots=true", headers=auth_headers, timeout=15)
+        assert rgs.status_code == 200
+        with_shots = rgs.json()
+        assert "baseline_shots" in with_shots
+        assert len(with_shots["baseline_shots"]) == 1
+    finally:
+        rd = requests.delete(f"{API}/deep-dive/{did}", headers=auth_headers, timeout=15)
+        assert rd.status_code == 200
+        # Verify gone
+        rg2 = requests.get(f"{API}/deep-dive/{did}", headers=auth_headers, timeout=10)
+        assert rg2.status_code == 404

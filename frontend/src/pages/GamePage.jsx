@@ -3,14 +3,16 @@ import { useParams, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
+import DeepDiveModule from "../components/DeepDiveModule";
 import { api, streamChat } from "../lib/api";
 import {
   ChatCircleText, Target, BookOpen, ListChecks, ArrowLeft, PaperPlaneTilt, Plus,
-  Trash, Check, Lightning, Sparkle,
+  Trash, Check, Lightning, Sparkle, Brain,
 } from "@phosphor-icons/react";
 
 const TABS = [
   { key: "chat", label: "AI Chat", icon: ChatCircleText },
+  { key: "deepdive", label: "Deep Dive", icon: Brain },
   { key: "optimizer", label: "Optimizer", icon: Target },
   { key: "guides", label: "Guides", icon: BookOpen },
   { key: "tasks", label: "Planner", icon: ListChecks },
@@ -429,6 +431,7 @@ const GamePage = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {tab === "chat" && <ChatModule slug={slug} gameName={game.name} />}
+        {tab === "deepdive" && <DeepDiveModule slug={slug} gameName={game.name} />}
         {tab === "optimizer" && <OptimizerModule slug={slug} />}
         {tab === "guides" && <GuidesModule slug={slug} />}
         {tab === "tasks" && <TasksModule slug={slug} />}

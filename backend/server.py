@@ -10,14 +10,14 @@ from typing import List, Optional, Literal
 import bcrypt
 import jwt
 from dotenv import load_dotenv
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File, Form
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field, EmailStr
 from starlette.middleware.cors import CORSMiddleware
 
-from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone
+from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone, ImageContent
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -281,13 +281,42 @@ def system_prompt_for(game_slug: str) -> str:
     name = game["name"] if game else "37Games title"
     genre = game["genre"] if game else "mobile strategy game"
     return (
-        f"You are 'Tactician', a veteran strategy coach for the 37Games title '{name}' ({genre}). "
+        f"You are 'CyphrAI', the tactical AI engine inside the Tactical Ally app. You specialize in the 37Games title '{name}' ({genre}). "
         "You give concrete, prioritized, actionable advice for free-to-play and light-spender gamers. "
         "When giving advice: 1) list priorities, 2) cite specific heroes / buildings / events when relevant, "
         "3) keep responses concise (under 300 words by default) but rich in tactical detail, "
         "4) use bold for hero names and key numbers, 5) suggest follow-up questions at the end. "
         "Never fabricate update patches you don't know about — be honest if uncertain. "
         "Tone: confident, friendly, slightly tactical/military. Reply in the user's language."
+    )
+
+
+def deepdive_system_prompt(game_slug: str, mode: str) -> str:
+    game = next((g for g in GAMES if g["slug"] == game_slug), None)
+    name = game["name"] if game else "37Games title"
+    base = (
+        f"You are 'CyphrAI', the tactical AI inside Tactical Ally. The user has uploaded screenshots from their account in '{name}'. "
+        "Read every screenshot carefully — heroes, levels, resources, building HQ, alliance, VIP, gear, formation, power, anything visible. "
+    )
+    if mode == "baseline":
+        return base + (
+            "Produce a DEEP DIVE BASELINE analysis. Use this exact markdown structure:\n"
+            "## Account Snapshot\n(1-2 sentences summarizing what you see — power level, progression stage)\n\n"
+            "## Strengths\n- bullet 1\n- bullet 2\n- bullet 3\n\n"
+            "## Weaknesses\n- bullet 1\n- bullet 2\n- bullet 3\n\n"
+            "## Top 5 Priority Actions\n1. **Action** — why\n2. ...\n\n"
+            "## Resource Allocation Recommendation\n(percentage split or focus areas)\n\n"
+            "## Next Milestones (30 / 60 / 90 days)\n- 30: ...\n- 60: ...\n- 90: ...\n\n"
+            "Be specific. If you can't see something, say so — never invent."
+        )
+    return base + (
+        "This is a FOLLOW-UP DEEP DIVE. The previous baseline analysis is provided as context. "
+        "Compare what's changed, congratulate progress, flag regressions, and update priorities. Structure:\n"
+        "## Progress Since Baseline\n(2-3 sentences)\n\n"
+        "## What Improved\n- ...\n\n"
+        "## What Stalled or Regressed\n- ...\n\n"
+        "## Updated Top 5 Actions\n1. ...\n\n"
+        "## Building-Block Next Phase\n(2-3 sentences pointing to the next stage of growth)\n"
     )
 
 
@@ -583,6 +612,140 @@ async def delete_task(tid: str, user=Depends(get_current_user)):
     res = await db.tasks.delete_one({"id": tid, "user_id": user["id"]})
     if res.deleted_count == 0:
         raise HTTPException(404, "Task not found")
+    return {"ok": True}
+
+
+# ----- Deep Dive (CyphrAI vision analysis) -----
+MAX_SHOTS = 6
+MAX_BYTES = 6 * 1024 * 1024  # 6 MB per image
+
+
+async def _analyze_screenshots(
+    game_slug: str, screenshots_b64: list[str], mode: str, context: str = "", user_notes: str = ""
+) -> str:
+    images = [ImageContent(image_base64=b) for b in screenshots_b64]
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"dd-{uuid.uuid4()}",
+        system_message=deepdive_system_prompt(game_slug, mode),
+    ).with_model("anthropic", "claude-sonnet-4-5-20250929")
+    prompt = f"User notes: {user_notes or '(none)'}\n"
+    if context:
+        prompt += f"\n--- BASELINE ANALYSIS FOR CONTEXT ---\n{context}\n--- END BASELINE ---\n"
+    prompt += "\nAnalyze the attached screenshots and respond per the instructed structure."
+    msg = UserMessage(text=prompt, file_contents=images)
+    return await chat.send_message(msg)
+
+
+async def _files_to_b64(files: list[UploadFile]) -> list[str]:
+    import base64
+    if not files:
+        raise HTTPException(400, "No screenshots provided")
+    if len(files) > MAX_SHOTS:
+        raise HTTPException(400, f"Max {MAX_SHOTS} screenshots per analysis")
+    out = []
+    for f in files:
+        data = await f.read()
+        if len(data) > MAX_BYTES:
+            raise HTTPException(400, f"{f.filename} exceeds {MAX_BYTES // (1024*1024)}MB limit")
+        out.append(base64.b64encode(data).decode())
+    return out
+
+
+@api.post("/deep-dive")
+async def create_deep_dive(
+    game_slug: str = Form(...),
+    title: str = Form("Account Baseline"),
+    notes: str = Form(""),
+    files: list[UploadFile] = File(...),
+    user=Depends(get_current_user),
+):
+    if game_slug not in GAME_SLUGS:
+        raise HTTPException(400, "Invalid game_slug")
+    shots = await _files_to_b64(files)
+    try:
+        analysis = await _analyze_screenshots(game_slug, shots, mode="baseline", user_notes=notes)
+    except Exception as e:
+        logging.exception("deep dive baseline failed")
+        raise HTTPException(500, f"CyphrAI analysis failed: {e}")
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["id"],
+        "game_slug": game_slug,
+        "title": title,
+        "baseline_analysis": analysis,
+        "baseline_shots": shots,
+        "baseline_notes": notes,
+        "follow_ups": [],
+        "created_at": now_iso(),
+    }
+    await db.deep_dives.insert_one(doc)
+    out = {k: v for k, v in doc.items() if k not in ("_id", "baseline_shots")}
+    out["shot_count"] = len(shots)
+    return out
+
+
+@api.post("/deep-dive/{did}/followup")
+async def add_followup(
+    did: str,
+    notes: str = Form(""),
+    files: list[UploadFile] = File(...),
+    user=Depends(get_current_user),
+):
+    dd = await db.deep_dives.find_one({"id": did, "user_id": user["id"]}, {"_id": 0})
+    if not dd:
+        raise HTTPException(404, "Deep dive not found")
+    shots = await _files_to_b64(files)
+    try:
+        analysis = await _analyze_screenshots(
+            dd["game_slug"], shots, mode="followup",
+            context=dd["baseline_analysis"], user_notes=notes,
+        )
+    except Exception as e:
+        logging.exception("deep dive followup failed")
+        raise HTTPException(500, f"CyphrAI analysis failed: {e}")
+    block = {
+        "id": str(uuid.uuid4()),
+        "analysis": analysis,
+        "notes": notes,
+        "shots": shots,
+        "shot_count": len(shots),
+        "created_at": now_iso(),
+    }
+    await db.deep_dives.update_one({"id": did}, {"$push": {"follow_ups": block}})
+    out = {k: v for k, v in block.items() if k != "shots"}
+    return out
+
+
+@api.get("/deep-dive")
+async def list_deep_dives(user=Depends(get_current_user), game_slug: Optional[str] = None):
+    q = {"user_id": user["id"]}
+    if game_slug:
+        q["game_slug"] = game_slug
+    docs = await db.deep_dives.find(q, {"_id": 0, "baseline_shots": 0, "follow_ups.shots": 0}).sort("created_at", -1).to_list(200)
+    for d in docs:
+        d["shot_count"] = 0  # placeholder, we omitted shots from list
+        d["followup_count"] = len(d.get("follow_ups", []))
+    return docs
+
+
+@api.get("/deep-dive/{did}")
+async def get_deep_dive(did: str, user=Depends(get_current_user), include_shots: bool = False):
+    proj = {"_id": 0}
+    if not include_shots:
+        proj["baseline_shots"] = 0
+        proj["follow_ups.shots"] = 0
+    dd = await db.deep_dives.find_one({"id": did, "user_id": user["id"]}, proj)
+    if not dd:
+        raise HTTPException(404, "Not found")
+    return dd
+
+
+@api.delete("/deep-dive/{did}")
+async def delete_deep_dive(did: str, user=Depends(get_current_user)):
+    res = await db.deep_dives.delete_one({"id": did, "user_id": user["id"]})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Not found")
     return {"ok": True}
 
 

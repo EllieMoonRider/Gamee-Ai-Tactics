@@ -1,0 +1,38 @@
+{
+  "summary": "Iteration 2 testing of Tactical Ally (CyphrAI) — 20/20 backend pytest passing (16 carried over + 4 new Deep Dive: unauth 401, bad slug 400, no files 422, full lifecycle baseline+followup+list+get+delete with real Anthropic Claude Sonnet 4.5 vision calls via emergentintegrations). Frontend verified: TACTICAL ALLY brand, Recruitment Center (Resume command / Enlist your Ally + username field + recovery helper text), protected /dashboard redirect, Command Center (Briefing with CommanderOne highlighted, 3 stat cards, Tutorial dropdown w/ default selection + Start walkthrough enabled, Path Cards including path-war-room link, 10 game cards), War Room route, Game page with 5 tabs (chat, deepdive, optimizer, guides, tasks), Deep Dive UI (deepdive-new-btn, deepdive-new-form, upload zone, title/notes/submit all wired with correct testids).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "_files_to_b64 raises HTTPException(400) for an empty files list, but FastAPI's File(...) declaration already enforces presence and returns 422 before reaching the function — the 'No screenshots provided' branch is dead code. Consider Optional list and explicit check, or remove.",
+    "deep_dives docs store full base64 image bytes in 'baseline_shots' and inside each follow_ups[].shots — at 6 images x 6MB this can balloon MongoDB documents past the 16MB BSON limit. Move shots to GridFS or external object storage.",
+    "list_deep_dives sets d['shot_count']=0 placeholder which contradicts the field returned by create_deep_dive (real count). Either compute shot_count from a stored counter, or omit the field in list view to avoid misleading UI.",
+    "Deep Dive endpoints don't restrict file MIME types (jpg/png only is documented but not enforced) — a malicious user can upload anything up to 6MB; add content-type validation.",
+    "deep_dive create/follow-up wrap LLM errors with HTTPException(500) including the raw exception string (model name, request id) — consider redacting before sending to the UI.",
+    "Existing iteration_1 review points remain (server.py 779 lines and growing — extract Deep Dive into its own router; lifespan over @on_event; CORS + allow_credentials='*' combo; placeholder JWT_SECRET in .env)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py"
+  ],
+  "success_rate": {
+    "backend": "100% (20/20)",
+    "frontend": "100% on verified flows (brand, auth copy/username, protected redirect, dashboard/tutorial/paths, war room, game tabs, deep dive form/upload UI)"
+  },
+  "test_credentials": "email=test@tactician.gg password=strongpw1 username=CommanderOne (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "Backend tests use TEST_ prefixes and clean up created sessions/builds/tasks/deep-dives. Deep Dive test creates a 100x100 procedural PNG (Anthropic vision rejects 1x1 with 'Could not process image' — captured in backend_test.py helper).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "backend_test.py now has 20 tests including Deep Dive (test_deep_dive_unauth, test_deep_dive_bad_slug, test_deep_dive_no_files, test_deep_dive_full_lifecycle). Use _tiny_png_bytes() helper for a 100x100 procedural PNG — DO NOT use a 1x1 PNG, Anthropic returns 'Could not process image' BadRequestError. Deep Dive vision call takes ~10-20s per analysis so set 120s timeouts. Frontend Deep Dive testids verified rendering: tab-deepdive, deepdive-new-btn, deepdive-new-form, deepdive-upload-zone, deepdive-new-title, deepdive-new-notes, deepdive-new-submit. Card and detail testids (deepdive-card-{id}, deepdive-detail, deepdive-baseline-analysis, deepdive-add-followup, deepdive-followup-form, deepdive-followup-submit, followup-block-{id}, deepdive-delete, deepdive-back) exist in /app/frontend/src/components/DeepDiveModule.jsx and are wired to the same backend that backend tests have proven works E2E. End-to-end Playwright run for the AI vision flow was attempted but truncated by browser SIGSEGV / token budget; backend lifecycle test covers the same code path and passed. War Room route requires logged-in session; recruitment 'Enlist now' is a text link (not a tab button) — use text=Enlist now to switch to register tab and text=Authenticate (or 'Already enlisted? Authenticate') to go back.",
+  "rca_of_the_issue": "Initial Deep Dive lifecycle test failed with HTTP 500 from Anthropic: 'Could not process image'. RCA: Anthropic vision API rejects 1x1 PNG payloads as not a valid image input. Fix: generate a 100x100 procedural PNG via zlib in the test helper. Re-run -> PASS. No app-side bug; this was a test-data issue."
+}

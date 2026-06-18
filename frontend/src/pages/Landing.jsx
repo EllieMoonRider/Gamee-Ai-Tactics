@@ -34,17 +34,17 @@ const Landing = () => {
         </div>
         <div className="max-w-7xl mx-auto px-6 pt-24 pb-32">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <div className="tactical-label text-[#E63946] mb-6" data-testid="hero-tagline">// AI STRATEGY CO-PILOT FOR 37GAMES</div>
+            <div className="tactical-label text-[#E63946] mb-6" data-testid="hero-tagline">// TACTICAL ALLY · AI CO-PILOT FOR 37GAMES</div>
             <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-black tracking-tighter max-w-4xl leading-[0.95]">
               Win every <span className="text-[#E63946]">battle</span>.<br />
               Plan every <span className="text-[#FFBA08]">empire</span>.
             </h1>
             <p className="mt-6 text-zinc-400 text-lg max-w-2xl leading-relaxed">
-              Tactical AI coach for the top 10 MMORPGs published by 37Games — Puzzles & Conquest, Puzzles & Survival, Legend, Soul Land Reloaded, and more. Build smarter, fight harder.
+              Tactical Ally is the AI war-room companion for the top 10 MMORPGs published by 37Games — Puzzles & Conquest, Puzzles & Survival, Legend, Soul Land Reloaded, and more. Build smarter, fight harder.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link to="/auth" className="btn-primary flex items-center gap-2" data-testid="hero-cta-start">
-                Deploy your tactician <ArrowRight size={18} weight="bold" />
+                Enter the Recruitment Center <ArrowRight size={18} weight="bold" />
               </Link>
               <a href="#features" className="btn-outline">See capabilities</a>
             </div>
@@ -126,8 +126,8 @@ const Landing = () => {
 
       <footer className="border-t border-white/5 py-8">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500">
-          <div className="tactical-label">// TACTICIAN © 2026 — Unofficial fan project. Not affiliated with 37Games.</div>
-          <div className="mt-2 sm:mt-0 font-mono-tactical">v1.0.0</div>
+          <div className="tactical-label">// TACTICAL ALLY © 2026 — Unofficial fan project. Not affiliated with 37Games.</div>
+          <div className="mt-2 sm:mt-0 font-mono-tactical">v1.1.0</div>
         </div>
       </footer>
     </div>
