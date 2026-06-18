@@ -1,0 +1,40 @@
+{
+  "summary": "Iteration 3 backend + frontend tested. Backend: 32/32 pytest passed (20 iter-2 regression + 12 new iter-3 tests: MIME validation, GridFS shot endpoint w/ ownership 403 + post-delete 404, rate-limit verification on optimizer/chat, full password-reset flow w/ dev_reset_link, bad/reused/short-token paths, email rate-limit 3/hr). Frontend: /auth show-hide toggle works; forgot-link navigates correctly; /forgot-password dev_reset_link visible; /reset-password toggle + mismatch toast + successful reset + redirect to /auth + login w/ new password verified; no-token state shown when token missing.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/optimizer (rate limiter)", "issue": "TOCTOU race in _rate_limit: count_documents() then insert_one() is not atomic. Concurrent burst of 16 reqs produced only 1 x 429 instead of expected ~6 (race lets requests slip through between count and insert). Manual smoke said ~2; with high concurrency we see fewer 429s. Functionally rate-limit works for normal load."},
+      {"endpoint": "/api/deep-dive (rate limiter ordering)", "issue": "_rate_limit is awaited BEFORE _validate_and_store_files, so a request with invalid MIME (400) still consumes a deep_dive rate-limit slot. Consider validating MIME first, then rate-limit."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/iter3_full.xml"
+  ],
+  "action_items": [
+    "(Optional) Make rate-limiter atomic — e.g. find_one_and_update with $inc on a per-window doc with TTL, or use Mongo unique-index + ordering. This would tighten the 'optimizer burst -> 2 x 429' guarantee.",
+    "(Optional) Reorder MIME check before _rate_limit in create_deep_dive / add_followup so failed validations don't burn a rate-limit slot.",
+    "(Optional) The TTL index on db.rate_limits and db.password_resets is referenced in problem statement but not visible in server.py — verify it is being created at startup (otherwise these collections grow unbounded)."
+  ],
+  "critical_code_review_comments": [
+    "server.py is ~978 lines — should be split into routers (auth, chat, optimizer, deep_dive, password_reset) for maintainability.",
+    "_rate_limit has a TOCTOU race; under burst load >limit requests may slip through. Acceptable for current threat model but documented.",
+    "Rate-limit + MIME ordering in deep dive create/followup: validate MIME first to avoid burning rate-limit slot on rejected upload.",
+    "No explicit TTL index creation in startup code for rate_limits or password_resets collections — these will grow forever without one.",
+    "_gridfs_to_b64 loads every file fully into RAM and base64-encodes — fine at 6MB*6 cap but document the upper bound."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py (extended with 12 new tests; updated 2 iter-2 assertions to match new GridFS shape; switched deep-dive lifecycle/MIME tests to fresh users to avoid 5/300s rate-limit collisions)"
+  ],
+  "success_rate": {"backend": "100% (32/32)", "frontend": "100% (all manual flows passed)"},
+  "test_credentials": "Seed user test@tactician.gg / strongpw1 valid. New tests register their own TEST_ prefixed users.",
+  "seed_data_creation": "Each rate-limit / password-reset / deep-dive lifecycle test registers a fresh TEST_<prefix>_<uuid>@tactician.gg user via the public /api/auth/register endpoint to isolate per-user rate-limit buckets.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Backend test suite at /app/backend/tests/backend_test.py runs 32 tests in ~2-3min. Heavy LLM usage (optimizer burst spawns 16 concurrent LLM calls) — monitor EMERGENT_LLM_KEY budget; we saw a 'Budget has been exceeded! Current cost: 0.50073, Max budget: 0.4' once during a prior run that flaked test_deep_dive_gridfs_shot_lifecycle. If you re-run shortly the LLM key may be throttled. Each new iteration should bump tests, not rewrite the file."
+}

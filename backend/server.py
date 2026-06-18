@@ -1,19 +1,23 @@
 """37Games AI Strategy Assistant — backend."""
 import os
 import uuid
-import logging
 import asyncio
+import logging
+import base64
+import secrets
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import List, Optional, Literal
 
 import bcrypt
 import jwt
+import resend
+from bson import ObjectId
 from dotenv import load_dotenv
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File, Form
-from fastapi.responses import StreamingResponse
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File, Form, Request
+from fastapi.responses import StreamingResponse, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorGridFSBucket
 from pydantic import BaseModel, Field, EmailStr
 from starlette.middleware.cors import CORSMiddleware
 
@@ -26,6 +30,7 @@ load_dotenv(ROOT_DIR / ".env")
 mongo_url = os.environ["MONGO_URL"]
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ["DB_NAME"]]
+gridfs_bucket = AsyncIOMotorGridFSBucket(db, bucket_name="deep_dive_shots")
 
 # ---------- App ----------
 app = FastAPI(title="37Games AI Strategy")
@@ -35,6 +40,11 @@ security = HTTPBearer(auto_error=False)
 JWT_SECRET = os.environ["JWT_SECRET"]
 JWT_ALG = "HS256"
 EMERGENT_LLM_KEY = os.environ["EMERGENT_LLM_KEY"]
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "onboarding@resend.dev")
+APP_BASE_URL = os.environ.get("APP_BASE_URL", "http://localhost:3000")
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
 
 # ---------- Game Catalog (seed) ----------
 GAMES = [
@@ -276,6 +286,50 @@ async def get_current_user(creds: HTTPAuthorizationCredentials = Depends(securit
     return user
 
 
+# ---------- Rate limiter ----------
+# Per-user fixed-window counter stored in Mongo: 1 doc per (user, endpoint, window-start).
+RATE_LIMITS = {
+    "chat": (30, 60),          # 30 req / 60s
+    "optimizer": (10, 60),     # 10 req / 60s
+    "deep_dive": (5, 300),     # 5 req / 5 min  (vision is expensive)
+    "password_reset": (3, 3600),  # 3 / hour by email
+}
+
+
+async def _rate_limit(key: str, bucket: str):
+    if bucket not in RATE_LIMITS:
+        return
+    limit, window = RATE_LIMITS[bucket]
+    now = datetime.now(timezone.utc)
+    window_start = now - timedelta(seconds=window)
+    coll = db.rate_limits
+    # Count usages in the rolling window
+    count = await coll.count_documents({"key": f"{bucket}:{key}", "ts": {"$gte": window_start.isoformat()}})
+    if count >= limit:
+        raise HTTPException(429, f"Rate limit exceeded ({limit} requests per {window}s for {bucket}). Try again shortly.")
+    await coll.insert_one({"key": f"{bucket}:{key}", "ts": now.isoformat()})
+
+
+async def rate_limit_user(bucket: str, user=Depends(get_current_user)):
+    await _rate_limit(user["id"], bucket)
+    return user
+
+
+# ---------- Email ----------
+async def send_email(to: str, subject: str, html: str) -> tuple[bool, str]:
+    """Returns (sent_via_resend, info). If RESEND_API_KEY missing -> logs link and returns False."""
+    if not RESEND_API_KEY:
+        logging.warning("RESEND_API_KEY missing — email NOT sent. Subject=%s To=%s", subject, to)
+        return False, "dev-mode"
+    try:
+        params = {"from": SENDER_EMAIL, "to": [to], "subject": subject, "html": html}
+        result = await asyncio.to_thread(resend.Emails.send, params)
+        return True, result.get("id", "sent")
+    except Exception as e:
+        logging.exception("Resend send failed")
+        return False, str(e)
+
+
 def system_prompt_for(game_slug: str) -> str:
     game = next((g for g in GAMES if g["slug"] == game_slug), None)
     name = game["name"] if game else "37Games title"
@@ -377,6 +431,74 @@ async def me(user=Depends(get_current_user)):
     return UserOut(id=user["id"], email=user["email"], username=user["username"], created_at=user["created_at"])
 
 
+# ----- Password Reset -----
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str = Field(min_length=6)
+
+
+@api.post("/auth/forgot-password")
+async def forgot_password(data: ForgotPasswordRequest):
+    # Rate limit by email to prevent enumeration storms
+    await _rate_limit(data.email.lower(), "password_reset")
+    user = await db.users.find_one({"email": data.email.lower()}, {"_id": 0})
+    # Always return success to avoid leaking existence of accounts
+    if not user:
+        return {"ok": True, "delivered": False, "info": "If an account exists for this email, a reset link has been sent."}
+
+    token = secrets.token_urlsafe(32)
+    expires_at = datetime.now(timezone.utc) + timedelta(hours=2)
+    await db.password_resets.insert_one({
+        "id": str(uuid.uuid4()),
+        "user_id": user["id"],
+        "token": token,
+        "email": user["email"],
+        "expires_at": expires_at.isoformat(),
+        "used": False,
+        "created_at": now_iso(),
+    })
+    reset_link = f"{APP_BASE_URL}/reset-password?token={token}"
+    html = f"""
+    <table style="background:#0A0A0A;color:#fff;font-family:Arial,sans-serif;padding:32px;width:100%">
+      <tr><td>
+        <h1 style="color:#E63946;margin:0 0 16px 0;font-size:24px">Tactical Ally — Password Reset</h1>
+        <p style="color:#A1A1AA;line-height:1.6">Hi <strong style="color:#FFBA08">{user.get('username','operator')}</strong>,</p>
+        <p style="color:#A1A1AA;line-height:1.6">A password reset was requested for your Tactical Ally account.
+        Click the button below to set a new password. The link expires in 2 hours.</p>
+        <p style="margin:24px 0">
+          <a href="{reset_link}" style="background:#E63946;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:bold;display:inline-block">Reset password</a>
+        </p>
+        <p style="color:#71717A;font-size:12px;line-height:1.6">Or copy and paste this link: <br/>{reset_link}</p>
+        <p style="color:#71717A;font-size:12px;margin-top:24px">If you didn't request this, you can safely ignore this email.</p>
+      </td></tr>
+    </table>
+    """
+    sent, info = await send_email(user["email"], "Tactical Ally · Reset your password", html)
+    resp = {"ok": True, "delivered": sent}
+    # In dev mode (no Resend key), expose the link so the user can still complete the flow
+    if not sent and info == "dev-mode":
+        resp["dev_reset_link"] = reset_link
+    return resp
+
+
+@api.post("/auth/reset-password")
+async def reset_password(data: ResetPasswordRequest):
+    rec = await db.password_resets.find_one({"token": data.token, "used": False}, {"_id": 0})
+    if not rec:
+        raise HTTPException(400, "Invalid or used reset token")
+    expires_at = datetime.fromisoformat(rec["expires_at"])
+    if expires_at < datetime.now(timezone.utc):
+        raise HTTPException(400, "Reset link has expired")
+    new_hash = hash_password(data.new_password)
+    await db.users.update_one({"id": rec["user_id"]}, {"$set": {"password_hash": new_hash}})
+    await db.password_resets.update_one({"token": data.token}, {"$set": {"used": True, "used_at": now_iso()}})
+    return {"ok": True}
+
+
 # ----- Chat -----
 @api.get("/chat/sessions", response_model=List[ChatSession])
 async def list_sessions(user=Depends(get_current_user), game_slug: Optional[str] = None):
@@ -422,6 +544,7 @@ async def get_messages(sid: str, user=Depends(get_current_user)):
 
 @api.post("/chat/sessions/{sid}/messages")
 async def send_message(sid: str, body: ChatMessageIn, user=Depends(get_current_user)):
+    await _rate_limit(user["id"], "chat")
     sess = await db.chat_sessions.find_one({"id": sid, "user_id": user["id"]}, {"_id": 0})
     if not sess:
         raise HTTPException(404, "Session not found")
@@ -537,6 +660,7 @@ class OptimizerRequest(BaseModel):
 
 @api.post("/optimizer")
 async def optimize(req: OptimizerRequest, user=Depends(get_current_user)):
+    await _rate_limit(user["id"], "optimizer")
     if req.game_slug not in GAME_SLUGS:
         raise HTTPException(400, "Invalid game_slug")
     sys_prompt = (
@@ -618,6 +742,7 @@ async def delete_task(tid: str, user=Depends(get_current_user)):
 # ----- Deep Dive (CyphrAI vision analysis) -----
 MAX_SHOTS = 6
 MAX_BYTES = 6 * 1024 * 1024  # 6 MB per image
+ALLOWED_MIMES = {"image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"}
 
 
 async def _analyze_screenshots(
@@ -637,19 +762,52 @@ async def _analyze_screenshots(
     return await chat.send_message(msg)
 
 
-async def _files_to_b64(files: list[UploadFile]) -> list[str]:
-    import base64
+async def _validate_and_store_files(files: list[UploadFile], user_id: str) -> list[dict]:
+    """Validate MIME + size, push each file into GridFS. Returns list of {file_id, mime, name, size}."""
     if not files:
         raise HTTPException(400, "No screenshots provided")
     if len(files) > MAX_SHOTS:
         raise HTTPException(400, f"Max {MAX_SHOTS} screenshots per analysis")
-    out = []
+    stored = []
     for f in files:
+        mime = (f.content_type or "").lower()
+        if mime not in ALLOWED_MIMES:
+            raise HTTPException(400, f"Unsupported file type '{mime}' for {f.filename}. Allowed: PNG, JPEG, WebP, GIF.")
         data = await f.read()
         if len(data) > MAX_BYTES:
             raise HTTPException(400, f"{f.filename} exceeds {MAX_BYTES // (1024*1024)}MB limit")
+        if len(data) < 100:  # too small to be a real image
+            raise HTTPException(400, f"{f.filename} is empty or corrupted")
+        file_id = await gridfs_bucket.upload_from_stream(
+            f.filename or "screenshot",
+            data,
+            metadata={"user_id": user_id, "mime": mime, "size": len(data)},
+        )
+        stored.append({
+            "file_id": str(file_id),
+            "mime": mime,
+            "name": f.filename or "screenshot",
+            "size": len(data),
+        })
+    return stored
+
+
+async def _gridfs_to_b64(refs: list[dict]) -> list[str]:
+    """Read GridFS file ids back into base64 strings for the LLM call."""
+    out = []
+    for ref in refs:
+        stream = await gridfs_bucket.open_download_stream(ObjectId(ref["file_id"]))
+        data = await stream.read()
         out.append(base64.b64encode(data).decode())
     return out
+
+
+async def _delete_gridfs_refs(refs: list[dict]):
+    for ref in refs or []:
+        try:
+            await gridfs_bucket.delete(ObjectId(ref["file_id"]))
+        except Exception:
+            logging.warning("Could not delete gridfs file %s", ref.get("file_id"))
 
 
 @api.post("/deep-dive")
@@ -662,26 +820,32 @@ async def create_deep_dive(
 ):
     if game_slug not in GAME_SLUGS:
         raise HTTPException(400, "Invalid game_slug")
-    shots = await _files_to_b64(files)
+    await _rate_limit(user["id"], "deep_dive")
+    refs = await _validate_and_store_files(files, user["id"])
     try:
-        analysis = await _analyze_screenshots(game_slug, shots, mode="baseline", user_notes=notes)
+        b64 = await _gridfs_to_b64(refs)
+        analysis = await _analyze_screenshots(game_slug, b64, mode="baseline", user_notes=notes)
+    except HTTPException:
+        await _delete_gridfs_refs(refs)
+        raise
     except Exception as e:
-        logging.exception("deep dive baseline failed")
-        raise HTTPException(500, f"CyphrAI analysis failed: {e}")
+        await _delete_gridfs_refs(refs)
+        logging.exception("deep dive baseline failed: %s", e)
+        raise HTTPException(500, "CyphrAI analysis failed. Please try again.")
     doc = {
         "id": str(uuid.uuid4()),
         "user_id": user["id"],
         "game_slug": game_slug,
         "title": title,
         "baseline_analysis": analysis,
-        "baseline_shots": shots,
+        "baseline_shots": refs,  # GridFS refs only — small
         "baseline_notes": notes,
         "follow_ups": [],
         "created_at": now_iso(),
     }
     await db.deep_dives.insert_one(doc)
-    out = {k: v for k, v in doc.items() if k not in ("_id", "baseline_shots")}
-    out["shot_count"] = len(shots)
+    out = {k: v for k, v in doc.items() if k != "_id"}
+    out["shot_count"] = len(refs)
     return out
 
 
@@ -695,25 +859,31 @@ async def add_followup(
     dd = await db.deep_dives.find_one({"id": did, "user_id": user["id"]}, {"_id": 0})
     if not dd:
         raise HTTPException(404, "Deep dive not found")
-    shots = await _files_to_b64(files)
+    await _rate_limit(user["id"], "deep_dive")
+    refs = await _validate_and_store_files(files, user["id"])
     try:
+        b64 = await _gridfs_to_b64(refs)
         analysis = await _analyze_screenshots(
-            dd["game_slug"], shots, mode="followup",
+            dd["game_slug"], b64, mode="followup",
             context=dd["baseline_analysis"], user_notes=notes,
         )
-    except Exception as e:
+    except HTTPException:
+        await _delete_gridfs_refs(refs)
+        raise
+    except Exception:
+        await _delete_gridfs_refs(refs)
         logging.exception("deep dive followup failed")
-        raise HTTPException(500, f"CyphrAI analysis failed: {e}")
+        raise HTTPException(500, "CyphrAI analysis failed. Please try again.")
     block = {
         "id": str(uuid.uuid4()),
         "analysis": analysis,
         "notes": notes,
-        "shots": shots,
-        "shot_count": len(shots),
+        "shots": refs,
+        "shot_count": len(refs),
         "created_at": now_iso(),
     }
     await db.deep_dives.update_one({"id": did}, {"$push": {"follow_ups": block}})
-    out = {k: v for k, v in block.items() if k != "shots"}
+    out = {k: v for k, v in block.items()}
     return out
 
 
@@ -722,30 +892,49 @@ async def list_deep_dives(user=Depends(get_current_user), game_slug: Optional[st
     q = {"user_id": user["id"]}
     if game_slug:
         q["game_slug"] = game_slug
-    docs = await db.deep_dives.find(q, {"_id": 0, "baseline_shots": 0, "follow_ups.shots": 0}).sort("created_at", -1).to_list(200)
+    docs = await db.deep_dives.find(q, {"_id": 0}).sort("created_at", -1).to_list(200)
     for d in docs:
-        d["shot_count"] = 0  # placeholder, we omitted shots from list
+        d["shot_count"] = len(d.get("baseline_shots", []))
         d["followup_count"] = len(d.get("follow_ups", []))
     return docs
 
 
 @api.get("/deep-dive/{did}")
-async def get_deep_dive(did: str, user=Depends(get_current_user), include_shots: bool = False):
-    proj = {"_id": 0}
-    if not include_shots:
-        proj["baseline_shots"] = 0
-        proj["follow_ups.shots"] = 0
-    dd = await db.deep_dives.find_one({"id": did, "user_id": user["id"]}, proj)
+async def get_deep_dive(did: str, user=Depends(get_current_user)):
+    dd = await db.deep_dives.find_one({"id": did, "user_id": user["id"]}, {"_id": 0})
     if not dd:
         raise HTTPException(404, "Not found")
     return dd
 
 
+@api.get("/deep-dive/shot/{file_id}")
+async def get_shot(file_id: str, user=Depends(get_current_user)):
+    """Stream a stored screenshot back to the client (auth-gated)."""
+    try:
+        oid = ObjectId(file_id)
+    except Exception:
+        raise HTTPException(400, "Invalid file id")
+    try:
+        stream = await gridfs_bucket.open_download_stream(oid)
+    except Exception:
+        raise HTTPException(404, "File not found")
+    meta = stream.metadata or {}
+    if meta.get("user_id") != user["id"]:
+        raise HTTPException(403, "Forbidden")
+    data = await stream.read()
+    return Response(content=data, media_type=meta.get("mime", "image/png"))
+
+
 @api.delete("/deep-dive/{did}")
 async def delete_deep_dive(did: str, user=Depends(get_current_user)):
-    res = await db.deep_dives.delete_one({"id": did, "user_id": user["id"]})
-    if res.deleted_count == 0:
+    dd = await db.deep_dives.find_one({"id": did, "user_id": user["id"]}, {"_id": 0})
+    if not dd:
         raise HTTPException(404, "Not found")
+    # Best-effort GridFS cleanup
+    await _delete_gridfs_refs(dd.get("baseline_shots", []))
+    for fu in dd.get("follow_ups", []):
+        await _delete_gridfs_refs(fu.get("shots", []))
+    await db.deep_dives.delete_one({"id": did})
     return {"ok": True}
 
 
@@ -758,6 +947,16 @@ async def seed_data():
             doc = {**g, "id": str(uuid.uuid4()), "created_at": now_iso()}
             await db.guides.insert_one(doc)
         logging.info("seeded %d guides", len(GUIDES_SEED))
+    # TTL index for rate-limit usage docs (auto-expire after 1 day)
+    try:
+        await db.rate_limits.create_index("ts", expireAfterSeconds=86400)
+    except Exception:
+        pass
+    # TTL index for password reset tokens (auto-expire after 24h)
+    try:
+        await db.password_resets.create_index("created_at", expireAfterSeconds=86400)
+    except Exception:
+        pass
 
 
 @app.on_event("shutdown")

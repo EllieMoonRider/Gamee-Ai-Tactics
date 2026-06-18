@@ -3,13 +3,14 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "../lib/auth";
 import Navbar from "../components/Navbar";
-import { ShieldStar, IdentificationBadge, Lock, EnvelopeSimple } from "@phosphor-icons/react";
+import { ShieldStar, IdentificationBadge, Lock, EnvelopeSimple, Eye, EyeSlash } from "@phosphor-icons/react";
 
 const AuthPage = () => {
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login, register } = useAuth();
   const nav = useNavigate();
@@ -94,13 +95,31 @@ const AuthPage = () => {
             <label className="tactical-label flex items-center gap-1.5 mb-2">
               <Lock size={12} /> Password
             </label>
-            <input
-              type="password" required minLength={6}
-              placeholder="Min. 6 characters"
-              className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2.5 text-sm"
-              value={password} onChange={e => setPassword(e.target.value)}
-              data-testid="auth-input-password"
-            />
+            <div className="relative">
+              <input
+                type={showPw ? "text" : "password"} required minLength={6}
+                placeholder="Min. 6 characters"
+                className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2.5 pr-10 text-sm"
+                value={password} onChange={e => setPassword(e.target.value)}
+                data-testid="auth-input-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPw(s => !s)}
+                className="absolute inset-y-0 right-2 flex items-center text-zinc-500 hover:text-white"
+                aria-label={showPw ? "Hide password" : "Show password"}
+                data-testid="auth-toggle-show-password"
+              >
+                {showPw ? <EyeSlash size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+            {mode === "login" && (
+              <div className="mt-2 text-right">
+                <Link to="/forgot-password" className="text-xs text-zinc-400 hover:text-[#FFBA08]" data-testid="auth-forgot-link">
+                  Forgot password?
+                </Link>
+              </div>
+            )}
           </div>
           <button
             type="submit" disabled={loading}

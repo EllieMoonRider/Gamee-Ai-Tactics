@@ -3,6 +3,8 @@ import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./lib/auth";
 import Landing from "./pages/Landing";
 import AuthPage from "./pages/AuthPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import GamePage from "./pages/GamePage";
 import WarRoom from "./pages/WarRoom";
@@ -23,6 +25,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
           <Route path="/war-room" element={<Protected><WarRoom /></Protected>} />
           <Route path="/game/:slug" element={<Protected><GamePage /></Protected>} />
