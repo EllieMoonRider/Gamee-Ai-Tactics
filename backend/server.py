@@ -820,8 +820,12 @@ async def create_deep_dive(
 ):
     if game_slug not in GAME_SLUGS:
         raise HTTPException(400, "Invalid game_slug")
-    await _rate_limit(user["id"], "deep_dive")
     refs = await _validate_and_store_files(files, user["id"])
+    try:
+        await _rate_limit(user["id"], "deep_dive")
+    except HTTPException:
+        await _delete_gridfs_refs(refs)
+        raise
     try:
         b64 = await _gridfs_to_b64(refs)
         analysis = await _analyze_screenshots(game_slug, b64, mode="baseline", user_notes=notes)
@@ -859,8 +863,12 @@ async def add_followup(
     dd = await db.deep_dives.find_one({"id": did, "user_id": user["id"]}, {"_id": 0})
     if not dd:
         raise HTTPException(404, "Deep dive not found")
-    await _rate_limit(user["id"], "deep_dive")
     refs = await _validate_and_store_files(files, user["id"])
+    try:
+        await _rate_limit(user["id"], "deep_dive")
+    except HTTPException:
+        await _delete_gridfs_refs(refs)
+        raise
     try:
         b64 = await _gridfs_to_b64(refs)
         analysis = await _analyze_screenshots(

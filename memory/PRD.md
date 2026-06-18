@@ -22,32 +22,35 @@ User direction iterations:
 ## Implemented (✅ as of 2026-02)
 ### Backend (`/app/backend/server.py`)
 - Auth: `/api/auth/register`, `/api/auth/login`, `/api/auth/me`
+- **Password reset (Resend + dev fallback)**: `/api/auth/forgot-password`, `/api/auth/reset-password` — tokens single-use, 2h expiry, email rate-limited 3/hour, dev mode returns reset link inline when `RESEND_API_KEY` is empty
 - Games catalog: 10 hardcoded 37Games MMORPG titles
-- Chat sessions CRUD + SSE streaming with multi-turn context: `/api/chat/sessions[/messages]`
-- AI optimizer: `/api/optimizer`
-- Builds CRUD: `/api/builds`
-- Guides: 13 seeded guides via `/api/guides`
-- Tasks (daily planner) CRUD with priority + completed toggle: `/api/tasks`
-- **Deep Dive (CyphrAI vision)**: `/api/deep-dive` (create baseline), `/api/deep-dive/{id}/followup` (building block), GET/DELETE — multipart screenshot upload (≤6 images, 6MB each) analyzed by Claude Sonnet 4.5 vision.
+- Chat sessions CRUD + SSE streaming (rate-limited 30/60s/user)
+- AI optimizer (rate-limited 10/60s/user)
+- Builds CRUD
+- 13 seeded guides
+- Tasks CRUD with priority + completed
+- **Deep Dive (CyphrAI vision)** — `/api/deep-dive` (baseline + building-block follow-ups). **GridFS storage** for screenshots (≤6 images × 6MB), refs only in Mongo doc. **MIME validation** (PNG/JPEG/WebP/GIF). Auth-gated `/api/deep-dive/shot/{file_id}` streams the image. Rate-limited 5/300s/user. DELETE also cleans GridFS.
+- TTL indexes on `rate_limits` and `password_resets` (auto-cleanup)
 
 ### Frontend
-- Landing `/`: hero, supported arsenal, capabilities, CTA
-- Recruitment Center `/auth`: login/register, username + recovery email
-- Command Center `/dashboard`: Briefing, stats, Tutorial dropdown (6 walkthroughs), Path Cards, game grid
+- Landing `/`, Recruitment Center `/auth`, Forgot Password `/forgot-password`, Reset Password `/reset-password`
+- Command Center `/dashboard`: Briefing + Tutorial dropdown (6 walkthroughs) + Path Cards + game grid
 - War Room `/war-room`: cross-game archive of chats, builds, tasks
 - Game Page `/game/:slug`: 5 tabs — AI Chat (streaming) · Deep Dive · Optimizer · Guides · Planner
+- Show/hide password toggle on Auth + Reset pages
+- Forgot password link from auth page
 
 ### Testing
-- Iteration 1: 16/16 backend pytest + frontend flow 100% (`/app/test_reports/iteration_1.json`)
-- Iteration 2: 20/20 backend pytest including Deep Dive vision lifecycle + frontend rebrand & UI 100% (`/app/test_reports/iteration_2.json`)
+- Iteration 1: 16/16 backend pytest + frontend flow 100%
+- Iteration 2: 20/20 backend pytest including Deep Dive vision lifecycle + frontend rebrand & UI 100%
+- Iteration 3: 32/32 backend pytest (12 new: MIME validation, GridFS shot lifecycle, ownership 403, post-delete 404, rate-limit 429 on optimizer/chat/deep-dive, password reset happy path + single-use + bad-token + email rate-limit) + frontend show-hide + forgot/reset flow 100%
 
 ## Prioritized Backlog
 ### P1 (next reasonable additions)
-- Move Deep Dive screenshots from inline base64 to GridFS / S3 (avoid 16MB BSON limit at scale)
-- Image MIME validation on Deep Dive upload
-- Per-user rate limiting on AI endpoints (optimizer, deep-dive, chat) to protect EMERGENT_LLM_KEY budget
-- Email recovery flow (password reset) leveraging the email/username link
-- Sharing: public read-only links for Builds & Deep Dive baselines
+- Atomic rate-limiter (find_one_and_update with $inc on per-window doc) — eliminates TOCTOU race on bursts
+- Real email provider key (Resend) — user can add `RESEND_API_KEY` in `/app/backend/.env`
+- Split `server.py` into routers (auth, chat, optimizer, deep_dive, guides, tasks)
+- Per-user usage dashboard surfacing remaining rate-limit quota
 
 ### P2 (nice-to-haves)
 - Mobile-optimized chat UI with bottom-sheet sessions list
