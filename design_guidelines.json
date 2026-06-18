@@ -1,0 +1,108 @@
+{
+  "theme": "DARK",
+  "archetype": "5 (Luxury) mixed with 2 (Performance Pro) - Cinematic Tactical Command Center",
+  "design_philosophy": "A premium, dark-mode gaming dashboard that feels like a tactical command center for MMORPG players. Focuses on high-contrast typography, bento-grid layouts for data density, and restrained terminal-style aesthetics. Avoids flashy purple/neon gamer cliches in favor of a serious, high-end strategy feel.",
+  "typography": {
+    "font_families": {
+      "headings": "Outfit",
+      "body": "IBM Plex Sans",
+      "mono_labels": "JetBrains Mono"
+    },
+    "pairing_strategy": "The 'Editorial Future' + 'Terminal': Wide Display Sans (Outfit) for expressive, bold hero text, combined with Geometric Body (IBM Plex Sans) for readability, and Monospace (JetBrains Mono) for tactical data points, stats, and overlines.",
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "body": "text-base leading-relaxed font-normal",
+      "labels": "text-xs font-mono uppercase tracking-[0.2em] font-medium"
+    }
+  },
+  "colors": {
+    "background": {
+      "base": "#0A0A0A",
+      "surface": "#121212",
+      "surface_elevated": "#1A1A1A"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#A1A1AA",
+      "muted": "#71717A"
+    },
+    "brand_accents": {
+      "primary": "#E63946",
+      "secondary": "#FFBA08",
+      "tactical_green": "#10B981"
+    },
+    "borders": {
+      "default": "rgba(255, 255, 255, 0.08)",
+      "focus": "#E63946"
+    },
+    "rules": [
+      "No purple or violet gradients.",
+      "Use 1px solid strokes or 2px 'Inner Glow' highlights.",
+      "Never use pure black #000000; base is tinted with a microscopic warmth."
+    ]
+  },
+  "layout_spacing": {
+    "system": "Tailwind Scale: Generous spacing (p-8 to p-12) mixed with dense bento grids (gap-4).",
+    "bento_grid": "MODE B: THE CONTROL ROOM GRID. Dense bento layouts for stats, build optimizer, and tasks. Base grid: grid-cols-1 md:grid-cols-3 lg:grid-cols-4. Gap: gap-6.",
+    "alignment": "Strict grid hierarchy. Left-align most text for readability; use asymmetry in the hero section.",
+    "container_padding": "Containers with borders must use internal padding p-6 or p-8 to prevent text collision."
+  },
+  "surfaces_and_micro_themes": {
+    "dashboard_cards": "Flat background (#121212), 1px subtle border (border-white/10), no shadow default. Hover adds slight lift (-translate-y-1) and sharpens border contrast.",
+    "glassmorphism": "Used only for sticky nav / overlays. bg-black/60, backdrop-blur-xl, border-b border-white/10.",
+    "terminal_look": "Used for the 'AI Strategy Chat' and 'Build Optimizer' outputs to feel like calculated readouts. JetBrains mono, subtle red/amber data highlights."
+  },
+  "components": {
+    "strategy": "Hybrid: Pure HTML/Tailwind for structural marketing/hero layouts. Heavily customized Shadcn UI for forms, dialogs, dropdowns, tabs.",
+    "buttons": "Sharp edges (rounded-none or max rounded-md). Solid primary background with white text, or pure outline with text hover.",
+    "navigation": "Sticky top nav with glassmorphism. Contains Game Selector dropdown (Shadcn), User Auth, and primary links. Mobile gets hamburger.",
+    "game_cards": "Asymmetric bento cards. Top section features absolute positioned image with gradient overlay (to black), bottom features stats/tags.",
+    "ai_chat": "Dedicated panel. AI responses stream with typewriter effect. Terminal styling for strategy steps."
+  },
+  "animations": {
+    "hover_states": "Crisp, fast. Background lightens by 5%, border opacity increases.",
+    "page_transitions": "Framer motion fade and slight slide-up (y: 10 to 0).",
+    "staggered_lists": "Bento grid items stagger in on load."
+  },
+  "media_and_assets": {
+    "icons": "Phosphor Icons (@phosphor-icons/react) for high-end duotone feel.",
+    "image_urls": {
+      "hero_background": {
+        "url": "https://images.unsplash.com/photo-1544380904-c686aad2fc40?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHRhY3RpY2FsJTIwZ2FtZSUyMGJhY2tncm91bmR8ZW58MHx8fHwxNzgxODExNDc1fDA&ixlib=rb-4.1.0&q=85",
+        "description": "3D abstract tactical game background. Use with heavy black gradient overlay (bg-black/60) to ensure text readability."
+      },
+      "login_accent": {
+        "url": "https://images.pexels.com/photos/6041464/pexels-photo-6041464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Gold chess pieces on black, symbolizing strategy and intellect."
+      },
+      "game_card_placeholder_1": {
+        "url": "https://images.pexels.com/photos/26178754/pexels-photo-26178754.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Intense warrior portrait for RPG game cards."
+      },
+      "game_card_placeholder_2": {
+        "url": "https://images.unsplash.com/photo-1779274243035-9a53377374c2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwzfHxlcGljJTIwZmFudGFzeSUyMHdhcnJpb3IlMjBwb3J0cmFpdHxlbnwwfHx8fDE3ODE4MTE0NzV8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Mandalorian/Sci-fi warrior portrait for strategy games."
+      },
+      "game_card_placeholder_3": {
+        "url": "https://images.pexels.com/photos/8111368/pexels-photo-8111368.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Board game / puzzle strategy elements."
+      }
+    }
+  },
+  "accessibility": {
+    "contrast": "Strict APCA/WCAG AA adherence. Text on dark background must be #A1A1AA or brighter.",
+    "testing": "All interactive elements MUST have data-testid attributes (e.g., data-testid='game-selector-dropdown', data-testid='ai-chat-input')."
+  },
+  "instructions_to_main_agent": [
+    "Install dependencies: framer-motion, @phosphor-icons/react, clsx, tailwind-merge.",
+    "Initialize Shadcn UI for dropdown-menu, dialog, tabs, card, scroll-area, and input components.",
+    "Apply the JetBrains Mono font specifically to data readouts and the Build Optimizer section to simulate a tactical terminal.",
+    "Use the Bento Grid layout (CSS Grid with col-span/row-span) for the Dashboard View.",
+    "For the AI Chat, implement a streaming typing effect.",
+    "Strictly enforce the dark theme. Do NOT use purple or violet gradients.",
+    "Wrap grid items correctly when animating with Framer Motion (motion.div must be the direct child or apply subgrid).",
+    "List of 37Games to include in the Game Selector: Puzzles & Conquest, Puzzles & Survival, Legend: Rise of Mythic Heroes, Soul Land Reloaded, Days of Empire, Era of Conquest, Infinity Kingdom, League of Angels, Wartune, Dynasty Origins: Conquest."
+  ]
+}
