@@ -125,9 +125,14 @@ const Landing = () => {
       </section>
 
       <footer className="border-t border-white/5 py-8">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500">
-          <div className="tactical-label">// TACTICAL ALLY © 2026 — Unofficial fan project. Not affiliated with 37Games.</div>
-          <div className="mt-2 sm:mt-0 font-mono-tactical">v1.1.0</div>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 mb-4">
+            <div className="tactical-label">// TACTICAL ALLY © 2026 — Unofficial fan project. Not affiliated with 37Games.</div>
+            <div className="mt-2 sm:mt-0 font-mono-tactical">v1.4.0</div>
+          </div>
+          <p className="text-[11px] text-zinc-600 leading-relaxed max-w-4xl" data-testid="landing-disclaimer">
+            Tactical Ally is an independent strategy companion. It is not affiliated with, endorsed by, or sponsored by 37Games. All game names, logos, and trademarks are property of their respective owners. Tactical Ally does not automate gameplay, read game memory, intercept network traffic, or interact with 37Games' servers — it is purely an advisory tool that analyzes screenshots you voluntarily upload.
+          </p>
         </div>
       </footer>
     </div>

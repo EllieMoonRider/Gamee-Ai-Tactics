@@ -21,6 +21,7 @@ const Navbar = () => {
             <>
               <Link to="/dashboard" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-dashboard">Command Center</Link>
               <Link to="/war-room" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-war-room">War Room</Link>
+              <Link to="/pricing" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-pricing">Pricing</Link>
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 surface rounded">
                 <UserCircle size={16} className="text-zinc-400" />
                 <span className="text-sm">{user.username}</span>
@@ -30,7 +31,10 @@ const Navbar = () => {
               </button>
             </>
           ) : !onAuthPage ? (
-            <Link to="/auth" className="btn-primary" data-testid="navbar-signin">Sign in</Link>
+            <>
+              <Link to="/pricing" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-pricing-public">Pricing</Link>
+              <Link to="/auth" className="btn-primary" data-testid="navbar-signin">Sign in</Link>
+            </>
           ) : null}
         </nav>
       </div>

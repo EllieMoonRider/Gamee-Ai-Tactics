@@ -22,6 +22,9 @@ from pydantic import BaseModel, Field, EmailStr
 from starlette.middleware.cors import CORSMiddleware
 
 from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone, ImageContent
+from emergentintegrations.payments.stripe.checkout import (
+    StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest,
+)
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -43,6 +46,7 @@ EMERGENT_LLM_KEY = os.environ["EMERGENT_LLM_KEY"]
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "onboarding@resend.dev")
 APP_BASE_URL = os.environ.get("APP_BASE_URL", "http://localhost:3000")
+STRIPE_API_KEY = os.environ.get("STRIPE_API_KEY", "")
 if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
 
@@ -138,6 +142,15 @@ GAMES = [
         "image": "https://images.pexels.com/photos/26178754/pexels-photo-26178754.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
         "color": "#E63946",
     },
+    {
+        "slug": "puzzles-chaos",
+        "name": "Puzzles & Chaos",
+        "genre": "Match-3 / Dark Fantasy Strategy",
+        "tagline": "Match runes, summon heroes, conquer the corrupted realm.",
+        "tags": ["Match-3", "Dark Fantasy", "Heroes", "Alliance"],
+        "image": "https://images.pexels.com/photos/8111368/pexels-photo-8111368.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "color": "#FFBA08",
+    },
 ]
 GAME_SLUGS = {g["slug"] for g in GAMES}
 
@@ -156,6 +169,8 @@ GUIDES_SEED = [
     {"game_slug": "league-of-angels", "category": "Beginner", "title": "BR Boosting Guide", "summary": "Fastest path to high Battle Rating.", "content": "Upgrade gear refinement before enchanting. Daily login angels are worth saving for Astrals."},
     {"game_slug": "wartune", "category": "Build", "title": "Class Pick Guide", "summary": "Knight, Mage or Archer?", "content": "Knight = tankiest, easiest to play. Mage = best AoE. Archer = highest single-target damage."},
     {"game_slug": "dynasty-origins-conquest", "category": "Heroes", "title": "Best 5-Star Generals", "summary": "Top picks for your formation.", "content": "S-tier: Zhao Yun (cavalry DPS), Zhuge Liang (support), Lü Bu (raw damage). Build Zhao Yun + Zhuge Liang in main team."},
+    {"game_slug": "puzzles-chaos", "category": "Beginner", "title": "First Week Roadmap", "summary": "Optimal opening for new Chaos commanders.", "content": "Day 1-2: Push the main story to chapter 5 to unlock alliance + arena. Day 3-4: Focus 1 main hero to ascension; don't spread XP. Day 5-7: Run rune dungeons daily — runes are the #1 power multiplier in Puzzles & Chaos."},
+    {"game_slug": "puzzles-chaos", "category": "Heroes", "title": "Top Dark Fantasy Heroes", "summary": "Meta hero tier list for Puzzles & Chaos.", "content": "S+: Vex (corruption DPS), Lyra (purifier). S: Drogan (tank), Nyx (control). Pair Vex with Lyra for sustain + burn comp."},
 ]
 
 
@@ -335,13 +350,14 @@ def system_prompt_for(game_slug: str) -> str:
     name = game["name"] if game else "37Games title"
     genre = game["genre"] if game else "mobile strategy game"
     return (
-        f"You are 'CyphrAI', the tactical AI engine inside the Tactical Ally app. You specialize in the 37Games title '{name}' ({genre}). "
-        "You give concrete, prioritized, actionable advice for free-to-play and light-spender gamers. "
-        "When giving advice: 1) list priorities, 2) cite specific heroes / buildings / events when relevant, "
-        "3) keep responses concise (under 300 words by default) but rich in tactical detail, "
-        "4) use bold for hero names and key numbers, 5) suggest follow-up questions at the end. "
-        "Never fabricate update patches you don't know about — be honest if uncertain. "
-        "Tone: confident, friendly, slightly tactical/military. Reply in the user's language."
+        f"You are 'CyphrAI', the tactical AI engine inside the Tactical Ally app. You are a DEDICATED SPECIALIST for the 37Games title '{name}' ({genre}) and NOTHING ELSE. "
+        "STRICT RULES (do not break these):\n"
+        f"1. You ONLY answer about '{name}'. If the player asks about a different game (even another 37Games title), politely refuse and say 'I'm the {name} specialist — open that game's workspace to talk to its dedicated CyphrAI.'\n"
+        f"2. NEVER cross-reference mechanics, heroes, items, or strategies from other games. Treat '{name}' as a closed universe.\n"
+        f"3. Provide TRUE, SPECIFIC strategy — exact hero names, building names, event names, numeric targets, formation roles. NEVER give generic mobile-strategy advice.\n"
+        f"4. If you don't know a specific patch/event detail, say 'I don't have verified info on that — can you screenshot it for me?' rather than fabricating.\n"
+        "5. Tone: confident, friendly, slightly tactical/military. Keep replies under 300 words unless asked for depth. Use **bold** for hero/building/numeric callouts. End with 1-2 follow-up question suggestions.\n"
+        "6. Reply in the user's language."
     )
 
 
@@ -349,8 +365,9 @@ def deepdive_system_prompt(game_slug: str, mode: str) -> str:
     game = next((g for g in GAMES if g["slug"] == game_slug), None)
     name = game["name"] if game else "37Games title"
     base = (
-        f"You are 'CyphrAI', the tactical AI inside Tactical Ally. The user has uploaded screenshots from their account in '{name}'. "
+        f"You are 'CyphrAI', the DEDICATED SPECIALIST for the 37Games title '{name}'. You are NOT a generic mobile-strategy AI; you only speak {name}. "
         "Read every screenshot carefully — heroes, levels, resources, building HQ, alliance, VIP, gear, formation, power, anything visible. "
+        "STRICT: Do not reference any other game. Do not give generic advice. Be specific to this title's mechanics, heroes, events, and meta. If something is unclear in the screenshot, say so — never invent. "
     )
     if mode == "baseline":
         return base + (
@@ -821,10 +838,21 @@ async def create_deep_dive(
     if game_slug not in GAME_SLUGS:
         raise HTTPException(400, "Invalid game_slug")
     refs = await _validate_and_store_files(files, user["id"])
+    # Enforce subscription / topup quota BEFORE rate-limit & LLM call
+    try:
+        source = await consume_baseline(user["id"])
+    except HTTPException:
+        await _delete_gridfs_refs(refs)
+        raise
     try:
         await _rate_limit(user["id"], "deep_dive")
     except HTTPException:
         await _delete_gridfs_refs(refs)
+        # rollback quota
+        if source == "subscription":
+            await db.users.update_one({"id": user["id"]}, {"$inc": {"analyses_used_this_period": -1}})
+        else:
+            await db.users.update_one({"id": user["id"]}, {"$inc": {"extra_baselines": 1}})
         raise
     try:
         b64 = await _gridfs_to_b64(refs)
@@ -946,15 +974,290 @@ async def delete_deep_dive(did: str, user=Depends(get_current_user)):
     return {"ok": True}
 
 
+# ---------- Billing (Stripe subscription + topup) ----------
+PACKAGES = {
+    "subscription_monthly": {
+        "name": "Tactical Ally Pro — Monthly",
+        "amount": 4.99,
+        "currency": "usd",
+        "kind": "subscription",
+        "baselines": 2,
+        "period_days": 30,
+        "description": "2 CyphrAI Deep Dive baselines per month + unlimited follow-up Building Blocks within them.",
+    },
+    "topup_analysis": {
+        "name": "Extra Deep Dive analysis",
+        "amount": 2.99,
+        "currency": "usd",
+        "kind": "one_time",
+        "baselines": 1,
+        "description": "Adds 1 extra Deep Dive baseline that doesn't expire.",
+    },
+}
+
+
+async def get_user_quota(user: dict) -> dict:
+    """Computes the user's current quota state (auto-renews monthly window)."""
+    now = datetime.now(timezone.utc)
+    sub_end_iso = user.get("subscription_period_end")
+    sub_active = False
+    sub_end = None
+    if sub_end_iso:
+        sub_end = datetime.fromisoformat(sub_end_iso)
+        sub_active = sub_end > now
+    plan = "pro" if sub_active else "free"
+    period_baselines_remaining = 0
+    if sub_active:
+        used = int(user.get("analyses_used_this_period", 0))
+        period_baselines_remaining = max(0, 2 - used)
+    extra_baselines = int(user.get("extra_baselines", 0))
+    return {
+        "plan": plan,
+        "subscription_active": sub_active,
+        "subscription_period_end": sub_end.isoformat() if sub_end else None,
+        "period_baselines_remaining": period_baselines_remaining,
+        "extra_baselines": extra_baselines,
+        "total_baselines_available": period_baselines_remaining + extra_baselines,
+    }
+
+
+async def consume_baseline(user_id: str):
+    """Atomically debit one baseline from the user's quota. Raises 402 if none available."""
+    # Try subscription period first
+    res = await db.users.find_one_and_update(
+        {
+            "id": user_id,
+            "subscription_period_end": {"$exists": True, "$ne": None},
+            "analyses_used_this_period": {"$lt": 2},
+        },
+        {"$inc": {"analyses_used_this_period": 1}},
+        return_document=True,
+    )
+    if res:
+        # Verify subscription is still active
+        end = datetime.fromisoformat(res["subscription_period_end"])
+        if end > datetime.now(timezone.utc):
+            return "subscription"
+        # Was past period; rollback & try extras
+        await db.users.update_one({"id": user_id}, {"$inc": {"analyses_used_this_period": -1}})
+    # Try extras
+    res2 = await db.users.find_one_and_update(
+        {"id": user_id, "extra_baselines": {"$gt": 0}},
+        {"$inc": {"extra_baselines": -1}},
+        return_document=True,
+    )
+    if res2:
+        return "topup"
+    raise HTTPException(402, "No Deep Dive analyses available. Subscribe to Tactical Ally Pro or buy a top-up.")
+
+
+@api.get("/billing/quota")
+async def billing_quota(user=Depends(get_current_user)):
+    return await get_user_quota(user)
+
+
+@api.get("/billing/packages")
+async def billing_packages():
+    return [{"id": pid, **{k: v for k, v in p.items()}} for pid, p in PACKAGES.items()]
+
+
+class CheckoutBody(BaseModel):
+    package_id: str
+    origin_url: str
+
+
+@api.post("/billing/checkout")
+async def billing_checkout(body: CheckoutBody, user=Depends(get_current_user)):
+    if not STRIPE_API_KEY:
+        raise HTTPException(500, "Stripe is not configured")
+    if body.package_id not in PACKAGES:
+        raise HTTPException(400, "Unknown package")
+    pkg = PACKAGES[body.package_id]
+    origin = body.origin_url.rstrip("/")
+    success_url = f"{origin}/billing/success?session_id={{CHECKOUT_SESSION_ID}}"
+    cancel_url = f"{origin}/billing/cancel"
+    webhook_url = f"{APP_BASE_URL}/api/webhook/stripe"
+    stripe_checkout = StripeCheckout(api_key=STRIPE_API_KEY, webhook_url=webhook_url)
+    req = CheckoutSessionRequest(
+        amount=float(pkg["amount"]),
+        currency=pkg["currency"],
+        success_url=success_url,
+        cancel_url=cancel_url,
+        metadata={"user_id": user["id"], "package_id": body.package_id, "email": user["email"]},
+    )
+    session: CheckoutSessionResponse = await stripe_checkout.create_checkout_session(req)
+    # Record transaction in 'initiated' state
+    await db.payment_transactions.insert_one({
+        "id": str(uuid.uuid4()),
+        "session_id": session.session_id,
+        "user_id": user["id"],
+        "email": user["email"],
+        "package_id": body.package_id,
+        "amount": float(pkg["amount"]),
+        "currency": pkg["currency"],
+        "status": "initiated",
+        "payment_status": "pending",
+        "metadata": {"package_id": body.package_id, "user_id": user["id"]},
+        "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.session_id}
+
+
+async def _apply_successful_payment(tx: dict):
+    """Idempotent: only applies entitlements once per session."""
+    if tx.get("entitlement_applied"):
+        return
+    pkg = PACKAGES.get(tx["package_id"])
+    if not pkg:
+        return
+    if pkg["kind"] == "subscription":
+        period_end = datetime.now(timezone.utc) + timedelta(days=pkg["period_days"])
+        await db.users.update_one(
+            {"id": tx["user_id"]},
+            {"$set": {
+                "subscription_status": "active",
+                "subscription_period_end": period_end.isoformat(),
+                "analyses_used_this_period": 0,
+            }},
+        )
+    elif pkg["kind"] == "one_time":
+        await db.users.update_one(
+            {"id": tx["user_id"]},
+            {"$inc": {"extra_baselines": int(pkg["baselines"])}},
+        )
+    await db.payment_transactions.update_one(
+        {"session_id": tx["session_id"]},
+        {"$set": {"entitlement_applied": True, "applied_at": now_iso()}},
+    )
+
+
+@api.get("/billing/checkout/{session_id}/status")
+async def billing_status(session_id: str, user=Depends(get_current_user)):
+    if not STRIPE_API_KEY:
+        raise HTTPException(500, "Stripe is not configured")
+    tx = await db.payment_transactions.find_one({"session_id": session_id, "user_id": user["id"]}, {"_id": 0})
+    if not tx:
+        raise HTTPException(404, "Transaction not found")
+    stripe_checkout = StripeCheckout(api_key=STRIPE_API_KEY, webhook_url=f"{APP_BASE_URL}/api/webhook/stripe")
+    status_resp: CheckoutStatusResponse = await stripe_checkout.get_checkout_status(session_id)
+    await db.payment_transactions.update_one(
+        {"session_id": session_id},
+        {"$set": {"status": status_resp.status, "payment_status": status_resp.payment_status, "last_checked": now_iso()}},
+    )
+    if status_resp.payment_status == "paid":
+        tx_now = await db.payment_transactions.find_one({"session_id": session_id}, {"_id": 0})
+        await _apply_successful_payment(tx_now)
+    return {
+        "status": status_resp.status,
+        "payment_status": status_resp.payment_status,
+        "amount": status_resp.amount_total,
+        "currency": status_resp.currency,
+    }
+
+
+@api.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    if not STRIPE_API_KEY:
+        raise HTTPException(500, "Stripe is not configured")
+    body = await request.body()
+    sig = request.headers.get("Stripe-Signature")
+    stripe_checkout = StripeCheckout(api_key=STRIPE_API_KEY, webhook_url=f"{APP_BASE_URL}/api/webhook/stripe")
+    try:
+        event = await stripe_checkout.handle_webhook(body, sig)
+    except Exception as e:
+        logging.exception("webhook verify failed")
+        raise HTTPException(400, f"Invalid webhook: {e}")
+    if event.payment_status == "paid":
+        tx = await db.payment_transactions.find_one({"session_id": event.session_id}, {"_id": 0})
+        if tx:
+            await db.payment_transactions.update_one(
+                {"session_id": event.session_id},
+                {"$set": {"payment_status": "paid", "status": "complete"}},
+            )
+            tx = await db.payment_transactions.find_one({"session_id": event.session_id}, {"_id": 0})
+            await _apply_successful_payment(tx)
+    return {"received": True}
+
+
+# ---------- Share links (Deep Dive + Builds) ----------
+@api.post("/deep-dive/{did}/share")
+async def share_deep_dive(did: str, user=Depends(get_current_user)):
+    dd = await db.deep_dives.find_one({"id": did, "user_id": user["id"]}, {"_id": 0})
+    if not dd:
+        raise HTTPException(404, "Not found")
+    token = dd.get("share_token") or secrets.token_urlsafe(16)
+    await db.deep_dives.update_one(
+        {"id": did},
+        {"$set": {"share_token": token, "shared_at": now_iso()}},
+    )
+    return {"share_token": token, "url": f"{APP_BASE_URL}/share/d/{token}"}
+
+
+@api.delete("/deep-dive/{did}/share")
+async def unshare_deep_dive(did: str, user=Depends(get_current_user)):
+    res = await db.deep_dives.update_one(
+        {"id": did, "user_id": user["id"]},
+        {"$unset": {"share_token": "", "shared_at": ""}},
+    )
+    if res.matched_count == 0:
+        raise HTTPException(404, "Not found")
+    return {"ok": True}
+
+
+@api.get("/share/d/{token}")
+async def public_deep_dive(token: str):
+    dd = await db.deep_dives.find_one({"share_token": token}, {"_id": 0, "baseline_shots": 0, "follow_ups.shots": 0})
+    if not dd:
+        raise HTTPException(404, "Share not found")
+    user = await db.users.find_one({"id": dd["user_id"]}, {"_id": 0, "username": 1})
+    return {
+        "title": dd["title"],
+        "game_slug": dd["game_slug"],
+        "baseline_analysis": dd["baseline_analysis"],
+        "baseline_notes": dd.get("baseline_notes", ""),
+        "follow_ups": [{"id": f["id"], "analysis": f["analysis"], "notes": f.get("notes", ""), "created_at": f["created_at"]} for f in dd.get("follow_ups", [])],
+        "created_at": dd["created_at"],
+        "shared_by": user.get("username") if user else "operator",
+    }
+
+
+@api.post("/builds/{bid}/share")
+async def share_build(bid: str, user=Depends(get_current_user)):
+    b = await db.builds.find_one({"id": bid, "user_id": user["id"]}, {"_id": 0})
+    if not b:
+        raise HTTPException(404, "Not found")
+    token = b.get("share_token") or secrets.token_urlsafe(16)
+    await db.builds.update_one({"id": bid}, {"$set": {"share_token": token, "shared_at": now_iso()}})
+    return {"share_token": token, "url": f"{APP_BASE_URL}/share/b/{token}"}
+
+
+@api.get("/share/b/{token}")
+async def public_build(token: str):
+    b = await db.builds.find_one({"share_token": token}, {"_id": 0})
+    if not b:
+        raise HTTPException(404, "Share not found")
+    user = await db.users.find_one({"id": b["user_id"]}, {"_id": 0, "username": 1})
+    return {
+        "title": b["title"],
+        "game_slug": b["game_slug"],
+        "team": b.get("team", []),
+        "notes": b.get("notes", ""),
+        "created_at": b["created_at"],
+        "shared_by": user.get("username") if user else "operator",
+    }
+
+
 # ---------- Init ----------
 @app.on_event("startup")
 async def seed_data():
-    count = await db.guides.count_documents({})
-    if count == 0:
-        for g in GUIDES_SEED:
-            doc = {**g, "id": str(uuid.uuid4()), "created_at": now_iso()}
-            await db.guides.insert_one(doc)
-        logging.info("seeded %d guides", len(GUIDES_SEED))
+    # Idempotent per-guide upsert so newly-added guides land on existing DBs
+    for g in GUIDES_SEED:
+        await db.guides.update_one(
+            {"game_slug": g["game_slug"], "title": g["title"]},
+            {"$setOnInsert": {**g, "id": str(uuid.uuid4()), "created_at": now_iso()}},
+            upsert=True,
+        )
+    logging.info("guides seeding ensured (%d entries)", len(GUIDES_SEED))
     # TTL index for rate-limit usage docs (auto-expire after 1 day)
     try:
         await db.rate_limits.create_index("ts", expireAfterSeconds=86400)

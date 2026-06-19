@@ -92,9 +92,29 @@ const DeepDiveDetail = ({ id, onBack, onDelete }) => {
   const [files, setFiles] = useState([]);
   const [notes, setNotes] = useState("");
   const [running, setRunning] = useState(false);
+  const [shareUrl, setShareUrl] = useState(null);
 
-  const refresh = () => api.get(`/deep-dive/${id}`).then(r => setDd(r.data));
+  const refresh = () => api.get(`/deep-dive/${id}`).then(r => {
+    setDd(r.data);
+    if (r.data.share_token) setShareUrl(`${window.location.origin}/share/d/${r.data.share_token}`);
+  });
   useEffect(() => { refresh(); }, [id]);
+
+  const generateShare = async () => {
+    try {
+      const r = await api.post(`/deep-dive/${id}/share`);
+      setShareUrl(r.data.url);
+      navigator.clipboard?.writeText(r.data.url).catch(() => {});
+      toast.success("Share link copied to clipboard");
+    } catch { toast.error("Could not create share link"); }
+  };
+  const revokeShare = async () => {
+    try {
+      await api.delete(`/deep-dive/${id}/share`);
+      setShareUrl(null);
+      toast.success("Share link revoked");
+    } catch { toast.error("Could not revoke"); }
+  };
 
   const submitFollowUp = async (e) => {
     e.preventDefault();
@@ -123,9 +143,26 @@ const DeepDiveDetail = ({ id, onBack, onDelete }) => {
     <div className="space-y-5" data-testid="deepdive-detail">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <button onClick={onBack} className="text-sm text-zinc-400 hover:text-white" data-testid="deepdive-back">← Back to archive</button>
-        <button onClick={() => onDelete(dd.id)} className="text-xs text-zinc-500 hover:text-[#E63946] flex items-center gap-1" data-testid="deepdive-delete">
-          <Trash size={12} /> Delete deep dive
-        </button>
+        <div className="flex items-center gap-2">
+          {shareUrl ? (
+            <>
+              <button onClick={() => { navigator.clipboard?.writeText(shareUrl); toast.success("Link copied"); }}
+                className="text-xs text-zinc-300 hover:text-white flex items-center gap-1 surface px-3 py-1.5 rounded" data-testid="deepdive-copy-share">
+                <LinkSimple size={12} /> Copy share link
+              </button>
+              <button onClick={revokeShare} className="text-xs text-zinc-500 hover:text-[#E63946] flex items-center gap-1" data-testid="deepdive-revoke-share">
+                Revoke
+              </button>
+            </>
+          ) : (
+            <button onClick={generateShare} className="text-xs text-zinc-300 hover:text-white flex items-center gap-1 surface px-3 py-1.5 rounded" data-testid="deepdive-share-btn">
+              <Share size={12} /> Share read-only
+            </button>
+          )}
+          <button onClick={() => onDelete(dd.id)} className="text-xs text-zinc-500 hover:text-[#E63946] flex items-center gap-1" data-testid="deepdive-delete">
+            <Trash size={12} /> Delete
+          </button>
+        </div>
       </div>
 
       <div className="surface rounded-md p-6">
@@ -210,14 +247,24 @@ const DeepDiveModule = ({ slug, gameName }) => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         body: fd,
       });
-      if (!r.ok) throw new Error((await r.json())?.detail || "Failed");
+      if (!r.ok) {
+        const detail = (await r.json())?.detail || "Failed";
+        if (r.status === 402) {
+          toast.error(detail, {
+            action: { label: "View Pricing", onClick: () => window.location.assign("/pricing") },
+            duration: 8000,
+          });
+          throw new Error("quota");
+        }
+        throw new Error(detail);
+      }
       const data = await r.json();
       toast.success("CyphrAI baseline complete");
       setFiles([]); setNotes(""); setTitle("Account Baseline"); setCreating(false);
       await refresh();
       setSelectedId(data.id);
     } catch (err) {
-      toast.error("CyphrAI failed: " + err.message);
+      if (err.message !== "quota") toast.error("CyphrAI failed: " + err.message);
     } finally { setRunning(false); }
   };
 

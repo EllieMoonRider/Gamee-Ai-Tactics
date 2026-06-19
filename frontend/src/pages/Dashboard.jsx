@@ -35,10 +35,44 @@ const Briefing = ({ username }) => {
         Welcome to the Command Center,<br />
         <span className="text-[#FFBA08]">{username || "Operator"}</span>.
       </h1>
-      <p className="text-zinc-400 mt-4 max-w-2xl leading-relaxed">
-        Your war table is set. Below: tutorials, strategy access for all 10 supported 37Games titles, and a private War Room for your saved campaigns.
+      <p className="text-zinc-400 mt-4 max-w-3xl leading-relaxed">
+        Tactical Ally is your AI war-room companion for 11 of the most popular 37Games MMORPGs.
+        Inside each title's workspace, the <strong className="text-white">CyphrAI specialist</strong> for that exact game
+        will chat strategy, optimize builds, and run <strong className="text-[#E63946]">Deep Dive</strong> vision analyses
+        on your account screenshots. Chat & Optimizer are free. Deep Dive baselines run on Pro ($4.99/mo · 2 / month) or top-ups.
       </p>
     </motion.div>
+  );
+};
+
+/* === Quota Widget === */
+const QuotaWidget = () => {
+  const [q, setQ] = useState(null);
+  useEffect(() => { api.get("/billing/quota").then(r => setQ(r.data)); }, []);
+  if (!q) return null;
+  const isPro = q.plan === "pro";
+  return (
+    <div className="surface rounded-md p-5 flex items-center gap-5 flex-wrap" data-testid="quota-widget">
+      <div className="flex-1 min-w-[200px]">
+        <div className="tactical-label mb-1.5" style={{ color: isPro ? "#10B981" : "#A1A1AA" }}>
+          // PLAN · {isPro ? "TACTICAL ALLY PRO" : "RECRUIT (FREE)"}
+        </div>
+        <div className="font-display text-2xl font-black">
+          {q.total_baselines_available} <span className="text-zinc-500 text-sm font-medium">Deep Dive{q.total_baselines_available === 1 ? "" : "s"} available</span>
+        </div>
+        {isPro && q.subscription_period_end && (
+          <p className="text-xs text-zinc-500 mt-1.5">
+            Pro renews {new Date(q.subscription_period_end).toLocaleDateString()} · {q.period_baselines_remaining} from plan · {q.extra_baselines} top-up
+          </p>
+        )}
+        {!isPro && (
+          <p className="text-xs text-zinc-500 mt-1.5">Unlock 2 baselines / month with Pro, or buy a one-off top-up.</p>
+        )}
+      </div>
+      <Link to="/pricing" className={isPro ? "btn-outline" : "btn-primary"} data-testid="quota-cta">
+        {isPro ? "Manage plan" : "Upgrade to Pro"}
+      </Link>
+    </div>
   );
 };
 
@@ -228,6 +262,8 @@ const Dashboard = () => {
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
         <Briefing username={user?.username} />
+
+        <QuotaWidget />
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 max-w-3xl">
