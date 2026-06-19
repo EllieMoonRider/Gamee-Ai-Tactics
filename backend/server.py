@@ -993,6 +993,14 @@ PACKAGES = {
         "baselines": 1,
         "description": "Adds 1 extra Deep Dive baseline that doesn't expire.",
     },
+    "toc_addon_monthly": {
+        "name": "Tactical Operations Center — Monthly add-on",
+        "amount": 0.99,
+        "currency": "usd",
+        "kind": "toc_addon",
+        "period_days": 30,
+        "description": "Create or join alliance chat rooms. Share Deep Dives & Builds with your alliance and ask CyphrAI questions in-room (unlimited). Requires active Pro subscription.",
+    },
 }
 
 
@@ -1011,6 +1019,11 @@ async def get_user_quota(user: dict) -> dict:
         used = int(user.get("analyses_used_this_period", 0))
         period_baselines_remaining = max(0, 2 - used)
     extra_baselines = int(user.get("extra_baselines", 0))
+    toc_end_iso = user.get("toc_period_end")
+    toc_active = False
+    if toc_end_iso:
+        toc_end = datetime.fromisoformat(toc_end_iso)
+        toc_active = toc_end > now
     return {
         "plan": plan,
         "subscription_active": sub_active,
@@ -1018,7 +1031,18 @@ async def get_user_quota(user: dict) -> dict:
         "period_baselines_remaining": period_baselines_remaining,
         "extra_baselines": extra_baselines,
         "total_baselines_available": period_baselines_remaining + extra_baselines,
+        "toc_active": toc_active,
+        "toc_period_end": user.get("toc_period_end"),
     }
+
+
+async def require_toc_access(user: dict):
+    """Raises 402 if user can't use the Tactical Operations Center."""
+    q = await get_user_quota(user)
+    if not q["subscription_active"]:
+        raise HTTPException(402, "Tactical Operations Center requires Tactical Ally Pro ($4.99/mo) + TOC add-on ($0.99/mo).")
+    if not q["toc_active"]:
+        raise HTTPException(402, "Add the Tactical Operations Center add-on ($0.99/mo) to create or join alliance chat rooms.")
 
 
 async def consume_baseline(user_id: str):
@@ -1124,6 +1148,12 @@ async def _apply_successful_payment(tx: dict):
         await db.users.update_one(
             {"id": tx["user_id"]},
             {"$inc": {"extra_baselines": int(pkg["baselines"])}},
+        )
+    elif pkg["kind"] == "toc_addon":
+        toc_end = datetime.now(timezone.utc) + timedelta(days=pkg["period_days"])
+        await db.users.update_one(
+            {"id": tx["user_id"]},
+            {"$set": {"toc_period_end": toc_end.isoformat()}},
         )
     await db.payment_transactions.update_one(
         {"session_id": tx["session_id"]},
@@ -1245,6 +1275,251 @@ async def public_build(token: str):
         "created_at": b["created_at"],
         "shared_by": user.get("username") if user else "operator",
     }
+
+
+# ---------- Tactical Operations Center (Alliances) ----------
+# (Unlimited members — no MAX cap)
+
+
+def _make_alliance_code() -> str:
+    return secrets.token_hex(3).upper()  # 6-char
+
+
+class AllianceCreate(BaseModel):
+    name: str = Field(min_length=2, max_length=40)
+    game_slug: str
+    description: Optional[str] = Field(default="", max_length=240)
+
+
+class AllianceJoin(BaseModel):
+    code: str
+
+
+class TextMsg(BaseModel):
+    content: str = Field(min_length=1, max_length=2000)
+
+
+class AskCyphrMsg(BaseModel):
+    question: str = Field(min_length=2, max_length=1000)
+
+
+class ShareRefMsg(BaseModel):
+    ref_id: str  # deep_dive_id or build_id
+
+
+async def _get_member_alliance(aid: str, user_id: str) -> dict:
+    a = await db.alliances.find_one({"id": aid}, {"_id": 0})
+    if not a:
+        raise HTTPException(404, "Alliance not found")
+    if user_id not in a.get("member_ids", []):
+        raise HTTPException(403, "Not a member of this alliance")
+    return a
+
+
+async def _push_message(alliance_id: str, user: dict, mtype: str, content: str, refs: Optional[dict] = None) -> dict:
+    msg = {
+        "id": str(uuid.uuid4()),
+        "alliance_id": alliance_id,
+        "user_id": user["id"],
+        "username": user.get("username", "operator"),
+        "type": mtype,
+        "content": content,
+        "refs": refs or {},
+        "created_at": now_iso(),
+    }
+    await db.alliance_messages.insert_one(msg)
+    await db.alliances.update_one({"id": alliance_id}, {"$set": {"last_activity": msg["created_at"]}})
+    return {k: v for k, v in msg.items() if k != "_id"}
+
+
+def _alliance_out(a: dict) -> dict:
+    return {
+        "id": a["id"],
+        "name": a["name"],
+        "code": a["code"],
+        "game_slug": a["game_slug"],
+        "description": a.get("description", ""),
+        "creator_id": a["creator_id"],
+        "member_count": len(a.get("member_ids", [])),
+        "member_ids": a.get("member_ids", []),
+        "created_at": a["created_at"],
+        "last_activity": a.get("last_activity"),
+    }
+
+
+@api.post("/alliances")
+async def create_alliance(body: AllianceCreate, user=Depends(get_current_user)):
+    await require_toc_access(user)
+    if body.game_slug not in GAME_SLUGS:
+        raise HTTPException(400, "Invalid game_slug")
+    code = _make_alliance_code()
+    # Avoid collisions in the rare case
+    while await db.alliances.find_one({"code": code}):
+        code = _make_alliance_code()
+    doc = {
+        "id": str(uuid.uuid4()),
+        "name": body.name,
+        "code": code,
+        "game_slug": body.game_slug,
+        "description": body.description or "",
+        "creator_id": user["id"],
+        "member_ids": [user["id"]],
+        "created_at": now_iso(),
+        "last_activity": now_iso(),
+    }
+    await db.alliances.insert_one(doc)
+    return _alliance_out(doc)
+
+
+@api.post("/alliances/join")
+async def join_alliance(body: AllianceJoin, user=Depends(get_current_user)):
+    await require_toc_access(user)
+    code = body.code.strip().upper()
+    a = await db.alliances.find_one({"code": code}, {"_id": 0})
+    if not a:
+        raise HTTPException(404, "Alliance code not found")
+    if user["id"] in a.get("member_ids", []):
+        return _alliance_out(a)
+    await db.alliances.update_one({"id": a["id"]}, {"$addToSet": {"member_ids": user["id"]}})
+    a2 = await db.alliances.find_one({"id": a["id"]}, {"_id": 0})
+    await _push_message(a2["id"], user, "system", f"{user['username']} joined the alliance.")
+    return _alliance_out(a2)
+
+
+@api.get("/alliances/mine")
+async def my_alliances(user=Depends(get_current_user)):
+    docs = await db.alliances.find({"member_ids": user["id"]}, {"_id": 0}).sort("last_activity", -1).to_list(50)
+    return [_alliance_out(a) for a in docs]
+
+
+@api.get("/alliances/{aid}")
+async def get_alliance(aid: str, user=Depends(get_current_user)):
+    a = await _get_member_alliance(aid, user["id"])
+    # Hydrate member usernames
+    members = await db.users.find({"id": {"$in": a["member_ids"]}}, {"_id": 0, "id": 1, "username": 1}).to_list(length=None)
+    out = _alliance_out(a)
+    out["members"] = members
+    return out
+
+
+@api.post("/alliances/{aid}/leave")
+async def leave_alliance(aid: str, user=Depends(get_current_user)):
+    a = await _get_member_alliance(aid, user["id"])
+    if a["creator_id"] == user["id"]:
+        # If creator leaves, just disband if only member; else promote oldest other member
+        others = [m for m in a["member_ids"] if m != user["id"]]
+        if not others:
+            await db.alliances.delete_one({"id": aid})
+            await db.alliance_messages.delete_many({"alliance_id": aid})
+            return {"ok": True, "disbanded": True}
+        await db.alliances.update_one({"id": aid}, {"$set": {"creator_id": others[0]}, "$pull": {"member_ids": user["id"]}})
+    else:
+        await db.alliances.update_one({"id": aid}, {"$pull": {"member_ids": user["id"]}})
+    await _push_message(aid, user, "system", f"{user['username']} left the alliance.")
+    return {"ok": True}
+
+
+@api.get("/alliances/{aid}/messages")
+async def alliance_messages(aid: str, since: Optional[str] = None, limit: int = 200, user=Depends(get_current_user)):
+    await _get_member_alliance(aid, user["id"])
+    q: dict = {"alliance_id": aid}
+    if since:
+        q["created_at"] = {"$gt": since}
+    msgs = await db.alliance_messages.find(q, {"_id": 0}).sort("created_at", 1).to_list(max(1, min(limit, 500)))
+    return msgs
+
+
+@api.post("/alliances/{aid}/messages")
+async def post_alliance_text(aid: str, body: TextMsg, user=Depends(get_current_user)):
+    await require_toc_access(user)
+    await _get_member_alliance(aid, user["id"])
+    return await _push_message(aid, user, "text", body.content.strip())
+
+
+@api.post("/alliances/{aid}/share-deepdive")
+async def share_deepdive_to_alliance(aid: str, body: ShareRefMsg, user=Depends(get_current_user)):
+    await require_toc_access(user)
+    a = await _get_member_alliance(aid, user["id"])
+    dd = await db.deep_dives.find_one({"id": body.ref_id, "user_id": user["id"]}, {"_id": 0})
+    if not dd:
+        raise HTTPException(404, "Deep Dive not found")
+    if dd["game_slug"] != a["game_slug"]:
+        raise HTTPException(400, "That Deep Dive isn't for this alliance's game.")
+    # Auto-generate share token if not already
+    token = dd.get("share_token") or secrets.token_urlsafe(16)
+    if not dd.get("share_token"):
+        await db.deep_dives.update_one({"id": dd["id"]}, {"$set": {"share_token": token, "shared_at": now_iso()}})
+    refs = {"deep_dive_id": dd["id"], "title": dd["title"], "share_token": token, "follow_ups": len(dd.get("follow_ups", []))}
+    return await _push_message(aid, user, "share_deepdive", f"Shared Deep Dive: {dd['title']}", refs=refs)
+
+
+@api.post("/alliances/{aid}/share-build")
+async def share_build_to_alliance(aid: str, body: ShareRefMsg, user=Depends(get_current_user)):
+    await require_toc_access(user)
+    a = await _get_member_alliance(aid, user["id"])
+    b = await db.builds.find_one({"id": body.ref_id, "user_id": user["id"]}, {"_id": 0})
+    if not b:
+        raise HTTPException(404, "Build not found")
+    if b["game_slug"] != a["game_slug"]:
+        raise HTTPException(400, "That Build isn't for this alliance's game.")
+    token = b.get("share_token") or secrets.token_urlsafe(16)
+    if not b.get("share_token"):
+        await db.builds.update_one({"id": b["id"]}, {"$set": {"share_token": token, "shared_at": now_iso()}})
+    refs = {"build_id": b["id"], "title": b["title"], "share_token": token}
+    return await _push_message(aid, user, "share_build", f"Shared Build: {b['title']}", refs=refs)
+
+
+@api.post("/alliances/{aid}/ask-cyphr")
+async def alliance_ask_cyphr(aid: str, body: AskCyphrMsg, user=Depends(get_current_user)):
+    await require_toc_access(user)
+    a = await _get_member_alliance(aid, user["id"])
+    await _rate_limit(user["id"], "chat")
+    # Post the question
+    q_msg = await _push_message(aid, user, "cyphr_q", body.question.strip())
+    # Run CyphrAI (specialist for alliance's game)
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"alliance-{aid}-{uuid.uuid4()}",
+        system_message=system_prompt_for(a["game_slug"]),
+    ).with_model("anthropic", "claude-sonnet-4-5-20250929")
+    try:
+        answer = await chat.send_message(UserMessage(text=body.question.strip()))
+    except Exception as e:
+        logging.exception("alliance ask-cyphr failed")
+        answer = f"(CyphrAI couldn't respond just now: {e})"
+    # Post answer as a system message (no human user_id)
+    a_msg = {
+        "id": str(uuid.uuid4()),
+        "alliance_id": aid,
+        "user_id": "cyphr-ai",
+        "username": "CyphrAI",
+        "type": "cyphr_a",
+        "content": answer,
+        "refs": {"in_reply_to": q_msg["id"], "asked_by": user["username"]},
+        "created_at": now_iso(),
+    }
+    await db.alliance_messages.insert_one(a_msg)
+    await db.alliances.update_one({"id": aid}, {"$set": {"last_activity": a_msg["created_at"]}})
+    return {"question": q_msg, "answer": {k: v for k, v in a_msg.items() if k != "_id"}}
+
+
+@api.post("/alliances/{aid}/battle-reports")
+async def post_battle_report(
+    aid: str,
+    title: str = Form(...),
+    notes: str = Form(""),
+    files: list[UploadFile] = File(...),
+    user=Depends(get_current_user),
+):
+    await require_toc_access(user)
+    await _get_member_alliance(aid, user["id"])
+    refs_files = await _validate_and_store_files(files, user["id"])
+    msg_refs = {
+        "title": title.strip()[:100],
+        "shots": refs_files,
+        "shot_count": len(refs_files),
+    }
+    return await _push_message(aid, user, "battle_report", notes.strip()[:2000] or title, refs=msg_refs)
 
 
 # ---------- Init ----------
