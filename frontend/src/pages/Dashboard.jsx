@@ -187,7 +187,7 @@ const TutorialPanel = () => {
 const PathCards = ({ navigate }) => {
   const paths = [
     { icon: Brain, label: "CyphrAI Deep Dive", desc: "Upload screenshots → AI baseline + building blocks.", action: "Pick a title below", color: "#E63946" },
-    { icon: ChatCircleText, label: "Talk to CyphrAI", desc: "Streaming AI chat for any of the 10 titles.", action: "Pick a title below", color: "#FFBA08" },
+    { icon: ChatCircleText, label: "Talk to CyphrAI", desc: "Streaming AI chat for any of the 11 titles.", action: "Pick a title below", color: "#FFBA08" },
     { icon: Target, label: "Run the Optimizer", desc: "Drop roster + objective → tactical plan.", action: "Pick a title below", color: "#10B981" },
     { icon: MapTrifold, label: "Enter the War Room", desc: "Your personal archive of campaigns, builds, tasks.", action: "Go to War Room →", color: "#FFFFFF", to: "/war-room", testId: "path-war-room" },
   ];

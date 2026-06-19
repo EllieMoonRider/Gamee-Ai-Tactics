@@ -21,36 +21,43 @@ User direction iterations:
 
 ## Implemented (✅ as of 2026-02)
 ### Backend (`/app/backend/server.py`)
-- Auth: `/api/auth/register`, `/api/auth/login`, `/api/auth/me`
-- **Password reset (Resend + dev fallback)**: `/api/auth/forgot-password`, `/api/auth/reset-password` — tokens single-use, 2h expiry, email rate-limited 3/hour, dev mode returns reset link inline when `RESEND_API_KEY` is empty
-- Games catalog: 10 hardcoded 37Games MMORPG titles
-- Chat sessions CRUD + SSE streaming (rate-limited 30/60s/user)
-- AI optimizer (rate-limited 10/60s/user)
-- Builds CRUD
-- 13 seeded guides
-- Tasks CRUD with priority + completed
-- **Deep Dive (CyphrAI vision)** — `/api/deep-dive` (baseline + building-block follow-ups). **GridFS storage** for screenshots (≤6 images × 6MB), refs only in Mongo doc. **MIME validation** (PNG/JPEG/WebP/GIF). Auth-gated `/api/deep-dive/shot/{file_id}` streams the image. Rate-limited 5/300s/user. DELETE also cleans GridFS.
-- TTL indexes on `rate_limits` and `password_resets` (auto-cleanup)
+- Auth: register / login / me / forgot-password / reset-password (Resend + dev-mode fallback)
+- 11 games catalog (Puzzles & Conquest, Puzzles & Chaos, Puzzles & Survival, Legend, Soul Land, Days of Empire, Era of Conquest, Infinity Kingdom, League of Angels, Wartune, Dynasty Origins)
+- 15 seeded guides (idempotent per-guide upsert)
+- Chat sessions + streaming (CyphrAI = STRICT per-game specialist, no cross-game refs)
+- Optimizer · Builds · Tasks
+- Deep Dive (CyphrAI vision) — GridFS storage, MIME validation, rate-limited (5/300s/user), quota-gated (402 when no plan/topup)
+- **Stripe billing**: `/api/billing/packages|quota|checkout|checkout/{sid}/status` + `/api/webhook/stripe`. `subscription_monthly $4.99/mo = 2 baselines + unlimited follow-ups` and `topup_analysis $2.99 one-time = +1 baseline`. Idempotent entitlement application.
+- **Share links**: `/api/deep-dive/{id}/share` & `/api/builds/{id}/share` → public `/api/share/d/{token}` and `/api/share/b/{token}` (no shots / no user_id leak)
+- Per-user rate limiting (chat 30/60s, optimizer 10/60s, deep_dive 5/300s, password_reset 3/3600s)
+- TTL indexes on `rate_limits` & `password_resets`
 
 ### Frontend
-- Landing `/`, Recruitment Center `/auth`, Forgot Password `/forgot-password`, Reset Password `/reset-password`
-- Command Center `/dashboard`: Briefing + Tutorial dropdown (6 walkthroughs) + Path Cards + game grid
-- War Room `/war-room`: cross-game archive of chats, builds, tasks
-- Game Page `/game/:slug`: 5 tabs — AI Chat (streaming) · Deep Dive · Optimizer · Guides · Planner
-- Show/hide password toggle on Auth + Reset pages
-- Forgot password link from auth page
+- Landing `/` (11 titles, footer disclaimer)
+- Recruitment Center `/auth` · Forgot `/forgot-password` · Reset `/reset-password` · show/hide password everywhere
+- **Pricing** `/pricing` — 3 tiers (Free / Pro $4.99 / Top-up $2.99) + 37Games disclaimer
+- **Billing** `/billing/success` (status polling) + `/billing/cancel`
+- Command Center `/dashboard` — updated Briefing + Quota Widget + Tutorial dropdown + Path Cards + 11-game grid
+- War Room `/war-room` — cross-game archive
+- Game Page `/game/:slug` — 5 tabs (Chat · Deep Dive · Optimizer · Guides · Planner) with share buttons + friendly 402 toast
+- **Public share pages** `/share/d/:token` & `/share/b/:token` (no auth)
 
 ### Testing
-- Iteration 1: 16/16 backend pytest + frontend flow 100%
-- Iteration 2: 20/20 backend pytest including Deep Dive vision lifecycle + frontend rebrand & UI 100%
-- Iteration 3: 32/32 backend pytest (12 new: MIME validation, GridFS shot lifecycle, ownership 403, post-delete 404, rate-limit 429 on optimizer/chat/deep-dive, password reset happy path + single-use + bad-token + email rate-limit) + frontend show-hide + forgot/reset flow 100%
+- Iteration 4 (final): 42/42 backend pytest passing (4 skipped — pre-paywall lifecycle tests now blocked by 402, fully covered by new quota tests). Frontend 100% — landing, pricing, billing flows, dashboard quota, 11-game grid, deep dive 402 toast, share links public pages all verified.
 
 ## Prioritized Backlog
-### P1 (next reasonable additions)
-- Atomic rate-limiter (find_one_and_update with $inc on per-window doc) — eliminates TOCTOU race on bursts
-- Real email provider key (Resend) — user can add `RESEND_API_KEY` in `/app/backend/.env`
-- Split `server.py` into routers (auth, chat, optimizer, deep_dive, guides, tasks)
-- Per-user usage dashboard surfacing remaining rate-limit quota
+### P1 — next iteration
+- **Tactical Scouts** (F2P credit-earning system): upload game-update screenshots → CyphrAI ingests new meta info → user earns credits redeemable for analyses; secondary tasks list (try recommended games, watch tutorial videos)
+- **Tactical Operations Center**: alliance/clan rooms — create/join, chat, share Deep Dives/Builds within alliance, ask CyphrAI questions in shared context
+- **CyphrAI Interactive Deep Dive guided upload**: AI walks user through what to screenshot, in what order, ability to Q&A mid-flow
+- Atomic `_rate_limit` ($inc per-window doc)
+- Dev-only `POST /api/billing/grant-baselines` (env-flag-guarded) so old lifecycle tests can be un-skipped
+- Split `server.py` (~1300 lines) into routers
+
+### P2
+- Real Resend API key (user adds to `.env`)
+- Customer portal for cancellation (Stripe portal)
+- Email notifications on Deep Dive completion
 
 ### P2 (nice-to-haves)
 - Mobile-optimized chat UI with bottom-sheet sessions list

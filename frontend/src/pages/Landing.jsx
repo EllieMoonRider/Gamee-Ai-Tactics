@@ -40,7 +40,7 @@ const Landing = () => {
               Plan every <span className="text-[#FFBA08]">empire</span>.
             </h1>
             <p className="mt-6 text-zinc-400 text-lg max-w-2xl leading-relaxed">
-              Tactical Ally is the AI war-room companion for the top 10 MMORPGs published by 37Games — Puzzles & Conquest, Puzzles & Survival, Legend, Soul Land Reloaded, and more. Build smarter, fight harder.
+              Tactical Ally is the AI war-room companion for the top 11 MMORPGs published by 37Games — Puzzles & Conquest, Puzzles & Chaos, Puzzles & Survival, Legend, Soul Land Reloaded, and more. Build smarter, fight harder.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link to="/auth" className="btn-primary flex items-center gap-2" data-testid="hero-cta-start">
@@ -53,7 +53,7 @@ const Landing = () => {
           {/* Tactical stats strip */}
           <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 border border-white/5 rounded">
             {[
-              { l: "Supported titles", v: "10" },
+              { l: "Supported titles", v: "11" },
               { l: "AI Model", v: "Claude 4.5" },
               { l: "Strategy modules", v: "4" },
               { l: "Response latency", v: "<2s" },
@@ -73,12 +73,12 @@ const Landing = () => {
           <div className="flex items-end justify-between mb-10">
             <div>
               <div className="tactical-label text-zinc-500 mb-2">// 01 — SUPPORTED ARSENAL</div>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">Top 10 37Games MMORPGs</h2>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">Top 11 37Games MMORPGs</h2>
             </div>
             <Link to="/auth" className="hidden md:inline-flex text-sm text-zinc-400 hover:text-white">Browse all →</Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {games.slice(0, 10).map((g, i) => (
+            {games.slice(0, 11).map((g, i) => (
               <motion.div
                 key={g.slug}
                 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
