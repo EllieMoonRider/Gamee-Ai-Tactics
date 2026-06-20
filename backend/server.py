@@ -2204,11 +2204,13 @@ async def set_pro_games(body: GamesSelect, user=Depends(get_current_user)):
     q = await get_user_quota(user)
     if not q["subscription_active"]:
         raise HTTPException(402, "Pro subscription required to select active games.")
-    slugs = [s for s in body.games if s in GAME_SLUGS]
+    invalid = [s for s in body.games if s not in GAME_SLUGS]
+    if invalid:
+        raise HTTPException(400, f"Unknown game slug(s): {', '.join(invalid)}")
     # Dedup, preserve order
     seen = set()
     clean = []
-    for s in slugs:
+    for s in body.games:
         if s not in seen:
             seen.add(s)
             clean.append(s)
