@@ -6,7 +6,7 @@ import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import {
   ChatCircleText, Target, BookOpen, ListChecks, ArrowRight, MapTrifold,
-  Compass, GraduationCap, ArrowSquareOut, CaretDown, X, Brain,
+  Compass, GraduationCap, ArrowSquareOut, CaretDown, X, Brain, ShieldStar, FlagBanner,
 } from "@phosphor-icons/react";
 import { TUTORIALS } from "../data/tutorials";
 
@@ -187,8 +187,8 @@ const TutorialPanel = () => {
 const PathCards = ({ navigate }) => {
   const paths = [
     { icon: Brain, label: "CyphrAI Deep Dive", desc: "Upload screenshots → AI baseline + building blocks.", action: "Pick a title below", color: "#E63946" },
-    { icon: ChatCircleText, label: "Talk to CyphrAI", desc: "Streaming AI chat for any of the 11 titles.", action: "Pick a title below", color: "#FFBA08" },
-    { icon: Target, label: "Run the Optimizer", desc: "Drop roster + objective → tactical plan.", action: "Pick a title below", color: "#10B981" },
+    { icon: ShieldStar, label: "Operations Center", desc: "Alliance chat, share Deep Dives & Builds, ask CyphrAI in-room.", action: "Open HQ →", color: "#FFBA08", to: "/operations", testId: "path-operations" },
+    { icon: FlagBanner, label: "Battle Reports", desc: "Log engagements with screenshots + optional CyphrAI take.", action: "Open archive →", color: "#10B981", to: "/battle-reports", testId: "path-battle-reports" },
     { icon: MapTrifold, label: "Enter the War Room", desc: "Your personal archive of campaigns, builds, tasks.", action: "Go to War Room →", color: "#FFFFFF", to: "/war-room", testId: "path-war-room" },
   ];
   return (

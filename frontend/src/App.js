@@ -11,6 +11,9 @@ import WarRoom from "./pages/WarRoom";
 import Pricing from "./pages/Pricing";
 import { BillingSuccess, BillingCancel } from "./pages/Billing";
 import { PublicDeepDive, PublicBuild } from "./pages/Public";
+import Operations from "./pages/Operations";
+import OperationsRoom from "./pages/OperationsRoom";
+import { BattleReportsList, BattleReportDetail } from "./pages/BattleReports";
 import "./App.css";
 
 const Protected = ({ children }) => {
@@ -38,6 +41,10 @@ function App() {
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
           <Route path="/war-room" element={<Protected><WarRoom /></Protected>} />
           <Route path="/game/:slug" element={<Protected><GamePage /></Protected>} />
+          <Route path="/operations" element={<Protected><Operations /></Protected>} />
+          <Route path="/operations/:id" element={<Protected><OperationsRoom /></Protected>} />
+          <Route path="/battle-reports" element={<Protected><BattleReportsList /></Protected>} />
+          <Route path="/battle-reports/:id" element={<Protected><BattleReportDetail /></Protected>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

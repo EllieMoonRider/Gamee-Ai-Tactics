@@ -1522,6 +1522,112 @@ async def post_battle_report(
     return await _push_message(aid, user, "battle_report", notes.strip()[:2000] or title, refs=msg_refs)
 
 
+# ----- First-class Battle Reports (personal + shareable to alliance) -----
+@api.post("/battle-reports")
+async def create_battle_report(
+    game_slug: str = Form(...),
+    title: str = Form(...),
+    notes: str = Form(""),
+    files: list[UploadFile] = File(...),
+    user=Depends(get_current_user),
+):
+    if game_slug not in GAME_SLUGS:
+        raise HTTPException(400, "Invalid game_slug")
+    shots = await _validate_and_store_files(files, user["id"])
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["id"],
+        "game_slug": game_slug,
+        "title": title.strip()[:120],
+        "notes": notes.strip()[:2000],
+        "shots": shots,
+        "cyphr_take": None,
+        "created_at": now_iso(),
+    }
+    await db.battle_reports.insert_one(doc)
+    return {k: v for k, v in doc.items() if k != "_id"}
+
+
+@api.get("/battle-reports")
+async def list_battle_reports(user=Depends(get_current_user), game_slug: Optional[str] = None):
+    q = {"user_id": user["id"]}
+    if game_slug:
+        q["game_slug"] = game_slug
+    docs = await db.battle_reports.find(q, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return docs
+
+
+@api.get("/battle-reports/{rid}")
+async def get_battle_report(rid: str, user=Depends(get_current_user)):
+    br = await db.battle_reports.find_one({"id": rid, "user_id": user["id"]}, {"_id": 0})
+    if not br:
+        raise HTTPException(404, "Battle report not found")
+    return br
+
+
+@api.delete("/battle-reports/{rid}")
+async def delete_battle_report(rid: str, user=Depends(get_current_user)):
+    br = await db.battle_reports.find_one({"id": rid, "user_id": user["id"]}, {"_id": 0})
+    if not br:
+        raise HTTPException(404, "Not found")
+    await _delete_gridfs_refs(br.get("shots", []))
+    await db.battle_reports.delete_one({"id": rid})
+    return {"ok": True}
+
+
+@api.post("/battle-reports/{rid}/analyze")
+async def analyze_battle_report(rid: str, user=Depends(get_current_user)):
+    br = await db.battle_reports.find_one({"id": rid, "user_id": user["id"]}, {"_id": 0})
+    if not br:
+        raise HTTPException(404, "Not found")
+    if br.get("cyphr_take"):
+        return {"cyphr_take": br["cyphr_take"], "cached": True}
+    await _rate_limit(user["id"], "chat")
+    b64 = await _gridfs_to_b64(br.get("shots", []))
+    game = next((g for g in GAMES if g["slug"] == br["game_slug"]), None)
+    game_name = game["name"] if game else br["game_slug"]
+    sys_prompt = (
+        f"You are CyphrAI, the STRICT specialist for the 37Games title '{game_name}'. The user just posted a Battle Report. "
+        "Read the screenshots and notes. Reply in this exact structure (concise, ≤250 words):\n"
+        "## What I see\n(1-2 sentence summary of the engagement)\n\n"
+        "## What worked\n- 2-3 bullets\n\n"
+        "## What didn't\n- 2-3 bullets\n\n"
+        "## Next time, do this\n1. ...\n2. ...\n3. ...\n\n"
+        "Be specific to this game. No generic advice. No other game references."
+    )
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"br-{rid}",
+        system_message=sys_prompt,
+    ).with_model("anthropic", "claude-sonnet-4-5-20250929")
+    images = [ImageContent(image_base64=b) for b in b64]
+    try:
+        take = await chat.send_message(UserMessage(text=f"Notes: {br.get('notes','(none)')}\nAnalyze this engagement.", file_contents=images))
+    except Exception as e:
+        logging.exception("battle report analyze failed: %s", e)
+        raise HTTPException(500, "CyphrAI couldn't analyze right now.")
+    await db.battle_reports.update_one({"id": rid}, {"$set": {"cyphr_take": take, "analyzed_at": now_iso()}})
+    return {"cyphr_take": take, "cached": False}
+
+
+@api.post("/alliances/{aid}/share-battle-report")
+async def share_battle_report_to_alliance(aid: str, body: ShareRefMsg, user=Depends(get_current_user)):
+    await require_toc_access(user)
+    a = await _get_member_alliance(aid, user["id"])
+    br = await db.battle_reports.find_one({"id": body.ref_id, "user_id": user["id"]}, {"_id": 0})
+    if not br:
+        raise HTTPException(404, "Battle report not found")
+    if br["game_slug"] != a["game_slug"]:
+        raise HTTPException(400, "That battle report isn't for this alliance's game.")
+    refs = {
+        "battle_report_id": br["id"],
+        "title": br["title"],
+        "shot_count": len(br.get("shots", [])),
+        "has_cyphr_take": bool(br.get("cyphr_take")),
+    }
+    return await _push_message(aid, user, "share_battle_report", f"Shared Battle Report: {br['title']}", refs=refs)
+
+
 # ---------- Init ----------
 @app.on_event("startup")
 async def seed_data():
