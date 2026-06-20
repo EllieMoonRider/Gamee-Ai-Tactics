@@ -14,6 +14,9 @@ import { PublicDeepDive, PublicBuild } from "./pages/Public";
 import Operations from "./pages/Operations";
 import OperationsRoom from "./pages/OperationsRoom";
 import { BattleReportsList, BattleReportDetail } from "./pages/BattleReports";
+import Referral from "./pages/Referral";
+import Seats from "./pages/Seats";
+import Calendar from "./pages/Calendar";
 import "./App.css";
 
 const Protected = ({ children }) => {
@@ -45,6 +48,9 @@ function App() {
           <Route path="/operations/:id" element={<Protected><OperationsRoom /></Protected>} />
           <Route path="/battle-reports" element={<Protected><BattleReportsList /></Protected>} />
           <Route path="/battle-reports/:id" element={<Protected><BattleReportDetail /></Protected>} />
+          <Route path="/referral" element={<Protected><Referral /></Protected>} />
+          <Route path="/seats" element={<Protected><Seats /></Protected>} />
+          <Route path="/calendar" element={<Protected><Calendar /></Protected>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

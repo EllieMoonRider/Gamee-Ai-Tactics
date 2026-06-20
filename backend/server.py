@@ -47,6 +47,8 @@ RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "onboarding@resend.dev")
 APP_BASE_URL = os.environ.get("APP_BASE_URL", "http://localhost:3000")
 STRIPE_API_KEY = os.environ.get("STRIPE_API_KEY", "")
+ALLIANCE_ADMIN_EMAILS = {e.strip().lower() for e in os.environ.get("ALLIANCE_ADMIN_EMAILS", "").split(",") if e.strip()}
+REFERRAL_MONTHLY_CAP = 5
 if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
 
@@ -179,6 +181,7 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str = Field(min_length=6)
     username: str = Field(min_length=2, max_length=30)
+    referral_code: Optional[str] = None
 
 
 class UserLogin(BaseModel):
@@ -416,13 +419,32 @@ async def register(data: UserRegister):
     existing = await db.users.find_one({"email": data.email.lower()})
     if existing:
         raise HTTPException(400, "Email already registered")
+    referral_code = "TA-" + secrets.token_hex(3).upper()
     user_doc = {
         "id": str(uuid.uuid4()),
         "email": data.email.lower(),
         "username": data.username,
         "password_hash": hash_password(data.password),
+        "referral_code": referral_code,
         "created_at": now_iso(),
     }
+    # Resolve referral
+    if data.referral_code:
+        referrer = await db.users.find_one({"referral_code": data.referral_code.strip().upper()}, {"_id": 0, "id": 1})
+        if referrer and referrer["id"] != user_doc["id"]:
+            user_doc["referred_by"] = referrer["id"]
+            user_doc["extra_baselines"] = int(user_doc.get("extra_baselines", 0)) + 1  # welcome bonus
+    # Auto-link a pending seat if one exists for this email
+    pending_seat = await db.seat_grants.find_one(
+        {"email": data.email.lower(), "status": "pending", "redeemed_user_id": None},
+        {"_id": 0},
+    )
+    if pending_seat:
+        user_doc["seat_grant_id"] = pending_seat["id"]
+        await db.seat_grants.update_one(
+            {"id": pending_seat["id"]},
+            {"$set": {"status": "active", "redeemed_user_id": user_doc["id"], "redeemed_at": now_iso()}},
+        )
     await db.users.insert_one(user_doc)
     token = create_jwt(user_doc["id"])
     return AuthResponse(
@@ -1246,32 +1268,51 @@ PACKAGES = {
 async def get_user_quota(user: dict) -> dict:
     """Computes the user's current quota state (auto-renews monthly window)."""
     now = datetime.now(timezone.utc)
+    # Check alliance seat first — overrides everything to free unlimited Pro+TOC
+    seat_id = user.get("seat_grant_id")
+    seat_active = False
+    seat_alliance = None
+    if seat_id:
+        seat = await db.seat_grants.find_one({"id": seat_id}, {"_id": 0})
+        if seat and seat.get("status") == "active" and not seat.get("revoked_at"):
+            seat_active = True
+            seat_alliance = seat.get("alliance_name")
     sub_end_iso = user.get("subscription_period_end")
     sub_active = False
     sub_end = None
     if sub_end_iso:
         sub_end = datetime.fromisoformat(sub_end_iso)
         sub_active = sub_end > now
-    plan = "pro" if sub_active else "free"
-    period_baselines_remaining = 0
-    if sub_active:
+    plan = "alliance_seat" if seat_active else ("pro" if sub_active else "free")
+    # Seat overrides give 2 monthly baselines too (resets via same analyses_used_this_period field)
+    if seat_active:
+        used = int(user.get("analyses_used_this_period", 0))
+        period_baselines_remaining = max(0, 4 - used)  # alliance seat gets 4 baselines/month
+    elif sub_active:
         used = int(user.get("analyses_used_this_period", 0))
         period_baselines_remaining = max(0, 2 - used)
+    else:
+        period_baselines_remaining = 0
     extra_baselines = int(user.get("extra_baselines", 0))
     toc_end_iso = user.get("toc_period_end")
     toc_active = False
     if toc_end_iso:
         toc_end = datetime.fromisoformat(toc_end_iso)
         toc_active = toc_end > now
+    # Seat grants TOC access too
+    if seat_active:
+        toc_active = True
     return {
         "plan": plan,
-        "subscription_active": sub_active,
+        "subscription_active": sub_active or seat_active,
         "subscription_period_end": sub_end.isoformat() if sub_end else None,
         "period_baselines_remaining": period_baselines_remaining,
         "extra_baselines": extra_baselines,
         "total_baselines_available": period_baselines_remaining + extra_baselines,
         "toc_active": toc_active,
         "toc_period_end": user.get("toc_period_end"),
+        "seat_alliance": seat_alliance,
+        "via_alliance_seat": seat_active,
     }
 
 
@@ -1394,6 +1435,26 @@ async def _apply_successful_payment(tx: dict):
             {"id": tx["user_id"]},
             {"$set": {"toc_period_end": toc_end.isoformat()}},
         )
+    # Referral reward on FIRST paid event for this user (any package)
+    user = await db.users.find_one({"id": tx["user_id"]}, {"_id": 0})
+    if user and user.get("referred_by") and not user.get("referral_reward_paid"):
+        # Check referrer's monthly cap
+        referrer_id = user["referred_by"]
+        referrer = await db.users.find_one({"id": referrer_id}, {"_id": 0})
+        if referrer:
+            window_start = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+            recent = await db.referral_rewards.count_documents({"referrer_id": referrer_id, "created_at": {"$gte": window_start}})
+            if recent < REFERRAL_MONTHLY_CAP:
+                await db.users.update_one({"id": referrer_id}, {"$inc": {"extra_baselines": 1}})
+                await db.referral_rewards.insert_one({
+                    "id": str(uuid.uuid4()),
+                    "referrer_id": referrer_id,
+                    "referred_user_id": user["id"],
+                    "session_id": tx["session_id"],
+                    "package_id": tx["package_id"],
+                    "created_at": now_iso(),
+                })
+                await db.users.update_one({"id": user["id"]}, {"$set": {"referral_reward_paid": True}})
     await db.payment_transactions.update_one(
         {"session_id": tx["session_id"]},
         {"$set": {"entitlement_applied": True, "applied_at": now_iso()}},
@@ -1893,6 +1954,185 @@ async def share_battle_report_to_alliance(aid: str, body: ShareRefMsg, user=Depe
         "has_cyphr_take": bool(br.get("cyphr_take")),
     }
     return await _push_message(aid, user, "share_battle_report", f"Shared Battle Report: {br['title']}", refs=refs)
+
+
+# ---------- Alliance Seats (free Pro+TOC for alliance members) ----------
+def _is_alliance_admin(user: dict) -> bool:
+    return user.get("is_alliance_admin") is True or user.get("email", "").lower() in ALLIANCE_ADMIN_EMAILS
+
+
+class SeatCreate(BaseModel):
+    email: EmailStr
+    alliance_name: str = Field(min_length=2, max_length=40)
+    note: Optional[str] = Field(default="", max_length=200)
+
+
+@api.post("/seats")
+async def create_seat(body: SeatCreate, user=Depends(get_current_user)):
+    if not _is_alliance_admin(user):
+        raise HTTPException(403, "Only alliance admins can grant seats. Contact your R5.")
+    target_email = body.email.lower()
+    # Cap: max 60 seats per admin
+    active_count = await db.seat_grants.count_documents({"granter_id": user["id"], "status": {"$in": ["pending", "active"]}})
+    if active_count >= 60:
+        raise HTTPException(400, "Seat cap reached (60 active seats max per admin).")
+    if await db.seat_grants.find_one({"granter_id": user["id"], "email": target_email, "status": {"$in": ["pending", "active"]}}):
+        raise HTTPException(400, "Seat already exists for this email")
+    doc = {
+        "id": str(uuid.uuid4()),
+        "granter_id": user["id"],
+        "granter_username": user["username"],
+        "alliance_name": body.alliance_name.upper(),
+        "email": target_email,
+        "note": body.note or "",
+        "status": "pending",       # pending | active | revoked
+        "redeemed_user_id": None,
+        "redeemed_at": None,
+        "revoked_at": None,
+        "created_at": now_iso(),
+    }
+    await db.seat_grants.insert_one(doc)
+    # If user already exists with this email, auto-link
+    existing = await db.users.find_one({"email": target_email}, {"_id": 0, "id": 1})
+    if existing:
+        await db.users.update_one({"id": existing["id"]}, {"$set": {"seat_grant_id": doc["id"]}})
+        await db.seat_grants.update_one({"id": doc["id"]}, {"$set": {"status": "active", "redeemed_user_id": existing["id"], "redeemed_at": now_iso()}})
+        doc["status"] = "active"
+        doc["redeemed_user_id"] = existing["id"]
+    return {k: v for k, v in doc.items() if k != "_id"}
+
+
+@api.get("/seats/mine")
+async def list_my_seats(user=Depends(get_current_user)):
+    if not _is_alliance_admin(user):
+        raise HTTPException(403, "Only alliance admins can view seats.")
+    docs = await db.seat_grants.find({"granter_id": user["id"]}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return docs
+
+
+@api.delete("/seats/{sid}")
+async def revoke_seat(sid: str, user=Depends(get_current_user)):
+    if not _is_alliance_admin(user):
+        raise HTTPException(403, "Forbidden")
+    seat = await db.seat_grants.find_one({"id": sid, "granter_id": user["id"]}, {"_id": 0})
+    if not seat:
+        raise HTTPException(404, "Seat not found")
+    await db.seat_grants.update_one({"id": sid}, {"$set": {"status": "revoked", "revoked_at": now_iso()}})
+    return {"ok": True}
+
+
+@api.get("/seats/admin-status")
+async def admin_status(user=Depends(get_current_user)):
+    return {"is_alliance_admin": _is_alliance_admin(user)}
+
+
+# ---------- Referrals ----------
+@api.get("/referral/me")
+async def referral_me(user=Depends(get_current_user)):
+    # Ensure user has a code (legacy users)
+    if not user.get("referral_code"):
+        code = "TA-" + secrets.token_hex(3).upper()
+        await db.users.update_one({"id": user["id"]}, {"$set": {"referral_code": code}})
+        user["referral_code"] = code
+    total = await db.users.count_documents({"referred_by": user["id"]})
+    paid = await db.users.count_documents({"referred_by": user["id"], "referral_reward_paid": True})
+    window_start = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+    this_period = await db.referral_rewards.count_documents({"referrer_id": user["id"], "created_at": {"$gte": window_start}})
+    return {
+        "code": user["referral_code"],
+        "share_url": f"{APP_BASE_URL}/auth?ref={user['referral_code']}",
+        "total_referred": total,
+        "paid_referred": paid,
+        "rewards_this_period": this_period,
+        "cap": REFERRAL_MONTHLY_CAP,
+    }
+
+
+# ---------- Events (Calendar) + Milestones ----------
+class EventCreate(BaseModel):
+    game_slug: str
+    title: str = Field(min_length=2, max_length=120)
+    description: Optional[str] = Field(default="", max_length=600)
+    start_at: str  # ISO
+    end_at: Optional[str] = None
+    category: Optional[str] = Field(default="general")
+
+
+class EventUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    start_at: Optional[str] = None
+    end_at: Optional[str] = None
+    category: Optional[str] = None
+
+
+@api.post("/events")
+async def create_event(body: EventCreate, user=Depends(get_current_user)):
+    if body.game_slug not in GAME_SLUGS:
+        raise HTTPException(400, "Invalid game_slug")
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["id"],
+        "game_slug": body.game_slug,
+        "title": body.title,
+        "description": body.description or "",
+        "start_at": body.start_at,
+        "end_at": body.end_at,
+        "category": body.category or "general",
+        "created_at": now_iso(),
+    }
+    await db.events.insert_one(doc)
+    await _emit_milestone(user["id"], "event_created", body.game_slug, {"event_id": doc["id"], "title": doc["title"]})
+    return {k: v for k, v in doc.items() if k != "_id"}
+
+
+@api.get("/events")
+async def list_events(user=Depends(get_current_user), game_slug: Optional[str] = None):
+    q = {"user_id": user["id"]}
+    if game_slug:
+        q["game_slug"] = game_slug
+    return await db.events.find(q, {"_id": 0}).sort("start_at", 1).to_list(500)
+
+
+@api.patch("/events/{eid}")
+async def update_event(eid: str, body: EventUpdate, user=Depends(get_current_user)):
+    upd = {k: v for k, v in body.model_dump(exclude_none=True).items()}
+    if not upd:
+        raise HTTPException(400, "Nothing to update")
+    r = await db.events.update_one({"id": eid, "user_id": user["id"]}, {"$set": upd})
+    if r.matched_count == 0:
+        raise HTTPException(404, "Event not found")
+    return await db.events.find_one({"id": eid}, {"_id": 0})
+
+
+@api.delete("/events/{eid}")
+async def delete_event(eid: str, user=Depends(get_current_user)):
+    r = await db.events.delete_one({"id": eid, "user_id": user["id"]})
+    if r.deleted_count == 0:
+        raise HTTPException(404, "Not found")
+    return {"ok": True}
+
+
+async def _emit_milestone(user_id: str, kind: str, game_slug: Optional[str], details: dict):
+    try:
+        await db.milestones.insert_one({
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "kind": kind,
+            "game_slug": game_slug,
+            "details": details,
+            "created_at": now_iso(),
+        })
+    except Exception as e:
+        logging.warning("milestone emit failed: %s", e)
+
+
+@api.get("/milestones")
+async def list_milestones(user=Depends(get_current_user), game_slug: Optional[str] = None, limit: int = 200):
+    q = {"user_id": user["id"]}
+    if game_slug:
+        q["game_slug"] = game_slug
+    return await db.milestones.find(q, {"_id": 0}).sort("created_at", -1).to_list(max(1, min(limit, 500)))
 
 
 # ---------- Init ----------

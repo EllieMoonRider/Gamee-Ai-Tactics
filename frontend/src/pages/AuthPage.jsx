@@ -1,15 +1,18 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "../lib/auth";
 import Navbar from "../components/Navbar";
 import { ShieldStar, IdentificationBadge, Lock, EnvelopeSimple, Eye, EyeSlash } from "@phosphor-icons/react";
 
 const AuthPage = () => {
-  const [mode, setMode] = useState("login");
+  const [params] = useSearchParams();
+  const refFromUrl = params.get("ref") || "";
+  const [mode, setMode] = useState(refFromUrl ? "register" : "login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [referralCode, setReferralCode] = useState(refFromUrl);
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login, register } = useAuth();
@@ -20,7 +23,7 @@ const AuthPage = () => {
     setLoading(true);
     try {
       if (mode === "login") await login(email, password);
-      else await register(email, password, username);
+      else await register(email, password, username, referralCode || undefined);
       toast.success(mode === "login" ? "Welcome back, commander." : "Recruitment complete. Allied tactician deployed.");
       nav("/dashboard");
     } catch (err) {
