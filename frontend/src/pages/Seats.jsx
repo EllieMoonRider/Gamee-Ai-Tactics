@@ -69,14 +69,14 @@ const Seats = () => {
           <h1 className="font-display text-3xl font-black tracking-tighter flex items-center gap-3">
             <ShieldStar size={32} weight="duotone" className="text-[#FFBA08]" /> Seats Granted by {user?.username}
           </h1>
-          <p className="text-zinc-400 mt-2 max-w-xl">Grant free <strong>Pro + Operations Center</strong> access to your alliance members. Each seat is email-locked & revocable. Max 60 active seats.</p>
+          <p className="text-zinc-400 mt-2 max-w-xl">Grant free <strong>Pro + Operations Center</strong> access to your alliance members. Each seat is email-locked & revocable. Max <strong>100 active seats</strong> (avg alliance: 60 active members).</p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           <div className="surface rounded p-4"><div className="tactical-label text-[#10B981] mb-1">// ACTIVE</div><div className="font-display text-3xl font-black">{active}</div></div>
           <div className="surface rounded p-4"><div className="tactical-label text-[#FFBA08] mb-1">// PENDING</div><div className="font-display text-3xl font-black">{pending}</div></div>
-          <div className="surface rounded p-4"><div className="tactical-label text-zinc-500 mb-1">// AVAILABLE</div><div className="font-display text-3xl font-black">{Math.max(0, 60 - active - pending)}</div></div>
+          <div className="surface rounded p-4"><div className="tactical-label text-zinc-500 mb-1">// AVAILABLE</div><div className="font-display text-3xl font-black">{Math.max(0, 100 - active - pending)}</div></div>
         </div>
 
         {/* Grant form */}

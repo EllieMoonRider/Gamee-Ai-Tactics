@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import Navbar from "../components/Navbar";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
-import { CheckCircle, Lightning, Stack, ShieldCheck, Coins } from "@phosphor-icons/react";
+import { CheckCircle, Lightning, Stack, ShieldCheck, Coins, GameController, ChatsCircle, Sparkle } from "@phosphor-icons/react";
 
 const Pricing = () => {
   const { user } = useAuth();
@@ -32,25 +32,6 @@ const Pricing = () => {
     } finally { setLoading(null); }
   };
 
-  const sub = packages.find(p => p.id === "subscription_monthly");
-  const top = packages.find(p => p.id === "topup_analysis");
-  const toc = packages.find(p => p.id === "toc_addon_monthly");
-
-  const buyBundle = async () => {
-    if (!user) { nav("/auth"); return; }
-    setLoading("bundle");
-    try {
-      // Buy Pro first; user can then add TOC from /pricing once active
-      const { data } = await api.post("/billing/checkout", {
-        package_id: "subscription_monthly",
-        origin_url: window.location.origin,
-      });
-      window.location.href = data.url;
-    } catch (err) {
-      toast.error(err?.response?.data?.detail || "Checkout failed");
-    } finally { setLoading(null); }
-  };
-
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -58,13 +39,13 @@ const Pricing = () => {
         <div className="text-center mb-12">
           <div className="tactical-label text-[#E63946] mb-2">// PRICING TIERS</div>
           <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tighter">Pick your loadout</h1>
-          <p className="text-zinc-400 mt-3 max-w-xl mx-auto">
-            CyphrAI Chat, Optimizer, Guides, and Daily Planner are <strong className="text-[#10B981]">free forever</strong>. Deep Dive vision analyses require a Pro subscription or top-up.
+          <p className="text-zinc-400 mt-3 max-w-2xl mx-auto">
+            CyphrAI Chat, Optimizer, Guides, and Daily Planner are <strong className="text-[#10B981]">free forever</strong>. Deep Dive vision analyses & Alliance Chat are paid — pricing scales with how many games and how big your alliance is.
           </p>
           {quota && quota.plan === "pro" && (
             <div className="mt-4 inline-flex items-center gap-2 surface px-4 py-2 rounded text-sm" data-testid="pricing-current-plan">
               <ShieldCheck size={16} className="text-[#10B981]" />
-              You're on <strong className="text-[#10B981]">Pro</strong> · {quota.total_baselines_available} analyses available
+              You&apos;re on <strong className="text-[#10B981]">Pro</strong> · {quota.total_baselines_available} analyses available · {quota.pro_games?.length || 0}/{quota.pro_game_slots} game slots used
             </div>
           )}
         </div>
@@ -83,7 +64,7 @@ const Pricing = () => {
               <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Build Optimizer (10/min)</li>
               <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> 13+ curated Guides</li>
               <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Daily Planner across 11 titles</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Personal War Room archive</li>
+              <li className="flex gap-2"><Sparkle size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>Tactical Scouts</strong> — earn Deep Dives free</li>
             </ul>
             <button onClick={() => nav(user ? "/dashboard" : "/auth")} className="btn-outline mt-6 w-full" data-testid="tier-free-cta">
               {user ? "Open Command Center" : "Enlist for free"}
@@ -100,11 +81,12 @@ const Pricing = () => {
               <span className="text-zinc-500"> / month</span>
             </div>
             <ul className="space-y-2.5 text-sm text-zinc-300 flex-1">
-              <li className="flex gap-2"><Lightning size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>2 Deep Dive baselines</strong> / month</li>
-              <li className="flex gap-2"><Stack size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>Unlimited Building Blocks</strong> on those baselines</li>
+              <li className="flex gap-2"><GameController size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>Full access for 2 games</strong> (your choice)</li>
+              <li className="flex gap-2"><Lightning size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> 2 Deep Dive baselines / month</li>
+              <li className="flex gap-2"><Stack size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> Unlimited Building Blocks per baseline</li>
               <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Everything in Recruit</li>
               <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Shareable Deep Dive links</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Game-specialist CyphrAI per title</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Add more games anytime · $0.99/ea</li>
             </ul>
             <button onClick={() => buy("subscription_monthly")} disabled={loading === "subscription_monthly"} className="btn-primary mt-6 w-full" data-testid="tier-pro-cta">
               {loading === "subscription_monthly" ? "Opening checkout…" : "Subscribe — $4.99/mo"}
@@ -113,17 +95,17 @@ const Pricing = () => {
 
           {/* TOPUP */}
           <div className="surface rounded-md p-7 flex flex-col" data-testid="tier-topup">
-            <div className="tactical-label text-zinc-500 mb-2">// TIER 03 · TOP-UP</div>
-            <h2 className="font-display text-2xl font-bold tracking-tight">Extra Analysis</h2>
+            <div className="tactical-label text-zinc-500 mb-2">// TIER 03 · ONE-SHOT</div>
+            <h2 className="font-display text-2xl font-bold tracking-tight">Single Deep Dive</h2>
             <div className="mt-3 mb-5">
               <span className="font-display text-4xl font-black">$2.99</span>
               <span className="text-zinc-500"> / one-time</span>
             </div>
             <ul className="space-y-2.5 text-sm text-zinc-300 flex-1">
-              <li className="flex gap-2"><Coins size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>+1 Deep Dive baseline</strong></li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Never expires — use any time</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Stacks with Pro plan</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Same vision quality, same depth</li>
+              <li className="flex gap-2"><Coins size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>1 Deep Dive baseline</strong> — ANY game</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> No subscription, no commitment</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Never expires — use it any time</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Stacks on top of Pro plan</li>
             </ul>
             <button onClick={() => buy("topup_analysis")} disabled={loading === "topup_analysis"} className="btn-outline mt-6 w-full" data-testid="tier-topup-cta">
               {loading === "topup_analysis" ? "Opening checkout…" : "Buy one — $2.99"}
@@ -131,46 +113,89 @@ const Pricing = () => {
           </div>
         </div>
 
-        {/* TOC ADD-ON ROW */}
-        <div className="mt-8 surface rounded-md p-7 ring-1 ring-[#FFBA08]/30" data-testid="tier-toc-addon">
-          <div className="flex items-start gap-5 flex-wrap">
-            <div className="w-14 h-14 rounded-md bg-[#FFBA08]/10 border border-[#FFBA08]/30 flex items-center justify-center flex-shrink-0">
-              <ShieldCheck size={28} weight="duotone" className="text-[#FFBA08]" />
-            </div>
-            <div className="flex-1 min-w-[260px]">
-              <div className="tactical-label text-[#FFBA08] mb-1">// ADD-ON · TACTICAL OPERATIONS CENTER</div>
-              <h2 className="font-display text-2xl font-bold tracking-tight">Alliance HQ — <span className="text-[#FFBA08]">$0.99/mo</span></h2>
-              <p className="text-sm text-zinc-400 mt-2 max-w-2xl">
-                <strong>Requires active Pro</strong>. Unlocks: create or join alliance chat rooms, share Deep Dives & Builds with alliance members, post battle reports, and ask CyphrAI questions <strong className="text-white">unlimited</strong> — in-room and game-specific.
-              </p>
-              <div className="mt-3 text-xs text-zinc-500">
-                <strong className="text-zinc-300">Bundle:</strong> Pro ($4.99) + Operations ($0.99) = <strong className="text-[#10B981]">$5.99/month total</strong>
+        {/* ADD-ONS */}
+        <div className="mt-10">
+          <div className="tactical-label text-zinc-500 mb-3">// ADD-ONS · STACK AS YOU GROW</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Extra Game */}
+            <div className="surface rounded-md p-6 ring-1 ring-[#FFBA08]/30" data-testid="tier-extra-game">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-md bg-[#FFBA08]/10 border border-[#FFBA08]/30 flex items-center justify-center flex-shrink-0">
+                  <GameController size={24} weight="duotone" className="text-[#FFBA08]" />
+                </div>
+                <div className="flex-1">
+                  <div className="tactical-label text-[#FFBA08] mb-1">// EXTRA GAME SLOT</div>
+                  <h3 className="font-display text-xl font-bold tracking-tight">Add a game — <span className="text-[#FFBA08]">$0.99/mo</span></h3>
+                  <p className="text-xs text-zinc-400 mt-2">
+                    Pro comes with 2 games. Play a 3rd, 4th, 5th title? Stack one slot per extra game. Each slot adds full Pro features for that title.
+                  </p>
+                  <button
+                    onClick={() => buy("extra_game_monthly")}
+                    disabled={loading === "extra_game_monthly" || (quota && !quota.subscription_active)}
+                    className="btn-primary !py-2 !px-4 text-sm mt-3"
+                    data-testid="tier-extra-game-cta"
+                  >
+                    {loading === "extra_game_monthly" ? "Opening checkout…" : (quota && !quota.subscription_active) ? "Get Pro first" : "Add a Game — $0.99/mo"}
+                  </button>
+                </div>
               </div>
             </div>
-            <button
-              onClick={() => buy("toc_addon_monthly")}
-              disabled={loading === "toc_addon_monthly" || !quota || (quota && !quota.subscription_active) || (quota && quota.toc_active)}
-              className="btn-primary"
-              data-testid="tier-toc-cta"
-              title={quota && !quota.subscription_active ? "Subscribe to Pro first" : ""}
-            >
-              {!quota
-                ? "…"
-                : loading === "toc_addon_monthly"
-                  ? "Opening checkout…"
-                  : quota.toc_active
-                    ? "Active ✓"
-                    : !quota.subscription_active
-                      ? "Get Pro first"
-                      : "Add Operations — $0.99/mo"}
-            </button>
+
+            {/* Alliance Chat (per member) */}
+            <div className="surface rounded-md p-6 ring-1 ring-[#10B981]/30" data-testid="tier-toc-addon">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-md bg-[#10B981]/10 border border-[#10B981]/30 flex items-center justify-center flex-shrink-0">
+                  <ChatsCircle size={24} weight="duotone" className="text-[#10B981]" />
+                </div>
+                <div className="flex-1">
+                  <div className="tactical-label text-[#10B981] mb-1">// ALLIANCE CHAT · PER MEMBER</div>
+                  <h3 className="font-display text-xl font-bold tracking-tight">Operations Center — <span className="text-[#10B981]">$0.99/mo</span></h3>
+                  <p className="text-xs text-zinc-400 mt-2">
+                    Each member pays their own seat. Unlocks alliance chat rooms, share Deep Dives & Battle Reports, ask CyphrAI in-room. Built for 60-active-member alliances.
+                  </p>
+                  <button
+                    onClick={() => buy("toc_addon_monthly")}
+                    disabled={loading === "toc_addon_monthly" || !quota || (quota && !quota.subscription_active) || (quota && quota.toc_active)}
+                    className="btn-primary !py-2 !px-4 text-sm mt-3"
+                    data-testid="tier-toc-cta"
+                  >
+                    {!quota
+                      ? "…"
+                      : loading === "toc_addon_monthly"
+                        ? "Opening checkout…"
+                        : quota.toc_active
+                          ? "Active ✓"
+                          : !quota.subscription_active
+                            ? "Get Pro first"
+                            : "Join Chat — $0.99/mo"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* SCOUTS F2P */}
+        <div className="mt-8 surface rounded-md p-6 ring-1 ring-dashed ring-[#E63946]/30" data-testid="scouts-callout">
+          <div className="flex items-start gap-4 flex-wrap">
+            <div className="w-12 h-12 rounded-md bg-[#E63946]/10 border border-[#E63946]/30 flex items-center justify-center flex-shrink-0">
+              <Sparkle size={24} weight="duotone" className="text-[#E63946]" />
+            </div>
+            <div className="flex-1 min-w-[240px]">
+              <div className="tactical-label text-[#E63946] mb-1">// F2P PATH · TACTICAL SCOUTS</div>
+              <h3 className="font-display text-xl font-bold tracking-tight">No wallet? Earn Deep Dives free.</h3>
+              <p className="text-xs text-zinc-400 mt-2 max-w-xl">
+                Upload game-update screenshots · try recommended games · watch strategy videos. Earn 1 credit = $1 value. 3 credits = 1 free Deep Dive. F2P engagement loop with real reward.
+              </p>
+            </div>
+            <Link to={user ? "/scouts" : "/auth"} className="btn-outline" data-testid="scouts-callout-cta">Open Scouts</Link>
           </div>
         </div>
 
         {/* Disclaimer */}
         <div className="mt-14 surface rounded p-5 text-xs text-zinc-500 leading-relaxed" data-testid="tos-disclaimer">
           <p>
-            <strong className="text-zinc-300">Disclaimer:</strong> Tactical Ally is an unofficial, fan-made strategy companion. It is not affiliated with, endorsed by, or sponsored by 37Games or any of its subsidiaries. All game names, logos, and trademarks are property of their respective owners. Tactical Ally does not automate gameplay, read game memory, intercept network traffic, or interact with 37Games' servers in any unauthorized manner — it is purely an advisory/educational tool that processes screenshots you voluntarily upload.
+            <strong className="text-zinc-300">Disclaimer:</strong> Tactical Ally is an unofficial, fan-made strategy companion. It is not affiliated with, endorsed by, or sponsored by 37Games or any of its subsidiaries. All game names, logos, and trademarks are property of their respective owners. Tactical Ally does not automate gameplay, read game memory, intercept network traffic, or interact with 37Games&apos; servers in any unauthorized manner — it is purely an advisory/educational tool that processes screenshots you voluntarily upload.
           </p>
         </div>
       </div>

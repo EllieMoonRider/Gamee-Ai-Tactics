@@ -17,6 +17,7 @@ import { BattleReportsList, BattleReportDetail } from "./pages/BattleReports";
 import Referral from "./pages/Referral";
 import Seats from "./pages/Seats";
 import Calendar from "./pages/Calendar";
+import Scouts from "./pages/Scouts";
 import "./App.css";
 
 const Protected = ({ children }) => {
@@ -51,6 +52,7 @@ function App() {
           <Route path="/referral" element={<Protected><Referral /></Protected>} />
           <Route path="/seats" element={<Protected><Seats /></Protected>} />
           <Route path="/calendar" element={<Protected><Calendar /></Protected>} />
+          <Route path="/scouts" element={<Protected><Scouts /></Protected>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

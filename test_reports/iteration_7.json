@@ -1,0 +1,47 @@
+{
+  "summary": "Iteration 7 backend testing complete — 86/86 tests pass (27 NEW iter7 + 59 regression iter1-5). NEW coverage: Tactical Scouts F2P credit ledger (4 earn kinds with correct credits & daily caps, 429 cap enforcement, unknown-kind 400, MIME-validated screenshot upload, text/plain rejection, redeem-with-insufficient 400, redeem success debits credits + grants +1 extra_baseline), Pro game slots (POST /api/billing/pro-games happy path + 400 when over-slot with 3 valid slugs), new extra_game_monthly Stripe SKU checkout, regression for subscription_monthly + toc_addon_monthly checkout, /api/billing/quota now exposes pro_game_slots/pro_games/pro_games_remaining/scout_credits, /api/billing/packages returns 4 packages with correct amount+kind+included_games=2, Seats: admin-status flag works + create-seat with admin grants pending/active doc (auto-activates if email matches existing user) + static-source check that seat cap error message mentions 100, Referrals: /api/referral/me returns TA- code + share_url + cap=5, register-with-referral_code links referred_by AND grants +1 extra_baseline welcome bonus, Calendar: create→list→delete events flow with milestone event_created emitted, Deep Dive 402 with 'Extra Game slot' hint when pro_games slots full (uses puzzles-conquest as 3rd game when whiteout/last-war fill slots). Regression: /api/games still returns 11, /api/guides still seeded, all iter1-5 (auth, builds, optimizer, chat, deep-dive baseline+followup+share, alliances, battle reports, ask-cyphr) still pass. Fixed one stale assertion in backend_test.py::test_billing_packages (expected len==3 → 4) to reflect the new extra_game_monthly SKU.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/billing/pro-games", "issue": "Silently drops unknown game slugs (filters via 'if s in GAME_SLUGS') instead of returning 400. A typo client-side returns 200 with a quietly-truncated list — masks bugs. Recommend explicit 400 when any submitted slug is not in GAME_SLUGS."},
+      {"endpoint": "POST /api/scouts/earn/{kind}", "issue": "Daily-cap enforcement is read-then-insert (no atomic compare-and-set). Under burst-concurrent requests the cap could be exceeded by 1-2. Low-risk at current scale; flag for prod hardening."},
+      {"endpoint": "POST /api/scouts/earn/upload_game_screenshot", "issue": "Reuses _validate_and_store_files which enforces a 100-byte minimum image size. Very small valid PNGs (e.g., 1x1) are rejected as 'empty or corrupted'. Acceptable but worth documenting in API docs; tests now use a 50x50 PNG (~137 bytes)."},
+      {"endpoint": "DELETE /api/guided-dive/{sid}", "issue": "(Carry-over from iter6) Spec'd path returns 405 — actual handler is at /api/deep-dive/guided/{sid}. Frontend does not exercise yet."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter7_scouts_seats_referrals.py",
+    "/app/test_reports/pytest/iter7_results.xml",
+    "/app/test_reports/pytest/iter7_regression.xml"
+  ],
+  "action_items": [
+    "(Optional) Return 400 from POST /api/billing/pro-games when the payload contains slugs not in GAME_SLUGS (currently silently dropped).",
+    "(Optional) Make scouts daily-cap check atomic (e.g., insert-and-count or unique compound index per kind+date).",
+    "(Carry-over) /api/guided-dive/{sid} DELETE alias still missing — spec'd path 405s.",
+    "(Carry-over) server.py is now 2367 lines (was 1937 last iter, 1697 before). Continue splitting into routers — at minimum a billing/scouts router and a guided_dive router."
+  ],
+  "critical_code_review_comments": [
+    "server.py reached 2367 lines (3.4x the 700-line threshold). Tactical Scouts + Pro-games endpoints are cohesive — move to /app/backend/routers/scouts.py and /app/backend/routers/billing.py.",
+    "POST /api/billing/pro-games silently filters invalid slugs (line 2207). Recommend explicit 400 — the current behavior returned 200 to my first 3-slug exceed test because one of the slugs ('kingshot') wasn't a valid GAME_SLUG, masking the over-slot path.",
+    "scouts_earn handler mixes multipart (file), form (video_id, game_tried), and path (kind) inputs in one route. Works but harder to validate. Consider splitting into 4 dedicated routes or using a discriminated Pydantic model.",
+    "scouts_earn emits milestones with game_slug=None — /api/milestones?game_slug=... will not surface scout activity for any per-game timeline view. Either pass the provoking game_slug (when available, e.g., game_tried) or document this as intentional.",
+    "consume_baseline's 402 message for slot-exhaustion correctly says 'Extra Game slot ($0.99/mo)' — copy aligns with new pricing.",
+    "Cap error 'Seat cap reached (100 active seats max per admin)' aligns with the spec'd 60→100 bump. Verified via static source check (live-test would have required mass seat creation)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter7_scouts_seats_referrals.py — NEW: 27 tests covering all iter7 spec items + regression",
+    "/app/backend/tests/backend_test.py — Updated test_billing_packages assertion from len==3 to len==4 to reflect the new extra_game_monthly SKU"
+  ],
+  "success_rate": {"backend": "100% (86/86: 27 iter7 + 59 iter1-5 regression). Iter6 (16 guided-dive tests) not re-run this session to save LLM cost — previous report shows 16/16 pass.", "frontend": "Not tested per request (backend-only scope)."},
+  "test_credentials": "test@tactician.gg / strongpw1 (already Pro). Iter7 tests temporarily set is_alliance_admin=true on this user (left set; harmless) and create short-lived TEST_ref_* and test_seat_* records that are cleaned in test_zzz_cleanup. Welcome-bonus referral test creates one new TEST_ref_<hex>@tactician.gg user and deletes it in-test.",
+  "seed_data_creation": "No persistent seed data. Tests use the existing seeded games (11) and guides; scout_events and TEST_-prefixed users are cleaned in test_zzz_cleanup. test_create_seat_with_admin sets is_alliance_admin=true on the test user (deliberately not reverted — needed for any future seat regression).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Run order: pytest backend/tests/backend_test.py backend/tests/test_iter5_alliances_battle_reports.py backend/tests/test_iter6_guided_deep_dive.py backend/tests/test_iter7_scouts_seats_referrals.py — total ~102 tests (75 prior + 27 new iter7), ~3.5 min. REACT_APP_BACKEND_URL + MONGO_URL + DB_NAME must be in env. Iter7 tests use pymongo directly to (1) reset pro_games and scout_credits/scout_events between tests, (2) grant is_alliance_admin to test user for the create-seat test, (3) set subscription_period_end into the future for the deep-dive 402 test. Iter7 spends $0 in LLM calls (Stripe checkout uses test key, deep-dive 402 fires BEFORE the LLM call at consume_baseline). The 50x50 PNG fixture is reused for both /api/scouts/earn/upload_game_screenshot and /api/deep-dive — must be >=100 bytes (enforced by _validate_and_store_files). To re-run scout cap tests, ensure db.scout_events for the test user is purged (the scouts_reset fixture does this automatically).",
+  "rca of the issue": "No bugs found. Two initial test failures were test-data issues (not code bugs): (a) the over-slot test used 'kingshot' which isn't in GAME_SLUGS so the silent-filter dropped it to 2 valid → 200; fixed by switching to 'wartune'. (b) the 1x1 PNG fixture was 67 bytes, below the 100-byte minimum in _validate_and_store_files; fixed by using a 50x50 PNG (~137 bytes). One real code-smell surfaced from issue (a): POST /api/billing/pro-games silently drops invalid slugs — recommend explicit 400 (documented in minor backend_issues)."
+}

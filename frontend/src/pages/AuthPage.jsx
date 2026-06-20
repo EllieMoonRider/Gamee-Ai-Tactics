@@ -3,7 +3,7 @@ import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "../lib/auth";
 import Navbar from "../components/Navbar";
-import { ShieldStar, IdentificationBadge, Lock, EnvelopeSimple, Eye, EyeSlash } from "@phosphor-icons/react";
+import { ShieldStar, IdentificationBadge, Lock, EnvelopeSimple, Eye, EyeSlash, Sparkle } from "@phosphor-icons/react";
 
 const AuthPage = () => {
   const [params] = useSearchParams();
@@ -124,6 +124,21 @@ const AuthPage = () => {
               </div>
             )}
           </div>
+          {mode === "register" && (
+            <div>
+              <label className="tactical-label flex items-center gap-1.5 mb-2">
+                <Sparkle size={12} /> Referral code <span className="text-zinc-600">(optional)</span>
+              </label>
+              <input
+                className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2.5 text-sm font-mono-tactical tracking-widest uppercase"
+                placeholder="TA-XXXXXX"
+                value={referralCode} onChange={e => setReferralCode(e.target.value.toUpperCase())}
+                maxLength={12}
+                data-testid="auth-input-referral"
+              />
+              {refFromUrl && <p className="text-[11px] text-[#10B981] mt-1.5">Referral code auto-applied. You&apos;ll get a free Deep Dive baseline as welcome bonus.</p>}
+            </div>
+          )}
           <button
             type="submit" disabled={loading}
             className="btn-primary w-full mt-2" data-testid="auth-submit-btn"

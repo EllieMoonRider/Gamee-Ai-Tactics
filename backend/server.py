@@ -862,7 +862,7 @@ async def create_deep_dive(
     refs = await _validate_and_store_files(files, user["id"])
     # Enforce subscription / topup quota BEFORE rate-limit & LLM call
     try:
-        source = await consume_baseline(user["id"])
+        source = await consume_baseline(user["id"], game_slug=game_slug)
     except HTTPException:
         await _delete_gridfs_refs(refs)
         raise
@@ -1183,7 +1183,7 @@ async def finalize_guided(sid: str, body: FinalizeGuided, user=Depends(get_curre
         raise HTTPException(400, "Upload at least one screenshot before finalizing.")
     # Enforce baseline quota
     try:
-        source = await consume_baseline(user["id"])
+        source = await consume_baseline(user["id"], game_slug=s["game_slug"])
     except HTTPException:
         raise
     # Build notes for the LLM: include user notes + step-by-step context map
@@ -1244,23 +1244,32 @@ PACKAGES = {
         "kind": "subscription",
         "baselines": 2,
         "period_days": 30,
-        "description": "2 CyphrAI Deep Dive baselines per month + unlimited follow-up Building Blocks within them.",
+        "included_games": 2,
+        "description": "Full Pro access for 2 games of your choice. Includes 2 CyphrAI Deep Dive baselines/month + unlimited follow-up Building Blocks.",
     },
     "topup_analysis": {
-        "name": "Extra Deep Dive analysis",
+        "name": "Single Deep Dive",
         "amount": 2.99,
         "currency": "usd",
         "kind": "one_time",
         "baselines": 1,
-        "description": "Adds 1 extra Deep Dive baseline that doesn't expire.",
+        "description": "One-shot Deep Dive on ANY game — no subscription, never expires.",
+    },
+    "extra_game_monthly": {
+        "name": "Extra Game Slot — Monthly",
+        "amount": 0.99,
+        "currency": "usd",
+        "kind": "extra_game",
+        "period_days": 30,
+        "description": "Adds 1 additional game to your Pro plan. Stack as many as you play. Requires active Pro.",
     },
     "toc_addon_monthly": {
-        "name": "Tactical Operations Center — Monthly add-on",
+        "name": "Alliance Chat Seat — Monthly (per member)",
         "amount": 0.99,
         "currency": "usd",
         "kind": "toc_addon",
         "period_days": 30,
-        "description": "Create or join alliance chat rooms. Share Deep Dives & Builds with your alliance and ask CyphrAI questions in-room (unlimited). Requires active Pro subscription.",
+        "description": "Per-member access to alliance chat rooms. Each player pays their own $0.99/mo. Requires active Pro.",
     },
 }
 
@@ -1302,6 +1311,13 @@ async def get_user_quota(user: dict) -> dict:
     # Seat grants TOC access too
     if seat_active:
         toc_active = True
+    # Per-game slots: 2 included with Pro + each $0.99 extra_game purchase = +1 slot
+    pro_game_slots = int(user.get("pro_game_slots", 2 if sub_active else 0))
+    pro_games = list(user.get("pro_games", []))
+    if seat_active:
+        # Alliance seat = unlimited games
+        pro_game_slots = 99
+    scout_credits = round(float(user.get("scout_credits", 0)), 2)
     return {
         "plan": plan,
         "subscription_active": sub_active or seat_active,
@@ -1313,6 +1329,10 @@ async def get_user_quota(user: dict) -> dict:
         "toc_period_end": user.get("toc_period_end"),
         "seat_alliance": seat_alliance,
         "via_alliance_seat": seat_active,
+        "pro_game_slots": pro_game_slots,
+        "pro_games": pro_games,
+        "pro_games_remaining": max(0, pro_game_slots - len(pro_games)),
+        "scout_credits": scout_credits,
     }
 
 
@@ -1325,8 +1345,24 @@ async def require_toc_access(user: dict):
         raise HTTPException(402, "Add the Tactical Operations Center add-on ($0.99/mo) to create or join alliance chat rooms.")
 
 
-async def consume_baseline(user_id: str):
-    """Atomically debit one baseline from the user's quota. Raises 402 if none available."""
+async def consume_baseline(user_id: str, game_slug: Optional[str] = None):
+    """Atomically debit one baseline from the user's quota. Raises 402 if none available.
+
+    If a game_slug is provided and the user is on the Pro plan, enforce per-game slots:
+    - If the game is already in pro_games[], allow.
+    - If not, and the user still has free slots (len(pro_games) < pro_game_slots), auto-add the game.
+    - Otherwise, raise 402 telling the user to add an Extra Game slot ($0.99/mo) or use a $2.99 top-up.
+    Alliance seats bypass the per-game gate (unlimited).
+    """
+    # Alliance seat users bypass per-game gating entirely
+    u = await db.users.find_one({"id": user_id}, {"_id": 0})
+    seat_grant_id = (u or {}).get("seat_grant_id")
+    seat_bypass = False
+    if seat_grant_id:
+        seat = await db.seat_grants.find_one({"id": seat_grant_id}, {"_id": 0})
+        if seat and seat.get("status") == "active":
+            seat_bypass = True
+
     # Try subscription period first
     res = await db.users.find_one_and_update(
         {
@@ -1341,10 +1377,22 @@ async def consume_baseline(user_id: str):
         # Verify subscription is still active
         end = datetime.fromisoformat(res["subscription_period_end"])
         if end > datetime.now(timezone.utc):
+            # Enforce per-game slot rules unless alliance-seat bypass
+            if game_slug and not seat_bypass:
+                slots = int(res.get("pro_game_slots", 2))
+                games = list(res.get("pro_games", []))
+                if game_slug not in games:
+                    if len(games) < slots:
+                        # Auto-assign the game to an available slot
+                        await db.users.update_one({"id": user_id}, {"$addToSet": {"pro_games": game_slug}})
+                    else:
+                        # Rollback the debit
+                        await db.users.update_one({"id": user_id}, {"$inc": {"analyses_used_this_period": -1}})
+                        raise HTTPException(402, f"All {slots} Pro game slots are in use. Add an Extra Game slot ($0.99/mo) or use a one-shot Deep Dive ($2.99) to analyze {game_slug}.")
             return "subscription"
         # Was past period; rollback & try extras
         await db.users.update_one({"id": user_id}, {"$inc": {"analyses_used_this_period": -1}})
-    # Try extras
+    # Try extras (no per-game restriction — one-shot deep dives work on ANY game)
     res2 = await db.users.find_one_and_update(
         {"id": user_id, "extra_baselines": {"$gt": 0}},
         {"$inc": {"extra_baselines": -1}},
@@ -1352,7 +1400,7 @@ async def consume_baseline(user_id: str):
     )
     if res2:
         return "topup"
-    raise HTTPException(402, "No Deep Dive analyses available. Subscribe to Tactical Ally Pro or buy a top-up.")
+    raise HTTPException(402, "No Deep Dive analyses available. Subscribe to Tactical Ally Pro or buy a single Deep Dive top-up.")
 
 
 @api.get("/billing/quota")
@@ -1416,18 +1464,28 @@ async def _apply_successful_payment(tx: dict):
         return
     if pkg["kind"] == "subscription":
         period_end = datetime.now(timezone.utc) + timedelta(days=pkg["period_days"])
+        # On (re)subscription, reset usage counters but PRESERVE pro_games selection.
+        # Also ensure pro_game_slots is at least the included_games (2).
+        included = int(pkg.get("included_games", 2))
         await db.users.update_one(
             {"id": tx["user_id"]},
             {"$set": {
                 "subscription_status": "active",
                 "subscription_period_end": period_end.isoformat(),
                 "analyses_used_this_period": 0,
-            }},
+            }, "$max": {"pro_game_slots": included}},
         )
     elif pkg["kind"] == "one_time":
         await db.users.update_one(
             {"id": tx["user_id"]},
             {"$inc": {"extra_baselines": int(pkg["baselines"])}},
+        )
+    elif pkg["kind"] == "extra_game":
+        # +1 slot, extend extra_games_period_end by 30 days (informational; renewal handled by Stripe in prod)
+        period_end = datetime.now(timezone.utc) + timedelta(days=pkg["period_days"])
+        await db.users.update_one(
+            {"id": tx["user_id"]},
+            {"$inc": {"pro_game_slots": 1}, "$set": {"extra_games_last_purchase": now_iso(), "extra_games_period_end": period_end.isoformat()}},
         )
     elif pkg["kind"] == "toc_addon":
         toc_end = datetime.now(timezone.utc) + timedelta(days=pkg["period_days"])
@@ -1972,10 +2030,10 @@ async def create_seat(body: SeatCreate, user=Depends(get_current_user)):
     if not _is_alliance_admin(user):
         raise HTTPException(403, "Only alliance admins can grant seats. Contact your R5.")
     target_email = body.email.lower()
-    # Cap: max 60 seats per admin
+    # Cap: max 100 seats per admin (alliance avg 60 active, max 100)
     active_count = await db.seat_grants.count_documents({"granter_id": user["id"], "status": {"$in": ["pending", "active"]}})
-    if active_count >= 60:
-        raise HTTPException(400, "Seat cap reached (60 active seats max per admin).")
+    if active_count >= 100:
+        raise HTTPException(400, "Seat cap reached (100 active seats max per admin).")
     if await db.seat_grants.find_one({"granter_id": user["id"], "email": target_email, "status": {"$in": ["pending", "active"]}}):
         raise HTTPException(400, "Seat already exists for this email")
     doc = {
@@ -2133,6 +2191,138 @@ async def list_milestones(user=Depends(get_current_user), game_slug: Optional[st
     if game_slug:
         q["game_slug"] = game_slug
     return await db.milestones.find(q, {"_id": 0}).sort("created_at", -1).to_list(max(1, min(limit, 500)))
+
+
+# ---------- Pro Game Slots: pick / swap which games are active ----------
+class GamesSelect(BaseModel):
+    games: List[str]
+
+
+@api.post("/billing/pro-games")
+async def set_pro_games(body: GamesSelect, user=Depends(get_current_user)):
+    """Activate or swap which game slugs are in the user's Pro slots. Must be Pro or alliance seat."""
+    q = await get_user_quota(user)
+    if not q["subscription_active"]:
+        raise HTTPException(402, "Pro subscription required to select active games.")
+    slugs = [s for s in body.games if s in GAME_SLUGS]
+    # Dedup, preserve order
+    seen = set()
+    clean = []
+    for s in slugs:
+        if s not in seen:
+            seen.add(s)
+            clean.append(s)
+    if len(clean) > q["pro_game_slots"]:
+        raise HTTPException(400, f"You only have {q['pro_game_slots']} Pro game slot(s). Buy more or remove a game.")
+    await db.users.update_one({"id": user["id"]}, {"$set": {"pro_games": clean}})
+    return {"pro_games": clean, "pro_game_slots": q["pro_game_slots"]}
+
+
+# ---------- Tactical Scouts (F2P credit system) ----------
+# 1 credit = $1 of value. 3 credits = 1 free Deep Dive baseline (worth $2.99).
+SCOUT_REWARDS = {
+    "upload_game_screenshot": {"credit": 0.25, "daily_cap": 4, "label": "Upload game update screenshot"},
+    "watch_video":            {"credit": 0.10, "daily_cap": 5, "label": "Watch a recommended video"},
+    "try_recommended_game":   {"credit": 0.50, "daily_cap": 2, "label": "Try a recommended game"},
+    "daily_login":            {"credit": 0.05, "daily_cap": 1, "label": "Daily login bonus"},
+}
+SCOUT_REDEEM_COST = 3.0  # credits → +1 extra_baseline
+
+
+async def _scout_today_counts(user_id: str) -> dict:
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+    cursor = db.scout_events.aggregate([
+        {"$match": {"user_id": user_id, "created_at": {"$gte": today_start}}},
+        {"$group": {"_id": "$kind", "count": {"$sum": 1}, "credits": {"$sum": "$credit"}}},
+    ])
+    by_kind = {}
+    async for row in cursor:
+        by_kind[row["_id"]] = {"count": row["count"], "credits": round(row["credits"], 2)}
+    return by_kind
+
+
+@api.get("/scouts/me")
+async def scouts_me(user=Depends(get_current_user)):
+    """Returns the user's current Scout credit balance and today's earnings per kind."""
+    fresh = await db.users.find_one({"id": user["id"]}, {"_id": 0, "scout_credits": 1})
+    balance = round(float((fresh or {}).get("scout_credits", 0)), 2)
+    today = await _scout_today_counts(user["id"])
+    rewards = []
+    for kind, meta in SCOUT_REWARDS.items():
+        t = today.get(kind, {"count": 0, "credits": 0})
+        rewards.append({
+            "kind": kind,
+            "label": meta["label"],
+            "credit_per_action": meta["credit"],
+            "daily_cap": meta["daily_cap"],
+            "today_count": t["count"],
+            "today_remaining": max(0, meta["daily_cap"] - t["count"]),
+        })
+    return {
+        "credits": balance,
+        "redeem_cost": SCOUT_REDEEM_COST,
+        "redeemable_now": int(balance // SCOUT_REDEEM_COST),
+        "rewards": rewards,
+    }
+
+
+@api.post("/scouts/earn/{kind}")
+async def scouts_earn(kind: str, user=Depends(get_current_user), file: Optional[UploadFile] = File(None), video_id: Optional[str] = Form(None), game_tried: Optional[str] = Form(None)):
+    """Earn Scout credits by completing a tracked action. Daily caps enforced server-side."""
+    if kind not in SCOUT_REWARDS:
+        raise HTTPException(400, "Unknown scout action")
+    meta = SCOUT_REWARDS[kind]
+    today = await _scout_today_counts(user["id"])
+    used = today.get(kind, {"count": 0})["count"]
+    if used >= meta["daily_cap"]:
+        raise HTTPException(429, f"Daily cap reached for '{meta['label']}' ({meta['daily_cap']}/day). Come back tomorrow.")
+    proof = {}
+    if kind == "upload_game_screenshot":
+        if not file:
+            raise HTTPException(400, "Screenshot file required")
+        # Validate as image (reuse Deep Dive validator semantics) — keep tiny in GridFS so we can audit
+        refs = await _validate_and_store_files([file], user["id"])
+        proof = {"file_ids": refs}
+    elif kind == "watch_video":
+        if not video_id:
+            raise HTTPException(400, "video_id required")
+        proof = {"video_id": video_id}
+    elif kind == "try_recommended_game":
+        if not game_tried:
+            raise HTTPException(400, "game_tried required")
+        proof = {"game_tried": game_tried}
+    # daily_login: no proof needed
+    # Award credits + record event (idempotent vs. cap)
+    await db.scout_events.insert_one({
+        "id": str(uuid.uuid4()),
+        "user_id": user["id"],
+        "kind": kind,
+        "credit": meta["credit"],
+        "proof": proof,
+        "created_at": now_iso(),
+    })
+    await db.users.update_one({"id": user["id"]}, {"$inc": {"scout_credits": meta["credit"]}})
+    await _emit_milestone(user["id"], "scout_credit_earned", None, {"kind": kind, "credit": meta["credit"]})
+    return await scouts_me(user)
+
+
+class ScoutRedeem(BaseModel):
+    units: int = Field(default=1, ge=1, le=10)  # how many baselines to redeem
+
+
+@api.post("/scouts/redeem")
+async def scouts_redeem(body: ScoutRedeem, user=Depends(get_current_user)):
+    """Spend 3 credits to get +1 Deep Dive extra baseline. Stackable up to 10 at a time."""
+    cost = SCOUT_REDEEM_COST * body.units
+    res = await db.users.find_one_and_update(
+        {"id": user["id"], "scout_credits": {"$gte": cost}},
+        {"$inc": {"scout_credits": -cost, "extra_baselines": body.units}},
+        return_document=True,
+    )
+    if not res:
+        raise HTTPException(400, f"Not enough credits. Need {cost}; you have {round(float(user.get('scout_credits', 0)), 2)}.")
+    await _emit_milestone(user["id"], "scout_credits_redeemed", None, {"units": body.units, "cost": cost})
+    return {"credits": round(float(res.get("scout_credits", 0)), 2), "extra_baselines": int(res.get("extra_baselines", 0)), "redeemed": body.units}
 
 
 # ---------- Init ----------

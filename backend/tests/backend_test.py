@@ -653,11 +653,12 @@ def test_billing_packages():
     assert r.status_code == 200
     pkgs = r.json()
     assert isinstance(pkgs, list)
-    assert len(pkgs) == 3
+    assert len(pkgs) == 4
     by_id = {p["id"]: p for p in pkgs}
     assert "subscription_monthly" in by_id
     assert "topup_analysis" in by_id
     assert "toc_addon_monthly" in by_id
+    assert "extra_game_monthly" in by_id
     sub = by_id["subscription_monthly"]
     assert sub["amount"] == 4.99
     assert sub["kind"] == "subscription"
