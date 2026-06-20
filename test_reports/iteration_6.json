@@ -1,0 +1,41 @@
+{
+  "summary": "Iteration 6 backend testing comprehensive — 75/75 tests pass (59 regression iter1-5 + 16 NEW iter6 guided deep dive). All guided-dive endpoints validated: plan generation+caching+game-specificity (P&C terms like 'hero/sanctuary/formation' present), session lifecycle (start/get/auth-scoping), upload with replace semantics (file_id changes on re-upload), skip→unskip via re-upload, ask returns P&C-specialist ≤120 word answer pushed into qa[], finalize success path consumes 1 extra_baseline + creates deep_dive doc with via_guided_session link + marks session 'finalized', finalize 402 when no quota, finalize 400 with zero captures (quota NOT consumed), finalize 400 on already-finalized session, abandon cleans GridFS. /api/deep-dive/{id} not shadowed by new routes. Frontend code review confirms all testids present in GuidedDeepDive.jsx & DeepDiveModule.jsx (deepdive-mode-toggle, mode-quick, mode-guided, guided-dive, guided-step-card, guided-step-title, guided-pick-files, guided-capture-btn, guided-skip-btn, guided-qa, guided-ask-input, guided-ask-send, guided-finalize-bar, guided-open-finalize, guided-progress-*). Lightning/ChatCircleText/PaperPlaneTilt phosphor icons properly imported (no ReferenceError) — Compass icon not used in current GuidedDeepDive.jsx file. Live UI verification was BLOCKED by automation harness routing: navigation to /login or /game/* in fresh playwright sessions caused redirects to / or /auth and playwright reported 0 inputs even though screenshot showed the form fully rendered — appears to be an automation-tool/preview-tunnel auth-cookie issue specific to this session (login worked in iter5 with same testids). Recommend main agent self-test the UI.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "DELETE /api/guided-dive/{sid}", "issue": "Spec says DELETE /api/guided-dive/{sid} but implementation is at /api/deep-dive/guided/{sid}. The spec'd path returns 405 Method Not Allowed (only GET handler exists at /api/guided-dive/{sid}). Not blocking — no frontend caller uses DELETE today. Either align route to /api/guided-dive/{sid} or update the spec/docs."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter6_guided_deep_dive.py",
+    "/app/test_reports/pytest/iter6_guided.xml",
+    "/app/test_reports/pytest/iter6_regression.xml"
+  ],
+  "action_items": [
+    "(Optional) Add DELETE /api/guided-dive/{sid} alias OR remove the orphan /api/deep-dive/guided/{sid} route — currently the spec'd path returns 405. Frontend does not exercise abandon yet, so non-blocking.",
+    "Main agent: self-verify UI manually — login as test@tactician.gg / strongpw1, /game/puzzles-conquest → Deep Dive tab → New deep dive → toggle to Guided. Plan is already cached (no LLM cost). Verify finalize 402 toast (no quota) and switching modes does not crash.",
+    "(Carry-over) server.py is now 1937 lines (was 1697). Split into routers — at minimum, move guided_deep_dive to /app/backend/routers/guided_dive.py.",
+    "(Carry-over) Decide on 4 skipped legacy deep-dive tests."
+  ],
+  "critical_code_review_comments": [
+    "server.py grew from 1697 → 1937 lines. Past the 700-line threshold by 2.8x. Guided Deep Dive helpers and routes are cohesive and should be moved to a router module.",
+    "Spec/implementation drift on the abandon DELETE path (/api/guided-dive/{sid} vs /api/deep-dive/guided/{sid}). The orphan path means a future client calling the spec'd path will silently 405 — add a redirect or fix the path.",
+    "In _generate_guide_plan no retry/timeout safety net for the LLM call; first plan generation per game is on the critical path of every first user. Consider seeding a fallback plan if LLM fails (so guided session start does not 500).",
+    "guided_ask rate-limits AFTER the auth check but its semantics for retry/refund are not symmetric with finalize (which DOES refund quota on failure). If ask exceeds chat rate-limit, user is not pushed onto qa[] (correct), but if the LLM call itself fails we already raised — no rate-limit refund (acceptable since chat bucket is generous)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter6_guided_deep_dive.py — NEW: 16 tests covering all iter6 guided-dive endpoints + route-coexistence + cleanup"
+  ],
+  "success_rate": {"backend": "100% (75/75: 59 regression + 16 iter6)", "frontend": "Not verified via automation (harness routing issue); code review of GuidedDeepDive.jsx + DeepDiveModule.jsx confirms all spec'd testids and import correctness."},
+  "test_credentials": "test@tactician.gg / strongpw1. Iter6 tests register fresh TEST_GD6/PLAN/FIN/NOUP/ABA/RT/OTHER/BADSLUG users and clean them in test_zzz_iter6_cleanup_test_users.",
+  "seed_data_creation": "Iter6 tests created 8 short-lived TEST_ users; the FIN test created 1 deep_dive doc which is deleted in-test. The PLAN test triggers and caches the P&C guide_plan document — left in DB intentionally so subsequent runs hit cache (~$0 cost).",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Run order: pytest backend/tests/backend_test.py backend/tests/test_iter5_alliances_battle_reports.py backend/tests/test_iter6_guided_deep_dive.py — total ~75 tests, ~150s. REACT_APP_BACKEND_URL must be exported in env (NOT defaulted). Iter6 cost: 1 vision call ($0.05) in test_iter6_finalize_success_with_extra_baseline + 1 text call (~$0.001) in test_iter6_ask_specialist_short. The puzzles-conquest guide_plan is cached after first run — subsequent runs are sub-100ms for plan tests. The DELETE abandon test tries spec'd /api/guided-dive/{sid} first then falls back to /api/deep-dive/guided/{sid} (which is the actual implementation). Frontend automation kept reporting input count=0 even when /login rendered visibly — same testids worked in iter5; likely a transient harness cookie issue.",
+  "rca of the issue": "Backend abandon-route mismatch RCA: The frontend GuidedDeepDive.jsx makes no DELETE call yet, so the bug is latent. Server.py registers DELETE at /api/deep-dive/guided/{sid} (line 1200), while review spec says /api/guided-dive/{sid}. FastAPI returns 405 for the spec'd path because a GET handler exists there. Fix: change the decorator on abandon_guided to @api.delete('/guided-dive/{sid}') to match the symmetric naming used by start/get/upload/skip/ask/finalize."
+}

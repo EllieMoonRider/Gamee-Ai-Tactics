@@ -4,7 +4,9 @@ import { toast } from "sonner";
 import { api, API } from "../lib/api";
 import {
   Brain, UploadSimple, X, Plus, CaretRight, CaretDown, Trash, Stack, Sparkle, Image as ImageIcon,
+  Share, LinkSimple, Compass, Lightning,
 } from "@phosphor-icons/react";
+import GuidedDeepDive from "./GuidedDeepDive";
 
 const renderMd = (s) => (s || "")
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -224,6 +226,7 @@ const DeepDiveModule = ({ slug, gameName }) => {
   const [list, setList] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [mode, setMode] = useState("quick"); // "quick" | "guided"
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("Account Baseline");
   const [notes, setNotes] = useState("");
@@ -298,12 +301,45 @@ const DeepDiveModule = ({ slug, gameName }) => {
         </button>
       </div>
 
+      {/* Mode toggle */}
       <AnimatePresence>
         {creating && (
+          <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="surface rounded-md p-2 flex items-center gap-1" data-testid="deepdive-mode-toggle">
+            <button onClick={() => setMode("quick")} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded text-xs transition ${mode === "quick" ? "bg-white/10 text-white" : "text-zinc-500 hover:text-white"}`} data-testid="mode-quick">
+              <Lightning size={12} weight={mode === "quick" ? "fill" : "regular"} /> Quick — upload everything at once
+            </button>
+            <button onClick={() => setMode("guided")} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded text-xs transition ${mode === "guided" ? "bg-white/10 text-white" : "text-zinc-500 hover:text-white"}`} data-testid="mode-guided">
+              <Compass size={12} weight={mode === "guided" ? "fill" : "regular"} /> Guided — CyphrAI walks you through it
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {creating && mode === "guided" && (
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} key="guided">
+            <GuidedDeepDive
+              slug={slug}
+              gameName={gameName}
+              onFinalized={async (ddId) => {
+                setCreating(false);
+                await refresh();
+                setSelectedId(ddId);
+              }}
+            />
+            <div className="mt-3 flex justify-end">
+              <button onClick={() => { setCreating(false); }} className="text-xs text-zinc-400 hover:text-white">Cancel guided session</button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {creating && mode === "quick" && (
           <motion.form
             initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
             onSubmit={submitNew} className="surface rounded-md p-6 space-y-4"
-            data-testid="deepdive-new-form"
+            data-testid="deepdive-new-form" key="quick"
           >
             <div>
               <label className="tactical-label block mb-2">Baseline title</label>

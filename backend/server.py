@@ -974,6 +974,245 @@ async def delete_deep_dive(did: str, user=Depends(get_current_user)):
     return {"ok": True}
 
 
+# ---------- CyphrAI Guided Deep Dive ----------
+DEFAULT_GUIDE_STEPS = [
+    {"id": "headquarters", "title": "Headquarters / Stronghold", "desc": "Open your main base/HQ screen so the level and power are visible."},
+    {"id": "heroes", "title": "Hero roster", "desc": "Show your full hero list (sorted by power or rarity)."},
+    {"id": "formation", "title": "Active formation", "desc": "Open your current battle team / formation screen."},
+    {"id": "gear", "title": "Gear & equipment", "desc": "Open the gear/equipment screen for your main hero."},
+    {"id": "resources", "title": "Resources stockpile", "desc": "Show your resources (gold, food, iron, gems, speedups)."},
+    {"id": "alliance", "title": "Alliance status", "desc": "Open your alliance profile — name, level, your role."},
+    {"id": "vip_account", "title": "VIP / account level", "desc": "Open your profile or VIP screen showing account level & VIP tier."},
+]
+
+
+async def _generate_guide_plan(game_slug: str) -> list[dict]:
+    game = next((g for g in GAMES if g["slug"] == game_slug), None)
+    name = game["name"] if game else game_slug
+    prompt = (
+        f"You are CyphrAI, the strict specialist for the 37Games title '{name}'. "
+        "A player has asked you to guide them through screenshotting their account for a Deep Dive analysis. "
+        "Produce a JSON array of 6-8 steps in priority order. Each step is {\"id\":\"snake_case\",\"title\":\"short\",\"desc\":\"one sentence telling exactly which screen to open and what should be visible\"}. "
+        "Be SPECIFIC to this title — name the actual menu paths, screens, and what data matters. "
+        "Output ONLY the JSON array, nothing else."
+    )
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"guide-plan-{game_slug}",
+        system_message="You output only valid JSON arrays as requested.",
+    ).with_model("anthropic", "claude-sonnet-4-5-20250929")
+    try:
+        raw = await chat.send_message(UserMessage(text=prompt))
+        import json as _json
+        # Strip code fences if any
+        cleaned = raw.strip().lstrip("`").lstrip("json").strip().rstrip("`").strip()
+        # Find array bracket
+        start = cleaned.find("[")
+        end = cleaned.rfind("]")
+        if start >= 0 and end > start:
+            cleaned = cleaned[start:end + 1]
+        plan = _json.loads(cleaned)
+        # Validate shape
+        if not isinstance(plan, list) or not all(isinstance(s, dict) and {"id", "title", "desc"} <= set(s.keys()) for s in plan):
+            raise ValueError("invalid shape")
+        return plan[:8]
+    except Exception as e:
+        logging.warning("guide plan LLM gen failed for %s: %s — using default", game_slug, e)
+        return DEFAULT_GUIDE_STEPS
+
+
+@api.get("/deep-dive-guide-plan")
+async def get_guide_plan(game_slug: str, user=Depends(get_current_user)):
+    if game_slug not in GAME_SLUGS:
+        raise HTTPException(400, "Invalid game_slug")
+    cached = await db.guide_plans.find_one({"game_slug": game_slug}, {"_id": 0})
+    if cached:
+        return cached
+    plan = await _generate_guide_plan(game_slug)
+    doc = {"game_slug": game_slug, "steps": plan, "created_at": now_iso()}
+    await db.guide_plans.insert_one(doc)
+    return doc
+
+
+@api.post("/guided-dive/start")
+async def start_guided(game_slug: str = Form(...), user=Depends(get_current_user)):
+    if game_slug not in GAME_SLUGS:
+        raise HTTPException(400, "Invalid game_slug")
+    plan_doc = await db.guide_plans.find_one({"game_slug": game_slug}, {"_id": 0})
+    if not plan_doc:
+        plan = await _generate_guide_plan(game_slug)
+        plan_doc = {"game_slug": game_slug, "steps": plan, "created_at": now_iso()}
+        await db.guide_plans.insert_one(plan_doc)
+    session = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["id"],
+        "game_slug": game_slug,
+        "steps": plan_doc["steps"],
+        "uploads": {},          # step_id -> [gridfs refs]
+        "skipped": [],          # list of step_ids
+        "qa": [],               # list of {q, a, at}
+        "status": "in_progress",
+        "created_at": now_iso(),
+    }
+    await db.guided_sessions.insert_one(session)
+    return {k: v for k, v in session.items() if k != "_id"}
+
+
+@api.get("/guided-dive/{sid}")
+async def get_guided(sid: str, user=Depends(get_current_user)):
+    s = await db.guided_sessions.find_one({"id": sid, "user_id": user["id"]}, {"_id": 0})
+    if not s:
+        raise HTTPException(404, "Session not found")
+    return s
+
+
+@api.post("/guided-dive/{sid}/upload")
+async def upload_guided_step(
+    sid: str,
+    step_id: str = Form(...),
+    files: list[UploadFile] = File(...),
+    user=Depends(get_current_user),
+):
+    s = await db.guided_sessions.find_one({"id": sid, "user_id": user["id"]}, {"_id": 0})
+    if not s:
+        raise HTTPException(404, "Session not found")
+    if s["status"] != "in_progress":
+        raise HTTPException(400, "Session is closed")
+    valid_step_ids = {st["id"] for st in s["steps"]}
+    if step_id not in valid_step_ids:
+        raise HTTPException(400, "Unknown step_id")
+    # Replace existing uploads for this step (so users can retake)
+    existing = s.get("uploads", {}).get(step_id, [])
+    if existing:
+        await _delete_gridfs_refs(existing)
+    refs = await _validate_and_store_files(files, user["id"])
+    await db.guided_sessions.update_one(
+        {"id": sid},
+        {"$set": {f"uploads.{step_id}": refs}, "$pull": {"skipped": step_id}},
+    )
+    s2 = await db.guided_sessions.find_one({"id": sid}, {"_id": 0})
+    return s2
+
+
+@api.post("/guided-dive/{sid}/skip")
+async def skip_guided_step(sid: str, step_id: str = Form(...), user=Depends(get_current_user)):
+    s = await db.guided_sessions.find_one({"id": sid, "user_id": user["id"]}, {"_id": 0})
+    if not s:
+        raise HTTPException(404, "Session not found")
+    if step_id not in {st["id"] for st in s["steps"]}:
+        raise HTTPException(400, "Unknown step_id")
+    # If user had uploaded for this step, clean up
+    existing = s.get("uploads", {}).get(step_id, [])
+    if existing:
+        await _delete_gridfs_refs(existing)
+    await db.guided_sessions.update_one(
+        {"id": sid},
+        {"$addToSet": {"skipped": step_id}, "$unset": {f"uploads.{step_id}": ""}},
+    )
+    return await db.guided_sessions.find_one({"id": sid}, {"_id": 0})
+
+
+class GuidedAsk(BaseModel):
+    question: str = Field(min_length=2, max_length=600)
+
+
+@api.post("/guided-dive/{sid}/ask")
+async def guided_ask(sid: str, body: GuidedAsk, user=Depends(get_current_user)):
+    s = await db.guided_sessions.find_one({"id": sid, "user_id": user["id"]}, {"_id": 0})
+    if not s:
+        raise HTTPException(404, "Session not found")
+    await _rate_limit(user["id"], "chat")
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"guided-qa-{sid}",
+        system_message=system_prompt_for(s["game_slug"]) + " You are helping the player during a Guided Deep Dive — keep answers ≤120 words and very direct.",
+    ).with_model("anthropic", "claude-sonnet-4-5-20250929")
+    try:
+        answer = await chat.send_message(UserMessage(text=body.question.strip()))
+    except Exception as e:
+        logging.exception("guided ask failed: %s", e)
+        raise HTTPException(500, "CyphrAI couldn't answer right now.")
+    qa_entry = {"id": str(uuid.uuid4()), "q": body.question.strip(), "a": answer, "at": now_iso()}
+    await db.guided_sessions.update_one({"id": sid}, {"$push": {"qa": qa_entry}})
+    return qa_entry
+
+
+class FinalizeGuided(BaseModel):
+    title: Optional[str] = "Guided Baseline"
+    notes: Optional[str] = ""
+
+
+@api.post("/guided-dive/{sid}/finalize")
+async def finalize_guided(sid: str, body: FinalizeGuided, user=Depends(get_current_user)):
+    s = await db.guided_sessions.find_one({"id": sid, "user_id": user["id"]}, {"_id": 0})
+    if not s:
+        raise HTTPException(404, "Session not found")
+    if s["status"] != "in_progress":
+        raise HTTPException(400, "Session already finalized")
+    # Collect all uploaded refs in step order
+    all_refs: list[dict] = []
+    captured_steps: list[str] = []
+    for st in s["steps"]:
+        refs = s.get("uploads", {}).get(st["id"], [])
+        if refs:
+            all_refs.extend(refs)
+            captured_steps.append(st["id"])
+    if not all_refs:
+        raise HTTPException(400, "Upload at least one screenshot before finalizing.")
+    # Enforce baseline quota
+    try:
+        source = await consume_baseline(user["id"])
+    except HTTPException:
+        raise
+    # Build notes for the LLM: include user notes + step-by-step context map
+    step_context = "\n".join(
+        f"- {st['title']}: {'captured' if st['id'] in captured_steps else 'skipped'}" for st in s["steps"]
+    )
+    augmented_notes = f"{body.notes or ''}\n\n[Guided capture coverage]\n{step_context}".strip()
+    try:
+        b64 = await _gridfs_to_b64(all_refs)
+        analysis = await _analyze_screenshots(s["game_slug"], b64, mode="baseline", user_notes=augmented_notes)
+    except Exception as e:
+        # Rollback quota on failure
+        if source == "subscription":
+            await db.users.update_one({"id": user["id"]}, {"$inc": {"analyses_used_this_period": -1}})
+        else:
+            await db.users.update_one({"id": user["id"]}, {"$inc": {"extra_baselines": 1}})
+        logging.exception("guided finalize failed: %s", e)
+        raise HTTPException(500, "CyphrAI analysis failed. Please try again.")
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["id"],
+        "game_slug": s["game_slug"],
+        "title": body.title or "Guided Baseline",
+        "baseline_analysis": analysis,
+        "baseline_shots": all_refs,
+        "baseline_notes": body.notes or "",
+        "follow_ups": [],
+        "created_at": now_iso(),
+        "via_guided_session": sid,
+    }
+    await db.deep_dives.insert_one(doc)
+    await db.guided_sessions.update_one({"id": sid}, {"$set": {"status": "finalized", "deep_dive_id": doc["id"], "finalized_at": now_iso()}})
+    return {"deep_dive_id": doc["id"], "title": doc["title"]}
+
+
+@api.delete("/deep-dive/guided/{sid}")
+async def abandon_guided(sid: str, user=Depends(get_current_user)):
+    s = await db.guided_sessions.find_one({"id": sid, "user_id": user["id"]}, {"_id": 0})
+    if not s:
+        raise HTTPException(404, "Session not found")
+    # Clean up any uploaded shots that weren't finalized
+    if s.get("status") == "in_progress":
+        for refs in (s.get("uploads") or {}).values():
+            await _delete_gridfs_refs(refs)
+    await db.guided_sessions.delete_one({"id": sid})
+    return {"ok": True}
+
+
+# ---------- CyphrAI Guided Deep Dive END ----------
+
+
 # ---------- Billing (Stripe subscription + topup) ----------
 PACKAGES = {
     "subscription_monthly": {
