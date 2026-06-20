@@ -58,6 +58,7 @@ export const BattleReportsList = () => {
   const [notes, setNotes] = useState("");
   const [gameSlug, setGameSlug] = useState("");
   const [files, setFiles] = useState([]);
+  const [autoAnalyze, setAutoAnalyze] = useState(true);
   const [busy, setBusy] = useState(false);
   const nav = useNavigate();
 
@@ -74,6 +75,7 @@ export const BattleReportsList = () => {
     try {
       const fd = new FormData();
       fd.append("title", title); fd.append("notes", notes); fd.append("game_slug", gameSlug);
+      fd.append("auto_analyze", autoAnalyze ? "true" : "false");
       files.forEach(f => fd.append("files", f));
       const r = await fetch(`${API}/battle-reports`, {
         method: "POST",
@@ -118,8 +120,20 @@ export const BattleReportsList = () => {
               </select>
               <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3} placeholder="Notes — what happened, lessons learned" className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2 text-sm" data-testid="br-notes" />
               <UploadZone files={files} setFiles={setFiles} />
+              <label className="flex items-center gap-2 cursor-pointer p-2 surface-elev rounded hover:border-white/30" data-testid="br-auto-label">
+                <input
+                  type="checkbox"
+                  checked={autoAnalyze}
+                  onChange={(e) => setAutoAnalyze(e.target.checked)}
+                  className="w-4 h-4 accent-[#10B981]"
+                  data-testid="br-auto-checkbox"
+                />
+                <Brain size={14} weight="duotone" className="text-[#10B981]" />
+                <span className="text-sm">Auto-run CyphrAI Take after saving</span>
+                <span className="tactical-label text-zinc-500 ml-auto">// COSTS 1 AI CALL</span>
+              </label>
               <button type="submit" disabled={busy} className="btn-primary w-full" data-testid="br-submit">
-                {busy ? "Saving…" : "Save battle report"}
+                {busy ? (autoAnalyze ? "Saving + analyzing…" : "Saving…") : "Save battle report"}
               </button>
             </motion.form>
           )}

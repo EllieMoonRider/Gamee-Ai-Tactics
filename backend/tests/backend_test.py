@@ -653,10 +653,11 @@ def test_billing_packages():
     assert r.status_code == 200
     pkgs = r.json()
     assert isinstance(pkgs, list)
-    assert len(pkgs) == 2
+    assert len(pkgs) == 3
     by_id = {p["id"]: p for p in pkgs}
     assert "subscription_monthly" in by_id
     assert "topup_analysis" in by_id
+    assert "toc_addon_monthly" in by_id
     sub = by_id["subscription_monthly"]
     assert sub["amount"] == 4.99
     assert sub["kind"] == "subscription"
@@ -666,6 +667,9 @@ def test_billing_packages():
     assert top["amount"] == 2.99
     assert top["kind"] == "one_time"
     assert top["baselines"] == 1
+    toc = by_id["toc_addon_monthly"]
+    assert toc["amount"] == 0.99
+    assert toc["kind"] == "toc_addon"
 
 
 def test_billing_quota_fresh_user_is_zero():

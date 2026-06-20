@@ -34,6 +34,22 @@ const Pricing = () => {
 
   const sub = packages.find(p => p.id === "subscription_monthly");
   const top = packages.find(p => p.id === "topup_analysis");
+  const toc = packages.find(p => p.id === "toc_addon_monthly");
+
+  const buyBundle = async () => {
+    if (!user) { nav("/auth"); return; }
+    setLoading("bundle");
+    try {
+      // Buy Pro first; user can then add TOC from /pricing once active
+      const { data } = await api.post("/billing/checkout", {
+        package_id: "subscription_monthly",
+        origin_url: window.location.origin,
+      });
+      window.location.href = data.url;
+    } catch (err) {
+      toast.error(err?.response?.data?.detail || "Checkout failed");
+    } finally { setLoading(null); }
+  };
 
   return (
     <div className="min-h-screen">
@@ -111,6 +127,38 @@ const Pricing = () => {
             </ul>
             <button onClick={() => buy("topup_analysis")} disabled={loading === "topup_analysis"} className="btn-outline mt-6 w-full" data-testid="tier-topup-cta">
               {loading === "topup_analysis" ? "Opening checkout…" : "Buy one — $2.99"}
+            </button>
+          </div>
+        </div>
+
+        {/* TOC ADD-ON ROW */}
+        <div className="mt-8 surface rounded-md p-7 ring-1 ring-[#FFBA08]/30" data-testid="tier-toc-addon">
+          <div className="flex items-start gap-5 flex-wrap">
+            <div className="w-14 h-14 rounded-md bg-[#FFBA08]/10 border border-[#FFBA08]/30 flex items-center justify-center flex-shrink-0">
+              <ShieldCheck size={28} weight="duotone" className="text-[#FFBA08]" />
+            </div>
+            <div className="flex-1 min-w-[260px]">
+              <div className="tactical-label text-[#FFBA08] mb-1">// ADD-ON · TACTICAL OPERATIONS CENTER</div>
+              <h2 className="font-display text-2xl font-bold tracking-tight">Alliance HQ — <span className="text-[#FFBA08]">$0.99/mo</span></h2>
+              <p className="text-sm text-zinc-400 mt-2 max-w-2xl">
+                <strong>Requires active Pro</strong>. Unlocks: create or join alliance chat rooms, share Deep Dives & Builds with alliance members, post battle reports, and ask CyphrAI questions <strong className="text-white">unlimited</strong> — in-room and game-specific.
+              </p>
+              <div className="mt-3 text-xs text-zinc-500">
+                <strong className="text-zinc-300">Bundle:</strong> Pro ($4.99) + Operations ($0.99) = <strong className="text-[#10B981]">$5.99/month total</strong>
+              </div>
+            </div>
+            <button
+              onClick={() => buy("toc_addon_monthly")}
+              disabled={loading === "toc_addon_monthly" || (quota && !quota.subscription_active)}
+              className="btn-primary"
+              data-testid="tier-toc-cta"
+              title={quota && !quota.subscription_active ? "Subscribe to Pro first" : ""}
+            >
+              {loading === "toc_addon_monthly"
+                ? "Opening checkout…"
+                : (quota && !quota.subscription_active)
+                  ? "Get Pro first"
+                  : (quota?.toc_active ? "Active ✓" : "Add Operations — $0.99/mo")}
             </button>
           </div>
         </div>

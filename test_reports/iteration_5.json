@@ -1,0 +1,45 @@
+{
+  "summary": "Iteration 5 full test pass. BACKEND: 42 regression tests pass (unchanged from iter4) + 17 NEW iter5 tests pass = 59 passed total, 4 legacy skipped (pre-existing). Validated all alliance endpoints (create/join/mine/get/leave/messages/ask-cyphr/share-deepdive/share-build/share-battle-report), TOC gating returns 402 with proper detail (no Pro, no TOC, and TOC-only without Pro all gated), packages endpoint now returns 3 entries including toc_addon_monthly ($0.99, kind=toc_addon), quota endpoint includes toc_active+toc_period_end fields, Battle Reports first-class CRUD + analyze caching + auto_analyze populating cyphr_take + GridFS cleanup on delete + cross-game share returns 400, leave-alliance ownership transfer + disband on last-member-leave with alliance_messages purge. CyphrAI in-alliance answers are P&C-specific (no cross-game leakage). FRONTEND: Logged in as test@tactician.gg (Pro+TOC granted via DB), verified Navbar has navbar-operations + navbar-war-room + navbar-pricing + navbar-dashboard. Dashboard Path Cards include path-operations + path-battle-reports + path-war-room. /pricing renders 3-card grid + tier-toc-addon row; tier-toc-cta correctly shows 'Active ✓' for granted user. /operations shows toggle-create-alliance + toggle-join-alliance (no toc-locked panel). Created TEST_UI_Alliance via UI, navigated to /operations/:id, posted a chat message which appeared in the chat, mode-cyphr toggle visible, alliance-code-copy + alliance-members-toggle visible, members panel shows creator as LEADER. /battle-reports new-form opens with all testids (br-title/br-game/br-notes/br-upload-zone/br-auto-checkbox/br-submit). br-auto-checkbox default is checked (true) as per spec.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "OperationsRoom polling", "issue": "React console warning: 'Encountered two children with the same key' on message IDs during polling. Polling fetches messages with since=<last_ts> but appears to re-merge an already-present message, producing duplicate React keys. Visually no duplicates rendered, but the warning indicates dedup logic should filter by msg.id before setState. Reproduce: open /operations/:id, post a message, wait ~4s for poll.", "selector": "[data-testid=alliance-chat]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Pricing", "issues": ["tier-toc-cta label briefly shows 'Add Operations — $0.99/mo' for ~1-2s before quota loads, then flips to 'Active ✓'. Consider a skeleton/'…' label until quota is fetched to avoid the flash for already-subscribed users."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/test_iter5_alliances_battle_reports.py",
+    "/app/test_reports/pytest/iter6_regression.xml",
+    "/app/test_reports/pytest/iter6_iter5_tests.xml"
+  ],
+  "action_items": [
+    "OperationsRoom.jsx polling: dedup by msg.id when merging incremental fetch results (filter out IDs already in state before setMessages).",
+    "Pricing.jsx tier-toc-cta: render '…' or hide CTA until quota is loaded to avoid the 'Add Operations — $0.99/mo' → 'Active ✓' flash for active subscribers.",
+    "(Carry-over) server.py is 1697 lines — split into routers (auth, billing, deep_dive, share, alliances, battle_reports) for maintainability.",
+    "(Carry-over) Decide on the 4 skipped legacy deep-dive tests: add a guarded dev-only quota-grant endpoint OR remove them since 402 path is already covered."
+  ],
+  "critical_code_review_comments": [
+    "server.py grew from 1289 → 1697 lines this iter. Past the 700-line threshold by 2.4x. Alliance + Battle Report code is cohesive enough to be a /app/backend/routers/operations.py and /app/backend/routers/battle_reports.py.",
+    "ask-cyphr in alliances calls _rate_limit AFTER pushing the question message but BEFORE checking rate. If chat rate-limit fires, the question is already persisted with no answer — orphan Q message. Suggest checking rate limit before _push_message(q_msg).",
+    "battle-reports/{rid}/analyze: error path raises HTTPException(500, 'CyphrAI couldn't analyze right now.') AFTER consuming a chat rate-limit slot. Same pattern as historical deep_dive issue: validate inputs and reserve slot, but refund/skip slot on LLM error.",
+    "Polling chat at 3.5s with 'since=<created_at>' is correct but client must dedupe by id on merge (see frontend bug)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py — updated test_billing_packages to expect 3 entries (including toc_addon_monthly)",
+    "/app/backend/tests/test_iter5_alliances_battle_reports.py — NEW: 17 tests covering packages/quota/TOC gating/alliance CRUD/messages/ask-cyphr/share-deepdive/share-battle-report/battle-reports CRUD+analyze+auto_analyze/leave-disband"
+  ],
+  "success_rate": {"backend": "100% (59/59 active tests passing, 4 legacy skipped)", "frontend": "100% (all iter5 testids confirmed; alliance create/post/chat round-trip works; pricing 'Active ✓' renders correctly after quota load)"},
+  "test_credentials": "test@tactician.gg / strongpw1 — granted Pro+TOC via Mongo upsert (toc_period_end + subscription_period_end = now+30d). Local Mongo (mongodb://localhost:27017, DB test_database) IS the same DB the preview backend uses, so direct upserts work for entitlement grants.",
+  "seed_data_creation": "Created and cleaned up: 1 alliance (TEST_UI_Alliance), 1 deep dive (TEST_DD_iter5), 4 battle reports (TEST_BR_iter5, TEST_BR_AUTO, TEST_BR_SHARE, TEST_BR_WG), ~17 TEST_ users (cleaned at end of test run via test_zzz_iter5_cleanup_test_users). Manual cleanup performed on alliance docs after UI test.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend suite is now SPLIT: /app/backend/tests/backend_test.py (46 iter1-4 tests, 4 skipped) + /app/backend/tests/test_iter5_alliances_battle_reports.py (17 iter5 tests). Run both. Iter5 file uses MongoClient on MONGO_URL to grant Pro+TOC directly — confirmed local Mongo IS the preview backend's DB. Each iter5 run makes 3 vision LLM calls (~$0.15): analyze-once, auto_analyze, and the cached-analyze re-call only reads from DB. The ask-cyphr call is text-only (~$0.001). Polling interval is 3.5s in OperationsRoom.jsx — verified via UI that posted messages appear in chat instantly post-send (since send also calls setMessages locally) and React duplicate-key warnings fire from the polling merge.",
+  "rca of the issue": "Frontend duplicate-key warning RCA: OperationsRoom.jsx posts a message → setMessages([...prev, newMsg]) → 3.5s later, GET /api/alliances/{aid}/messages?since=<last_ts> returns the same just-sent message (since the server-side 'since' filter uses '$gt' but client's last_ts is the timestamp BEFORE the new send), and the merge appends it again with the same id. Fix: in the poll merge, do `const ids = new Set(prev.map(m=>m.id)); return [...prev, ...incoming.filter(m=>!ids.has(m.id))]`."
+}

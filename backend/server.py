@@ -1528,6 +1528,7 @@ async def create_battle_report(
     game_slug: str = Form(...),
     title: str = Form(...),
     notes: str = Form(""),
+    auto_analyze: bool = Form(False),
     files: list[UploadFile] = File(...),
     user=Depends(get_current_user),
 ):
@@ -1545,6 +1546,32 @@ async def create_battle_report(
         "created_at": now_iso(),
     }
     await db.battle_reports.insert_one(doc)
+    if auto_analyze:
+        try:
+            await _rate_limit(user["id"], "chat")
+            b64 = await _gridfs_to_b64(shots)
+            game = next((g for g in GAMES if g["slug"] == game_slug), None)
+            game_name = game["name"] if game else game_slug
+            sys_prompt = (
+                f"You are CyphrAI, the STRICT specialist for '{game_name}'. The user just posted a Battle Report. "
+                "Read screenshots and notes. Respond in this exact structure (≤250 words):\n"
+                "## What I see\n(1-2 sentence summary)\n\n## What worked\n- ...\n\n## What didn't\n- ...\n\n## Next time, do this\n1. ...\n\n"
+                "Be specific to this game. No generic advice. No other game references."
+            )
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY,
+                session_id=f"br-{doc['id']}",
+                system_message=sys_prompt,
+            ).with_model("anthropic", "claude-sonnet-4-5-20250929")
+            images = [ImageContent(image_base64=b) for b in b64]
+            take = await chat.send_message(UserMessage(text=f"Notes: {doc.get('notes','(none)')}\nAnalyze this engagement.", file_contents=images))
+            await db.battle_reports.update_one({"id": doc["id"]}, {"$set": {"cyphr_take": take, "analyzed_at": now_iso()}})
+            doc["cyphr_take"] = take
+        except HTTPException:
+            # Rate-limited or other expected; user can run manually later.
+            pass
+        except Exception as e:
+            logging.warning("auto-analyze failed: %s", e)
     return {k: v for k, v in doc.items() if k != "_id"}
 
 
