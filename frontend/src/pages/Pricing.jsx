@@ -149,16 +149,20 @@ const Pricing = () => {
             </div>
             <button
               onClick={() => buy("toc_addon_monthly")}
-              disabled={loading === "toc_addon_monthly" || (quota && !quota.subscription_active)}
+              disabled={loading === "toc_addon_monthly" || !quota || (quota && !quota.subscription_active) || (quota && quota.toc_active)}
               className="btn-primary"
               data-testid="tier-toc-cta"
               title={quota && !quota.subscription_active ? "Subscribe to Pro first" : ""}
             >
-              {loading === "toc_addon_monthly"
-                ? "Opening checkout…"
-                : (quota && !quota.subscription_active)
-                  ? "Get Pro first"
-                  : (quota?.toc_active ? "Active ✓" : "Add Operations — $0.99/mo")}
+              {!quota
+                ? "…"
+                : loading === "toc_addon_monthly"
+                  ? "Opening checkout…"
+                  : quota.toc_active
+                    ? "Active ✓"
+                    : !quota.subscription_active
+                      ? "Get Pro first"
+                      : "Add Operations — $0.99/mo"}
             </button>
           </div>
         </div>

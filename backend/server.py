@@ -1473,6 +1473,7 @@ async def share_build_to_alliance(aid: str, body: ShareRefMsg, user=Depends(get_
 async def alliance_ask_cyphr(aid: str, body: AskCyphrMsg, user=Depends(get_current_user)):
     await require_toc_access(user)
     a = await _get_member_alliance(aid, user["id"])
+    # Reserve a chat rate-limit slot BEFORE persisting the question to avoid orphan Q messages on 429.
     await _rate_limit(user["id"], "chat")
     # Post the question
     q_msg = await _push_message(aid, user, "cyphr_q", body.question.strip())

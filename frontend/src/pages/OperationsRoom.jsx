@@ -225,8 +225,14 @@ const OperationsRoom = () => {
       const last = messages[messages.length - 1]?.created_at;
       try {
         const r = await api.get(`/alliances/${id}/messages?since=${encodeURIComponent(last)}`);
-        if (r.data.length) setMessages(prev => [...prev, ...r.data]);
-      } catch {}
+        if (r.data.length) {
+          setMessages(prev => {
+            const ids = new Set(prev.map(m => m.id));
+            const fresh = r.data.filter(m => !ids.has(m.id));
+            return fresh.length ? [...prev, ...fresh] : prev;
+          });
+        }
+      } catch { /* ignore poll error */ }
     }, 3500);
     return () => clearInterval(pollRef.current);
     // eslint-disable-next-line
