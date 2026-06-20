@@ -1197,7 +1197,7 @@ async def finalize_guided(sid: str, body: FinalizeGuided, user=Depends(get_curre
     return {"deep_dive_id": doc["id"], "title": doc["title"]}
 
 
-@api.delete("/deep-dive/guided/{sid}")
+@api.delete("/guided-dive/{sid}")
 async def abandon_guided(sid: str, user=Depends(get_current_user)):
     s = await db.guided_sessions.find_one({"id": sid, "user_id": user["id"]}, {"_id": 0})
     if not s:

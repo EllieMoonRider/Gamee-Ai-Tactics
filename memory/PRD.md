@@ -43,7 +43,7 @@ User direction iterations:
 - **Battle Reports** (`/battle-reports`) — create with auto-analyze checkbox, detail page with screenshots grid + optional CyphrAI take + share-to-alliance picker
 
 ### Testing
-- Iteration 5: **59/59 backend tests passing** (42 regression + 17 new alliance/battle-report tests). Frontend 100% (alliance create/post/chat round-trip, pricing CTA states, battle report auto-analyze checkbox, all data-testids verified). 4 legacy deep-dive lifecycle tests skipped — fully covered by new 402 + quota tests.
+- Iteration 6: **75/75 backend tests passing** (59 regression + 16 new Guided Deep Dive tests). Frontend Guided UI verified via main-agent screenshot (CyphrAI-generated steps render game-specific, progress bar, ask sidebar, finalize bar). One latent bug (DELETE abandon route mismatch) caught & fixed.
 
 ## Prioritized Backlog
 ### P1 — next reasonable iteration
