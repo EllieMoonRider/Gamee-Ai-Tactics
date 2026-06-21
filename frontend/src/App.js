@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./lib/auth";
+import SplashScreen from "./components/SplashScreen";
 import Landing from "./pages/Landing";
 import AuthPage from "./pages/AuthPage";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -32,8 +34,15 @@ const Protected = ({ children }) => {
 };
 
 function App() {
+  // Show splash on first session mount; sessionStorage avoids re-showing on hot-reload / route changes.
+  const [showSplash, setShowSplash] = useState(() => sessionStorage.getItem("ta-splash-shown") !== "1");
+  const dismissSplash = () => {
+    sessionStorage.setItem("ta-splash-shown", "1");
+    setShowSplash(false);
+  };
   return (
     <AuthProvider>
+      {showSplash && <SplashScreen onDone={dismissSplash} />}
       <BrowserRouter>
         <Toaster theme="dark" position="bottom-right" richColors />
         <LandscapeOverlay />
