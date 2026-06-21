@@ -6,9 +6,9 @@ import { api } from "../lib/api";
 import { ShieldStar, ArrowLeft, Lock, CheckCircle, Clock, ChatCircleText, EnvelopeSimple } from "@phosphor-icons/react";
 
 const STATUS_STYLES = {
-  open:         { color: "#E63946", label: "OPEN",        icon: Lock },
+  open:         { color: "#FF6B00", label: "OPEN",        icon: Lock },
   in_progress:  { color: "#FFBA08", label: "IN PROGRESS", icon: Clock },
-  resolved:     { color: "#10B981", label: "RESOLVED",    icon: CheckCircle },
+  resolved:     { color: "#FFAA33", label: "RESOLVED",    icon: CheckCircle },
 };
 
 const AdminSupport = () => {
@@ -69,7 +69,7 @@ const AdminSupport = () => {
 
   if (authorized === null) {
     return (
-      <div className="min-h-screen">
+      <div className="command-center min-h-screen">
         <Navbar />
         <div className="max-w-5xl mx-auto px-6 py-10"><div className="h-16 shimmer rounded" /></div>
       </div>
@@ -78,10 +78,10 @@ const AdminSupport = () => {
 
   if (authorized === false) {
     return (
-      <div className="min-h-screen">
+      <div className="command-center min-h-screen">
         <Navbar />
         <div className="max-w-md mx-auto px-6 py-20 text-center">
-          <ShieldStar size={48} weight="duotone" className="text-[#E63946] mx-auto mb-3" />
+          <ShieldStar size={48} weight="duotone" className="text-[#FF6B00] mx-auto mb-3" />
           <h1 className="font-display text-2xl font-bold">Restricted</h1>
           <p className="text-sm text-zinc-400 mt-2">This page is for support admins only.</p>
           <button onClick={() => nav("/dashboard")} className="btn-outline mt-5">Back to Command Center</button>
@@ -95,7 +95,7 @@ const AdminSupport = () => {
     const st = STATUS_STYLES[selected.status] || STATUS_STYLES.open;
     const StIcon = st.icon;
     return (
-      <div className="min-h-screen">
+      <div className="command-center min-h-screen">
         <Navbar />
         <div className="max-w-3xl mx-auto px-6 py-10 space-y-5">
           <button onClick={() => { setSelected(null); refresh(); }} className="btn-outline !py-1.5 !px-3 text-xs" data-testid="admin-back-list">
@@ -128,8 +128,8 @@ const AdminSupport = () => {
           {selected.responses?.length > 0 && (
             <div className="space-y-3" data-testid="admin-thread">
               {selected.responses.map(r => (
-                <div key={r.id} className={`surface rounded-md p-4 ${r.from_admin ? "ring-1 ring-[#10B981]/30" : ""}`}>
-                  <div className="tactical-label mb-2" style={{ color: r.from_admin ? "#10B981" : "#FFBA08" }}>
+                <div key={r.id} className={`surface rounded-md p-4 ${r.from_admin ? "ring-1 ring-[#FFAA33]/30" : ""}`}>
+                  <div className="tactical-label mb-2" style={{ color: r.from_admin ? "#FFAA33" : "#FFBA08" }}>
                     // {r.from_admin ? `STAFF · ${r.admin_username || ""}` : "USER"} · {new Date(r.created_at).toLocaleString()}
                   </div>
                   <div className="text-sm whitespace-pre-wrap text-zinc-200 leading-relaxed">{r.message}</div>
@@ -140,7 +140,7 @@ const AdminSupport = () => {
 
           {/* Reply box */}
           <div className="surface rounded-md p-5">
-            <div className="tactical-label text-[#10B981] mb-2">// REPLY</div>
+            <div className="tactical-label text-[#FFAA33] mb-2">// REPLY</div>
             <textarea
               value={reply} onChange={e => setReply(e.target.value)} rows={6}
               placeholder="Write your reply to the user. They'll receive this via email."
@@ -158,14 +158,14 @@ const AdminSupport = () => {
 
   // List view
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-5">
         <div className="flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div className="tactical-label text-[#10B981] mb-1">// SUPPORT ADMIN</div>
+            <div className="tactical-label text-[#FFAA33] mb-1">// SUPPORT ADMIN</div>
             <h1 className="font-display text-3xl font-black tracking-tighter flex items-center gap-2">
-              <ChatCircleText size={28} weight="duotone" className="text-[#10B981]" /> Support Inbox
+              <ChatCircleText size={28} weight="duotone" className="text-[#FFAA33]" /> Support Inbox
             </h1>
           </div>
           <div className="flex gap-2">

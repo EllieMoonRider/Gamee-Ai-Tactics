@@ -60,7 +60,7 @@ const SplashScreen = ({ onDone }) => {
       <div
         className="absolute inset-0"
         style={{
-          background: "radial-gradient(circle at 50% 50%, rgba(57,255,20,0.10) 0%, rgba(57,255,20,0.02) 35%, rgba(5,5,5,0) 65%)",
+          background: "radial-gradient(circle at 50% 50%, rgba(255,107,0,0.10) 0%, rgba(255,107,0,0.02) 35%, rgba(5,5,5,0) 65%)",
         }}
       />
 
@@ -93,15 +93,15 @@ const SplashScreen = ({ onDone }) => {
         <circle
           cx="200" cy="230" r="122"
           fill="none"
-          stroke="#39FF14"
+          stroke="#FF6B00"
           strokeWidth="1.5"
           opacity="0.7"
-          style={{ filter: "drop-shadow(0 0 10px rgba(57,255,20,0.8))" }}
+          style={{ filter: "drop-shadow(0 0 10px rgba(255,107,0,0.8))" }}
         />
         <circle
           cx="200" cy="230" r="135"
           fill="none"
-          stroke="#39FF14"
+          stroke="#FF6B00"
           strokeWidth="0.5"
           opacity="0.35"
           strokeDasharray="4 6"
@@ -112,9 +112,9 @@ const SplashScreen = ({ onDone }) => {
           fontFamily="Orbitron, sans-serif"
           fontWeight="900"
           fontSize="26"
-          fill="#39FF14"
+          fill="#FF6B00"
           letterSpacing="4"
-          style={{ filter: "drop-shadow(0 0 6px rgba(57,255,20,0.9)) drop-shadow(0 0 18px rgba(57,255,20,0.4))" }}
+          style={{ filter: "drop-shadow(0 0 6px rgba(255,107,0,0.9)) drop-shadow(0 0 18px rgba(255,107,0,0.4))" }}
         >
           <textPath href="#splashTopArc" startOffset="50%" textAnchor="middle">
             TACTICAL ALLY
@@ -126,9 +126,9 @@ const SplashScreen = ({ onDone }) => {
           fontFamily="Orbitron, sans-serif"
           fontWeight="700"
           fontSize="18"
-          fill="#39FF14"
+          fill="#FF6B00"
           letterSpacing="3"
-          style={{ filter: "drop-shadow(0 0 4px rgba(57,255,20,0.7))" }}
+          style={{ filter: "drop-shadow(0 0 4px rgba(255,107,0,0.7))" }}
         >
           <textPath href="#splashBottomArc" startOffset="50%" textAnchor="middle">
             CYPHERAI STRATEGIES
@@ -140,12 +140,12 @@ const SplashScreen = ({ onDone }) => {
       <div className="absolute bottom-6 left-0 right-0 text-center font-mono-tactical text-[10px] tracking-[0.3em] text-zinc-600" data-testid="splash-skip-hint">
         TAP TO SKIP
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#39FF14]/10">
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FF6B00]/10">
         <div
-          className="h-full bg-[#39FF14]"
+          className="h-full bg-[#FF6B00]"
           style={{
             animation: `splashProgress ${HOLD_MS}ms linear forwards`,
-            boxShadow: "0 0 8px rgba(57,255,20,0.7)",
+            boxShadow: "0 0 8px rgba(255,107,0,0.7)",
           }}
         />
       </div>

@@ -17,13 +17,13 @@ PROMPT = """Wide cinematic 16:9 widescreen concept art for a video game command 
 
 Foreground: two armored medieval-fantasy knight silhouettes (only their backs visible, dark) standing slightly apart, looking forward and slightly down toward a massive glowing holographic tactical scanner.
 
-Center: a large floating circular holographic radar/scanner with concentric rings and a sweeping line, projected in vibrant neon green light, hovering above an isometric battlefield map.
+Center: a large floating circular holographic radar/scanner with concentric rings and a sweeping line, projected in vibrant neon orange light, hovering above an isometric battlefield map.
 
-Map (below the radar): a deep dark fantasy battlefield with scattered glowing castle outposts, watch towers, fortresses, and tiny troops, all rendered as wireframe-style holographic projections in neon green light.
+Map (below the radar): a deep dark fantasy battlefield with scattered glowing castle outposts, watch towers, fortresses, and tiny troops, all rendered as wireframe-style holographic projections in neon orange light.
 
 Background: a massive ethereal dragon flying through distant atmospheric mist and dark mountains, very faded into the deep background.
 
-Lighting: heavy neon green ambient glow (hex #39FF14 / #00FF94), volumetric mist, deep blacks and charcoal grays, dramatic rim lighting on the knights, holographic shimmer.
+Lighting: heavy neon orange ambient glow (hex #FF6B00 / #FFAA33), volumetric mist, deep blacks and charcoal grays, dramatic rim lighting on the knights, holographic shimmer.
 
 Style: dark fantasy meets sci-fi command bridge, cinematic, photoreal but painterly, layered depth, very moody. No text, no UI labels, no data panels, no readouts, no HUD overlays, no logos. Pure atmospheric backdrop art that leaves the center-upper area calm for UI to sit on top.
 

@@ -7,8 +7,8 @@ import { Sparkle, UploadSimple, FilmStrip, GameController, Lightning, Coins, Tro
 
 const KIND_META = {
   upload_game_screenshot: { icon: UploadSimple, color: "#FFBA08", title: "Upload game update screenshot", help: "Snap your latest 37Games loading screen / patch notes / event banner. Helps the community track new content." },
-  watch_video: { icon: FilmStrip, color: "#10B981", title: "Watch a recommended video", help: "Open a CypherAI-curated strategy video. Bonus credit on first daily click." },
-  try_recommended_game: { icon: GameController, color: "#E63946", title: "Try a recommended game", help: "Open another 37Games title from the catalog and play 5+ min. Self-report; we trust commanders." },
+  watch_video: { icon: FilmStrip, color: "#FFAA33", title: "Watch a recommended video", help: "Open a CypherAI-curated strategy video. Bonus credit on first daily click." },
+  try_recommended_game: { icon: GameController, color: "#FF6B00", title: "Try a recommended game", help: "Open another 37Games title from the catalog and play 5+ min. Self-report; we trust commanders." },
   daily_login: { icon: Lightning, color: "#A1A1AA", title: "Daily login bonus", help: "Just for showing up." },
 };
 
@@ -76,7 +76,7 @@ const Scouts = () => {
 
   if (!data) {
     return (
-      <div className="min-h-screen">
+      <div className="command-center min-h-screen">
         <Navbar />
         <div className="max-w-5xl mx-auto px-6 py-10"><div className="h-16 shimmer rounded" /></div>
       </div>
@@ -87,15 +87,15 @@ const Scouts = () => {
   const redeemable = data.redeemable_now;
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
-            <div className="tactical-label text-[#E63946] mb-2">// F2P PATH</div>
+            <div className="tactical-label text-[#FF6B00] mb-2">// F2P PATH</div>
             <h1 className="font-display text-3xl sm:text-4xl font-black tracking-tighter flex items-center gap-3">
-              <Sparkle size={32} weight="duotone" className="text-[#E63946]" /> Tactical Scouts
+              <Sparkle size={32} weight="duotone" className="text-[#FF6B00]" /> Tactical Scouts
             </h1>
             <p className="text-sm text-zinc-400 mt-2 max-w-xl">
               Earn credits by helping the community. <strong className="text-white">1 credit = $1</strong>. Stack <strong className="text-[#FFBA08]">3 credits</strong> to unlock 1 free Deep Dive (worth $2.99).
@@ -109,7 +109,7 @@ const Scouts = () => {
               <Coins size={20} weight="duotone" className="text-[#FFBA08]" />
             </div>
             <div className="mt-3 text-xs text-zinc-400">
-              Redeemable now: <strong className="text-[#10B981]">{redeemable} Deep Dive{redeemable !== 1 ? "s" : ""}</strong>
+              Redeemable now: <strong className="text-[#FFAA33]">{redeemable} Deep Dive{redeemable !== 1 ? "s" : ""}</strong>
             </div>
             <button
               onClick={() => redeem(1)}

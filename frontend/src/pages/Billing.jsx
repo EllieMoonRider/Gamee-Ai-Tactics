@@ -34,7 +34,7 @@ export const BillingSuccess = () => {
   }, [sessionId]);
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-md mx-auto px-6 pt-20 text-center">
         {status === "polling" && (
@@ -46,8 +46,8 @@ export const BillingSuccess = () => {
         )}
         {status === "paid" && (
           <div data-testid="billing-paid">
-            <CheckCircle size={56} weight="duotone" className="text-[#10B981] mx-auto mb-3" />
-            <div className="tactical-label text-[#10B981] mb-2">// PAYMENT CONFIRMED</div>
+            <CheckCircle size={56} weight="duotone" className="text-[#FFAA33] mx-auto mb-3" />
+            <div className="tactical-label text-[#FFAA33] mb-2">// PAYMENT CONFIRMED</div>
             <h1 className="font-display text-3xl font-black tracking-tighter">Welcome to Pro, commander.</h1>
             <p className="text-sm text-zinc-400 mt-3">Your CypherAI Deep Dive analyses are unlocked.</p>
             <Link to="/dashboard" className="btn-primary inline-flex items-center gap-2 mt-8" data-testid="billing-paid-cta">
@@ -57,7 +57,7 @@ export const BillingSuccess = () => {
         )}
         {(status === "expired" || status === "timeout" || status === "error") && (
           <div data-testid="billing-failed">
-            <XCircle size={56} weight="duotone" className="text-[#E63946] mx-auto mb-3" />
+            <XCircle size={56} weight="duotone" className="text-[#FF6B00] mx-auto mb-3" />
             <h1 className="font-display text-2xl font-bold">{status === "expired" ? "Session expired" : status === "timeout" ? "Still processing" : "Something went wrong"}</h1>
             <p className="text-sm text-zinc-400 mt-2">
               {status === "timeout"
@@ -73,7 +73,7 @@ export const BillingSuccess = () => {
 };
 
 export const BillingCancel = () => (
-  <div className="min-h-screen">
+  <div className="command-center min-h-screen">
     <Navbar />
     <div className="max-w-md mx-auto px-6 pt-20 text-center" data-testid="billing-cancel">
       <XCircle size={56} weight="duotone" className="text-zinc-500 mx-auto mb-3" />

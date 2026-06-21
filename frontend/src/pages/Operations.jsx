@@ -67,11 +67,11 @@ const Operations = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="tactical-label text-[#E63946] mb-2">// TACTICAL OPERATIONS CENTER</div>
+          <div className="tactical-label text-[#FF6B00] mb-2">// TACTICAL OPERATIONS CENTER</div>
           <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tighter flex items-center gap-3">
             <ShieldStar size={42} weight="duotone" className="text-[#FFBA08]" />
             Alliance HQ
@@ -106,8 +106,8 @@ const Operations = () => {
               className="w-full flex items-center gap-3 p-5 text-left"
               data-testid="toggle-create-alliance"
             >
-              <div className="w-10 h-10 rounded bg-[#E63946]/10 border border-[#E63946]/30 flex items-center justify-center">
-                <Plus size={20} weight="bold" className="text-[#E63946]" />
+              <div className="w-10 h-10 rounded bg-[#FF6B00]/10 border border-[#FF6B00]/30 flex items-center justify-center">
+                <Plus size={20} weight="bold" className="text-[#FF6B00]" />
               </div>
               <div className="flex-1">
                 <div className="font-display font-bold">Create an alliance</div>
@@ -191,7 +191,7 @@ const Operations = () => {
                     {a.description && <p className="text-xs text-zinc-400 mt-1.5 line-clamp-2">{a.description}</p>}
                     <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/5">
                       <span className="text-xs text-zinc-500 flex items-center gap-1"><Users size={12} /> {a.member_count} member{a.member_count !== 1 ? "s" : ""}</span>
-                      <ArrowRight size={14} className="text-zinc-500 group-hover:text-[#E63946] transition" />
+                      <ArrowRight size={14} className="text-zinc-500 group-hover:text-[#FF6B00] transition" />
                     </div>
                   </Link>
                 );

@@ -54,13 +54,13 @@ const LandscapeOverlay = () => {
         </button>
 
         <div className="relative w-28 h-28 mx-auto mb-6">
-          <DeviceMobile size={96} weight="duotone" className="cc-neon-text animate-pulse" style={{ color: "#39FF14" }} />
-          <ArrowsClockwise size={32} weight="bold" className="absolute -right-2 -bottom-2 bg-[#0a0a0a] rounded-full p-1" style={{ color: "#39FF14", animation: "spin 2.4s ease-in-out infinite" }} />
+          <DeviceMobile size={96} weight="duotone" className="cc-neon-text animate-pulse" style={{ color: "#FF6B00" }} />
+          <ArrowsClockwise size={32} weight="bold" className="absolute -right-2 -bottom-2 bg-[#0a0a0a] rounded-full p-1" style={{ color: "#FF6B00", animation: "spin 2.4s ease-in-out infinite" }} />
         </div>
 
-        <div className="font-mono-tactical text-xs tracking-[0.25em] mb-2" style={{ color: "#39FF14" }}>// ROTATE DEVICE</div>
+        <div className="font-mono-tactical text-xs tracking-[0.25em] mb-2" style={{ color: "#FF6B00" }}>// ROTATE DEVICE</div>
         <h2 className="font-display text-2xl font-black tracking-tight mb-3">
-          Tactical Ally is built for <span style={{ color: "#39FF14" }}>landscape</span>
+          Tactical Ally is built for <span style={{ color: "#FF6B00" }}>landscape</span>
         </h2>
         <p className="text-sm text-zinc-400 leading-relaxed mb-6">
           Your screens, radar, and battle theaters render full-cinematic when you turn your device sideways. Rotate now for the command-bridge experience.

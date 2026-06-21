@@ -57,8 +57,8 @@ const InstallPwaPrompt = () => {
 
   return (
     <div
-      className="fixed bottom-4 right-4 left-4 sm:left-auto sm:max-w-sm z-[150] bg-[#080a08] border border-[#39FF14]/40 rounded-md p-4 shadow-2xl"
-      style={{ boxShadow: "0 0 24px rgba(57,255,20,0.18)" }}
+      className="fixed bottom-4 right-4 left-4 sm:left-auto sm:max-w-sm z-[150] bg-[#080a08] border border-[#FF6B00]/40 rounded-md p-4 shadow-2xl"
+      style={{ boxShadow: "0 0 24px rgba(255,107,0,0.18)" }}
       data-testid="pwa-install-prompt"
     >
       <button
@@ -70,11 +70,11 @@ const InstallPwaPrompt = () => {
         <X size={16} />
       </button>
       <div className="flex items-start gap-3 pr-6">
-        <div className="w-10 h-10 rounded-md bg-[#39FF14]/10 border border-[#39FF14]/40 flex items-center justify-center flex-shrink-0">
-          <DownloadSimple size={20} weight="duotone" style={{ color: "#39FF14" }} />
+        <div className="w-10 h-10 rounded-md bg-[#FF6B00]/10 border border-[#FF6B00]/40 flex items-center justify-center flex-shrink-0">
+          <DownloadSimple size={20} weight="duotone" style={{ color: "#FF6B00" }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-mono-tactical text-[10px] tracking-[0.25em]" style={{ color: "#39FF14" }}>// INSTALL APP</div>
+          <div className="font-mono-tactical text-[10px] tracking-[0.25em]" style={{ color: "#FF6B00" }}>// INSTALL APP</div>
           <h4 className="font-display font-bold text-sm mt-0.5">Get Tactical Ally as an app</h4>
           {iosHint ? (
             <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">
@@ -89,7 +89,7 @@ const InstallPwaPrompt = () => {
             <button
               onClick={install}
               className="btn-primary !py-1.5 !px-3 text-xs mt-3"
-              style={{ background: "#39FF14", color: "#0a0a0a" }}
+              style={{ background: "#FF6B00", color: "#0a0a0a" }}
               data-testid="pwa-install-btn"
             >
               Install now

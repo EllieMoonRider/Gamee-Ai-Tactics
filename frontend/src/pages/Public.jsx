@@ -18,8 +18,8 @@ const PublicHeader = () => (
   <header className="glass-nav sticky top-0 z-50">
     <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
       <Link to="/" className="flex items-center gap-2.5">
-        <CrosshairSimple size={22} weight="duotone" className="text-[#E63946]" />
-        <span className="font-display text-lg font-bold tracking-tight">TACTICAL ALLY<span className="text-[#E63946]">.</span></span>
+        <CrosshairSimple size={22} weight="duotone" className="text-[#FF6B00]" />
+        <span className="font-display text-lg font-bold tracking-tight">TACTICAL ALLY<span className="text-[#FF6B00]">.</span></span>
       </Link>
       <Link to="/auth" className="btn-primary !py-2 !px-4 text-sm">Get your own analysis</Link>
     </div>
@@ -61,14 +61,14 @@ export const PublicDeepDive = () => {
     <div className="min-h-screen" data-testid="public-deepdive">
       <PublicHeader />
       <div className="max-w-5xl mx-auto px-6 py-10">
-        <div className="tactical-label text-[#E63946] mb-2">// SHARED DEEP DIVE</div>
+        <div className="tactical-label text-[#FF6B00] mb-2">// SHARED DEEP DIVE</div>
         <h1 className="font-display text-3xl sm:text-4xl font-black tracking-tighter">{dd.title}</h1>
         <p className="text-sm text-zinc-400 mt-2">
           Shared by <strong className="text-[#FFBA08]">{dd.shared_by}</strong> · {new Date(dd.created_at).toLocaleDateString()} · {dd.game_slug}
         </p>
 
         <div className="surface rounded-md p-6 mt-8">
-          <div className="tactical-label text-[#E63946] mb-3">// BASELINE</div>
+          <div className="tactical-label text-[#FF6B00] mb-3">// BASELINE</div>
           <div className="terminal-block markdown-output" dangerouslySetInnerHTML={{ __html: renderMd(dd.baseline_analysis) }} />
         </div>
 

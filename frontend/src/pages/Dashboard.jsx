@@ -139,13 +139,13 @@ const CentralHub = ({ onPickTutorial }) => (
             <span className="cc-tile-corner tr" />
             <span className="cc-tile-corner bl" />
             <span className="cc-tile-corner br" />
-            <div className="w-14 h-14 mx-auto mb-3 rounded-full border border-[#39FF14]/40 flex items-center justify-center"
-                 style={{ background: "radial-gradient(circle at center, rgba(57,255,20,0.18), rgba(57,255,20,0))" }}>
+            <div className="w-14 h-14 mx-auto mb-3 rounded-full border border-[#FF6B00]/40 flex items-center justify-center"
+                 style={{ background: "radial-gradient(circle at center, rgba(255,107,0,0.18), rgba(255,107,0,0))" }}>
               <Icon size={28} weight="duotone" className="cc-neon-text" />
             </div>
             <h3 className="font-display text-sm font-bold tracking-tight leading-tight cc-neon-text">{s.label}</h3>
             <p className="text-[11px] text-zinc-400 mt-1.5 leading-snug">{s.desc}</p>
-            <div className="mt-3 inline-flex items-center gap-1 text-[10px] font-mono-tactical text-zinc-500 group-hover:text-[#39FF14] transition tracking-widest">
+            <div className="mt-3 inline-flex items-center gap-1 text-[10px] font-mono-tactical text-zinc-500 group-hover:text-[#FF6B00] transition tracking-widest">
               OPEN <ArrowRight size={10} weight="bold" />
             </div>
           </motion.div>
@@ -192,7 +192,7 @@ const TutorialModal = ({ open, onClose }) => {
                   {TUTORIALS.map(t => (
                     <button
                       key={t.id} onClick={() => setActiveId(t.id)}
-                      className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded text-left text-sm border border-[#39FF14]/20 hover:bg-[#39FF14]/10 hover:border-[#39FF14]/50 transition"
+                      className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded text-left text-sm border border-[#FF6B00]/20 hover:bg-[#FF6B00]/10 hover:border-[#FF6B00]/50 transition"
                       data-testid={`tutorial-option-${t.id}`}
                     >
                       <span>{t.label}</span>
@@ -344,13 +344,13 @@ const Dashboard = () => {
                     <span className="cc-tile-corner tr" />
                     <span className="cc-tile-corner bl" />
                     <span className="cc-tile-corner br" />
-                    <div className="w-16 h-16 rounded-full border border-[#39FF14]/40 flex items-center justify-center mb-3"
-                         style={{ background: "radial-gradient(circle at center, rgba(57,255,20,0.18), rgba(57,255,20,0))" }}>
+                    <div className="w-16 h-16 rounded-full border border-[#FF6B00]/40 flex items-center justify-center mb-3"
+                         style={{ background: "radial-gradient(circle at center, rgba(255,107,0,0.18), rgba(255,107,0,0))" }}>
                       <Icon size={32} weight="duotone" className="cc-neon-text" />
                     </div>
                     <h3 className="font-display text-sm font-bold tracking-tight leading-tight">{g.name}</h3>
                     <p className="text-[10px] uppercase tracking-widest font-mono-tactical text-zinc-500 mt-1">{g.genre.split(" / ")[0]}</p>
-                    <div className="mt-3 flex items-center gap-2 text-zinc-600 group-hover:text-[#39FF14] transition">
+                    <div className="mt-3 flex items-center gap-2 text-zinc-600 group-hover:text-[#FF6B00] transition">
                       <ChatCircleText size={12} /> <Target size={12} /> <BookOpen size={12} /> <ListChecks size={12} />
                     </div>
                   </Link>

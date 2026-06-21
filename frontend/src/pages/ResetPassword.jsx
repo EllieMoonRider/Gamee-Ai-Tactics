@@ -35,10 +35,10 @@ const ResetPassword = () => {
       <Navbar />
       <div className="max-w-md mx-auto px-6 pt-16 pb-20">
         <div className="text-center mb-8">
-          <div className="inline-flex w-14 h-14 rounded-full border border-[#E63946]/40 items-center justify-center mb-4 bg-[#E63946]/10">
-            <ShieldCheck size={28} weight="duotone" className="text-[#E63946]" />
+          <div className="inline-flex w-14 h-14 rounded-full border border-[#FF6B00]/40 items-center justify-center mb-4 bg-[#FF6B00]/10">
+            <ShieldCheck size={28} weight="duotone" className="text-[#FF6B00]" />
           </div>
-          <div className="tactical-label text-[#E63946] mb-2">// SECURE RESET</div>
+          <div className="tactical-label text-[#FF6B00] mb-2">// SECURE RESET</div>
           <h1 className="font-display text-3xl font-black tracking-tighter">Set a new password</h1>
           <p className="text-sm text-zinc-400 mt-2">Choose something you'll remember. Minimum 6 characters.</p>
         </div>
@@ -50,7 +50,7 @@ const ResetPassword = () => {
           </div>
         ) : done ? (
           <div className="surface rounded-md p-7 text-center space-y-3" data-testid="reset-done">
-            <ShieldCheck size={36} weight="duotone" className="text-[#10B981] mx-auto" />
+            <ShieldCheck size={36} weight="duotone" className="text-[#FFAA33] mx-auto" />
             <p className="text-sm">Password updated. Redirecting to sign-in…</p>
           </div>
         ) : (

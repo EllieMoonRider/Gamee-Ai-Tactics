@@ -8,8 +8,8 @@ import { Lifebuoy, EnvelopeSimple, ChatCircle, CheckCircle, Question, CreditCard
 
 const CATEGORY_OPTIONS = [
   { value: "billing", label: "Billing & Payments", icon: CreditCard, color: "#FFBA08" },
-  { value: "technical", label: "Bug / Technical issue", icon: Bug, color: "#E63946" },
-  { value: "account", label: "Account & Login", icon: UserCircle, color: "#10B981" },
+  { value: "technical", label: "Bug / Technical issue", icon: Bug, color: "#FF6B00" },
+  { value: "account", label: "Account & Login", icon: UserCircle, color: "#FFAA33" },
   { value: "refund", label: "Refund request", icon: ShieldWarning, color: "#A1A1AA" },
   { value: "feature_request", label: "Feature request", icon: Lightbulb, color: "#A78BFA" },
   { value: "feedback", label: "Feedback", icon: ChatCircle, color: "#60A5FA" },
@@ -74,16 +74,16 @@ const Help = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
         <div>
-          <div className="tactical-label text-[#E63946] mb-2">// COMMAND CENTER · SUPPORT</div>
+          <div className="tactical-label text-[#FF6B00] mb-2">// COMMAND CENTER · SUPPORT</div>
           <h1 className="font-display text-3xl sm:text-4xl font-black tracking-tighter flex items-center gap-3">
-            <Lifebuoy size={32} weight="duotone" className="text-[#E63946]" /> Help & Support
+            <Lifebuoy size={32} weight="duotone" className="text-[#FF6B00]" /> Help & Support
           </h1>
           <p className="text-sm text-zinc-400 mt-2 max-w-xl">
-            Got a question, bug, or refund request? We typically reply within <strong className="text-[#10B981]">48 hours</strong>. Browse the FAQ below first — many answers live there.
+            Got a question, bug, or refund request? We typically reply within <strong className="text-[#FFAA33]">48 hours</strong>. Browse the FAQ below first — many answers live there.
           </p>
         </div>
 
@@ -92,7 +92,7 @@ const Help = () => {
           <div className="tactical-label text-[#FFBA08] mb-4">// FREQUENTLY ASKED</div>
           <div className="space-y-3" data-testid="faq-list">
             {FAQS.map((f, i) => (
-              <details key={i} className="group border border-white/5 rounded-md bg-[#0c0c0c] open:ring-1 open:ring-[#E63946]/30" data-testid={`faq-item-${i}`}>
+              <details key={i} className="group border border-white/5 rounded-md bg-[#0c0c0c] open:ring-1 open:ring-[#FF6B00]/30" data-testid={`faq-item-${i}`}>
                 <summary className="cursor-pointer list-none p-4 flex items-center justify-between gap-3 select-none">
                   <span className="text-sm font-medium text-zinc-200">{f.q}</span>
                   <span className="text-[#FFBA08] text-xl leading-none group-open:rotate-45 transition-transform">+</span>
@@ -106,7 +106,7 @@ const Help = () => {
         {/* Contact form OR confirmation */}
         {submittedId ? (
           <div className="surface rounded-md p-8 text-center" data-testid="ticket-confirmation">
-            <CheckCircle size={48} weight="duotone" className="text-[#10B981] mx-auto mb-3" />
+            <CheckCircle size={48} weight="duotone" className="text-[#FFAA33] mx-auto mb-3" />
             <h2 className="font-display text-2xl font-bold tracking-tight">Ticket received</h2>
             <p className="text-sm text-zinc-400 mt-2">
               Your ticket <strong className="text-[#FFBA08] font-mono-tactical">#{submittedId.slice(0, 8)}</strong> is in the queue. We&apos;ll respond to <strong className="text-white">{form.email}</strong> within 48 hours.
@@ -118,7 +118,7 @@ const Help = () => {
           </div>
         ) : (
           <form onSubmit={submit} className="surface rounded-md p-6 space-y-5" data-testid="support-form">
-            <div className="tactical-label text-[#10B981] mb-1">// SUBMIT A TICKET</div>
+            <div className="tactical-label text-[#FFAA33] mb-1">// SUBMIT A TICKET</div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

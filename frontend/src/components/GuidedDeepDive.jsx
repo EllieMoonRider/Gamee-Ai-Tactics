@@ -144,7 +144,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
       <div className="surface rounded-md p-5">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
-            <div className="tactical-label text-[#10B981] mb-1">// CYPHERAI GUIDED MODE</div>
+            <div className="tactical-label text-[#FFAA33] mb-1">// CYPHERAI GUIDED MODE</div>
             <h2 className="font-display text-xl font-bold tracking-tight">{gameName} · step-by-step capture</h2>
             <p className="text-xs text-zinc-400 mt-1">CypherAI tells you exactly what to screenshot. Ask anything mid-flow.</p>
           </div>
@@ -161,7 +161,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
               <button
                 key={s.id}
                 onClick={() => setActiveStepIdx(i)}
-                className={`h-1.5 rounded-sm transition ${done ? "bg-[#10B981]" : skip ? "bg-zinc-700" : i === activeStepIdx ? "bg-[#FFBA08]" : "bg-white/10"}`}
+                className={`h-1.5 rounded-sm transition ${done ? "bg-[#FFAA33]" : skip ? "bg-zinc-700" : i === activeStepIdx ? "bg-[#FFBA08]" : "bg-white/10"}`}
                 title={s.title}
                 data-testid={`guided-progress-${i}`}
               />
@@ -185,7 +185,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
 
           {/* State indicator */}
           {uploaded.length > 0 && (
-            <div className="flex items-center gap-2 text-xs text-[#10B981] surface-elev rounded p-2.5">
+            <div className="flex items-center gap-2 text-xs text-[#FFAA33] surface-elev rounded p-2.5">
               <CheckCircle size={14} weight="duotone" /> {uploaded.length} screenshot{uploaded.length === 1 ? "" : "s"} captured. Pick again to replace.
             </div>
           )}
@@ -241,7 +241,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
         {/* Q&A sidebar */}
         <div className="surface rounded-md flex flex-col min-h-[400px]" data-testid="guided-qa">
           <div className="p-4 border-b border-white/5 flex items-center gap-2">
-            <Brain size={16} weight="duotone" className="text-[#10B981]" />
+            <Brain size={16} weight="duotone" className="text-[#FFAA33]" />
             <div className="font-display font-bold text-sm">Ask CypherAI</div>
             <span className="tactical-label text-zinc-500 ml-auto">// {gameName}</span>
           </div>
@@ -255,7 +255,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
               (session.qa || []).map(qa => (
                 <div key={qa.id} className="space-y-1.5">
                   <div className="text-xs text-zinc-300 surface-elev p-2 rounded">{qa.q}</div>
-                  <div className="text-xs markdown-output surface-elev p-2 rounded border-l-2 border-[#10B981]" dangerouslySetInnerHTML={{ __html: renderMd(qa.a) }} />
+                  <div className="text-xs markdown-output surface-elev p-2 rounded border-l-2 border-[#FFAA33]" dangerouslySetInnerHTML={{ __html: renderMd(qa.a) }} />
                 </div>
               ))
             )}
@@ -276,7 +276,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
 
       {/* Finalize bar */}
       <div className="surface rounded-md p-5 flex items-center gap-3 flex-wrap" data-testid="guided-finalize-bar">
-        <Lightning size={20} weight="duotone" className="text-[#E63946]" />
+        <Lightning size={20} weight="duotone" className="text-[#FF6B00]" />
         <div className="flex-1 min-w-[200px]">
           <div className="font-display font-bold">Ready to generate your Deep Dive?</div>
           <div className="text-xs text-zinc-400">CypherAI will analyze all <strong className="text-white">{totalCaptured}</strong> captured screen{totalCaptured === 1 ? "" : "s"} and produce a full baseline. <strong className="text-[#FFBA08]">Costs 1 baseline from your quota.</strong></div>

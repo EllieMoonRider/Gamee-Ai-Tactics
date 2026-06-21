@@ -45,10 +45,10 @@ const Seats = () => {
     refresh();
   };
 
-  if (isAdmin === null) return <div className="min-h-screen"><Navbar /><div className="max-w-4xl mx-auto px-6 py-10"><div className="h-12 shimmer rounded" /></div></div>;
+  if (isAdmin === null) return <div className="command-center min-h-screen"><Navbar /><div className="max-w-4xl mx-auto px-6 py-10"><div className="h-12 shimmer rounded" /></div></div>;
 
   if (!isAdmin) return (
-    <div className="min-h-screen"><Navbar />
+    <div className="command-center min-h-screen"><Navbar />
       <div className="max-w-md mx-auto px-6 py-20 text-center">
         <ShieldWarning size={42} weight="duotone" className="text-zinc-500 mx-auto mb-3" />
         <h1 className="font-display text-2xl font-bold">Alliance admins only</h1>
@@ -61,7 +61,7 @@ const Seats = () => {
   const pending = seats.filter(s => s.status === "pending").length;
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-6">
         <div>
@@ -74,7 +74,7 @@ const Seats = () => {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="surface rounded p-4"><div className="tactical-label text-[#10B981] mb-1">// ACTIVE</div><div className="font-display text-3xl font-black">{active}</div></div>
+          <div className="surface rounded p-4"><div className="tactical-label text-[#FFAA33] mb-1">// ACTIVE</div><div className="font-display text-3xl font-black">{active}</div></div>
           <div className="surface rounded p-4"><div className="tactical-label text-[#FFBA08] mb-1">// PENDING</div><div className="font-display text-3xl font-black">{pending}</div></div>
           <div className="surface rounded p-4"><div className="tactical-label text-zinc-500 mb-1">// AVAILABLE</div><div className="font-display text-3xl font-black">{Math.max(0, 100 - active - pending)}</div></div>
         </div>
@@ -94,16 +94,16 @@ const Seats = () => {
           {seats.length === 0 && <p className="surface p-6 rounded text-center text-sm text-zinc-500">No seats granted yet.</p>}
           {seats.map(s => (
             <div key={s.id} className="surface rounded p-3 flex items-center gap-3 flex-wrap" data-testid={`seat-${s.id}`}>
-              {s.status === "active" && <CheckCircle size={16} weight="duotone" className="text-[#10B981]" />}
+              {s.status === "active" && <CheckCircle size={16} weight="duotone" className="text-[#FFAA33]" />}
               {s.status === "pending" && <Clock size={16} className="text-[#FFBA08]" />}
-              {s.status === "revoked" && <X size={16} className="text-[#E63946]" />}
+              {s.status === "revoked" && <X size={16} className="text-[#FF6B00]" />}
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-semibold truncate">{s.email}</div>
                 <div className="text-xs text-zinc-500">[{s.alliance_name}] · {s.note || "—"} · {new Date(s.created_at).toLocaleDateString()}</div>
               </div>
-              <span className="tag-chip" style={{ color: s.status === "active" ? "#10B981" : s.status === "pending" ? "#FFBA08" : "#E63946" }}>{s.status.toUpperCase()}</span>
+              <span className="tag-chip" style={{ color: s.status === "active" ? "#FFAA33" : s.status === "pending" ? "#FFBA08" : "#FF6B00" }}>{s.status.toUpperCase()}</span>
               {s.status !== "revoked" && (
-                <button onClick={() => revoke(s.id)} className="text-zinc-500 hover:text-[#E63946]" data-testid={`seat-revoke-${s.id}`}>
+                <button onClick={() => revoke(s.id)} className="text-zinc-500 hover:text-[#FF6B00]" data-testid={`seat-revoke-${s.id}`}>
                   <Trash size={14} />
                 </button>
               )}

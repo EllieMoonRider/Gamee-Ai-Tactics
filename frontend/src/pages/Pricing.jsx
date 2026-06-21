@@ -33,19 +33,19 @@ const Pricing = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-14">
         <div className="text-center mb-12">
-          <div className="tactical-label text-[#E63946] mb-2">// PRICING TIERS</div>
+          <div className="tactical-label text-[#FF6B00] mb-2">// PRICING TIERS</div>
           <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tighter">Pick your loadout</h1>
           <p className="text-zinc-400 mt-3 max-w-2xl mx-auto">
-            CypherAI Chat, Optimizer, Guides, and Daily Planner are <strong className="text-[#10B981]">free forever</strong>. Deep Dive vision analyses & Alliance Chat are paid — pricing scales with how many games and how big your alliance is.
+            CypherAI Chat, Optimizer, Guides, and Daily Planner are <strong className="text-[#FFAA33]">free forever</strong>. Deep Dive vision analyses & Alliance Chat are paid — pricing scales with how many games and how big your alliance is.
           </p>
           {quota && quota.plan === "pro" && (
             <div className="mt-4 inline-flex items-center gap-2 surface px-4 py-2 rounded text-sm" data-testid="pricing-current-plan">
-              <ShieldCheck size={16} className="text-[#10B981]" />
-              You&apos;re on <strong className="text-[#10B981]">Pro</strong> · {quota.total_baselines_available} analyses available · {quota.pro_games?.length || 0}/{quota.pro_game_slots} game slots used
+              <ShieldCheck size={16} className="text-[#FFAA33]" />
+              You&apos;re on <strong className="text-[#FFAA33]">Pro</strong> · {quota.total_baselines_available} analyses available · {quota.pro_games?.length || 0}/{quota.pro_game_slots} game slots used
             </div>
           )}
         </div>
@@ -60,10 +60,10 @@ const Pricing = () => {
               <span className="text-zinc-500"> / forever</span>
             </div>
             <ul className="space-y-2.5 text-sm text-zinc-300 flex-1">
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> CypherAI Chat (30 msgs/min)</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Build Optimizer (10/min)</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> 13+ curated Guides</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Daily Planner across 11 titles</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> CypherAI Chat (30 msgs/min)</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> Build Optimizer (10/min)</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> 13+ curated Guides</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> Daily Planner across 11 titles</li>
               <li className="flex gap-2"><Sparkle size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>Tactical Scouts</strong> — earn Deep Dives free</li>
             </ul>
             <button onClick={() => nav(user ? "/dashboard" : "/auth")} className="btn-outline mt-6 w-full" data-testid="tier-free-cta">
@@ -72,9 +72,9 @@ const Pricing = () => {
           </div>
 
           {/* PRO */}
-          <div className="surface rounded-md p-7 flex flex-col relative ring-2 ring-[#E63946]/40 -translate-y-1" data-testid="tier-pro">
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E63946] text-white text-[10px] font-mono-tactical tracking-widest px-3 py-1 rounded">RECOMMENDED</span>
-            <div className="tactical-label text-[#E63946] mb-2">// TIER 02 · PRO</div>
+          <div className="surface rounded-md p-7 flex flex-col relative ring-2 ring-[#FF6B00]/40 -translate-y-1" data-testid="tier-pro">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FF6B00] text-white text-[10px] font-mono-tactical tracking-widest px-3 py-1 rounded">RECOMMENDED</span>
+            <div className="tactical-label text-[#FF6B00] mb-2">// TIER 02 · PRO</div>
             <h2 className="font-display text-2xl font-bold tracking-tight">Tactical Ally Pro</h2>
             <div className="mt-3 mb-5">
               <span className="font-display text-4xl font-black text-[#FFBA08]">$4.99</span>
@@ -84,9 +84,9 @@ const Pricing = () => {
               <li className="flex gap-2"><GameController size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>Full access for 2 games</strong> (your choice)</li>
               <li className="flex gap-2"><Lightning size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> 2 Deep Dive baselines / month</li>
               <li className="flex gap-2"><Stack size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> Unlimited Building Blocks per baseline</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Everything in Recruit</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Shareable Deep Dive links</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Add more games anytime · $0.99/ea</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> Everything in Recruit</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> Shareable Deep Dive links</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> Add more games anytime · $0.99/ea</li>
             </ul>
             <button onClick={() => buy("subscription_monthly")} disabled={loading === "subscription_monthly"} className="btn-primary mt-6 w-full" data-testid="tier-pro-cta">
               {loading === "subscription_monthly" ? "Opening checkout…" : "Subscribe — $4.99/mo"}
@@ -103,9 +103,9 @@ const Pricing = () => {
             </div>
             <ul className="space-y-2.5 text-sm text-zinc-300 flex-1">
               <li className="flex gap-2"><Coins size={16} weight="duotone" className="text-[#FFBA08] mt-0.5 flex-shrink-0" /> <strong>1 Deep Dive baseline</strong> — ANY game</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> No subscription, no commitment</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Never expires — use it any time</li>
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Stacks on top of Pro plan</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> No subscription, no commitment</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> Never expires — use it any time</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#FFAA33] mt-0.5 flex-shrink-0" /> Stacks on top of Pro plan</li>
             </ul>
             <button onClick={() => buy("topup_analysis")} disabled={loading === "topup_analysis"} className="btn-outline mt-6 w-full" data-testid="tier-topup-cta">
               {loading === "topup_analysis" ? "Opening checkout…" : "Buy one — $2.99"}
@@ -142,14 +142,14 @@ const Pricing = () => {
             </div>
 
             {/* Alliance Chat (per member) */}
-            <div className="surface rounded-md p-6 ring-1 ring-[#10B981]/30" data-testid="tier-toc-addon">
+            <div className="surface rounded-md p-6 ring-1 ring-[#FFAA33]/30" data-testid="tier-toc-addon">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-md bg-[#10B981]/10 border border-[#10B981]/30 flex items-center justify-center flex-shrink-0">
-                  <ChatsCircle size={24} weight="duotone" className="text-[#10B981]" />
+                <div className="w-12 h-12 rounded-md bg-[#FFAA33]/10 border border-[#FFAA33]/30 flex items-center justify-center flex-shrink-0">
+                  <ChatsCircle size={24} weight="duotone" className="text-[#FFAA33]" />
                 </div>
                 <div className="flex-1">
-                  <div className="tactical-label text-[#10B981] mb-1">// ALLIANCE CHAT · PER MEMBER</div>
-                  <h3 className="font-display text-xl font-bold tracking-tight">Operations Center — <span className="text-[#10B981]">$0.99/mo</span></h3>
+                  <div className="tactical-label text-[#FFAA33] mb-1">// ALLIANCE CHAT · PER MEMBER</div>
+                  <h3 className="font-display text-xl font-bold tracking-tight">Operations Center — <span className="text-[#FFAA33]">$0.99/mo</span></h3>
                   <p className="text-xs text-zinc-400 mt-2">
                     Each member pays their own seat. Unlocks alliance chat rooms, share Deep Dives & Battle Reports, ask CypherAI in-room. Built for 60-active-member alliances.
                   </p>
@@ -176,13 +176,13 @@ const Pricing = () => {
         </div>
 
         {/* SCOUTS F2P */}
-        <div className="mt-8 surface rounded-md p-6 ring-1 ring-dashed ring-[#E63946]/30" data-testid="scouts-callout">
+        <div className="mt-8 surface rounded-md p-6 ring-1 ring-dashed ring-[#FF6B00]/30" data-testid="scouts-callout">
           <div className="flex items-start gap-4 flex-wrap">
-            <div className="w-12 h-12 rounded-md bg-[#E63946]/10 border border-[#E63946]/30 flex items-center justify-center flex-shrink-0">
-              <Sparkle size={24} weight="duotone" className="text-[#E63946]" />
+            <div className="w-12 h-12 rounded-md bg-[#FF6B00]/10 border border-[#FF6B00]/30 flex items-center justify-center flex-shrink-0">
+              <Sparkle size={24} weight="duotone" className="text-[#FF6B00]" />
             </div>
             <div className="flex-1 min-w-[240px]">
-              <div className="tactical-label text-[#E63946] mb-1">// F2P PATH · TACTICAL SCOUTS</div>
+              <div className="tactical-label text-[#FF6B00] mb-1">// F2P PATH · TACTICAL SCOUTS</div>
               <h3 className="font-display text-xl font-bold tracking-tight">No wallet? Earn Deep Dives free.</h3>
               <p className="text-xs text-zinc-400 mt-2 max-w-xl">
                 Upload game-update screenshots · try recommended games · watch strategy videos. Earn 1 credit = $1 value. 3 credits = 1 free Deep Dive. F2P engagement loop with real reward.

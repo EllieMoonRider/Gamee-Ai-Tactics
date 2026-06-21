@@ -97,7 +97,7 @@ const ChatModule = ({ slug, gameName }) => {
               <button onClick={() => setActiveId(s.id)} className="flex-1 text-left px-3 py-2 text-sm truncate" data-testid={`chat-session-${s.id}`}>
                 {s.title}
               </button>
-              <button onClick={() => deleteSession(s.id)} className="px-2 opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-[#E63946]" data-testid={`chat-delete-${s.id}`}>
+              <button onClick={() => deleteSession(s.id)} className="px-2 opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-[#FF6B00]" data-testid={`chat-delete-${s.id}`}>
                 <Trash size={14} />
               </button>
             </div>
@@ -109,19 +109,19 @@ const ChatModule = ({ slug, gameName }) => {
       <div className="surface rounded-md flex flex-col min-h-[60vh]">
         <div className="px-5 py-3 border-b border-white/5 flex items-center justify-between">
           <div className="tactical-label">// {gameName} TACTICIAN</div>
-          <Sparkle size={14} className="text-[#10B981]" />
+          <Sparkle size={14} className="text-[#FFAA33]" />
         </div>
         <div className="flex-1 overflow-y-auto p-5 space-y-4 max-h-[60vh]" data-testid="chat-messages">
           {messages.length === 0 && (
             <div className="text-center text-zinc-500 mt-12">
-              <ChatCircleText size={42} weight="duotone" className="text-[#E63946] mx-auto mb-3" />
+              <ChatCircleText size={42} weight="duotone" className="text-[#FF6B00] mx-auto mb-3" />
               <p className="text-sm">Ask anything about {gameName}.</p>
               <p className="text-xs mt-2 opacity-70">Try: "Best F2P team for arena" or "How to prep for KvK"</p>
             </div>
           )}
           {messages.map(m => (
             <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] rounded-md px-4 py-3 ${m.role === "user" ? "bg-[#E63946] text-white" : "surface-elev"}`}>
+              <div className={`max-w-[85%] rounded-md px-4 py-3 ${m.role === "user" ? "bg-[#FF6B00] text-white" : "surface-elev"}`}>
                 <div className="tactical-label mb-1 opacity-60" style={{ color: m.role === "user" ? "white" : "#FFBA08" }}>
                   {m.role === "user" ? "// YOU" : "// TACTICIAN"}
                 </div>
@@ -254,7 +254,7 @@ const GuidesModule = ({ slug }) => {
         {guides.map(g => (
           <button
             key={g.id} onClick={() => setActive(g)}
-            className={`surface w-full text-left p-5 rounded-md ${active?.id === g.id ? "border-[#E63946]/50" : ""}`}
+            className={`surface w-full text-left p-5 rounded-md ${active?.id === g.id ? "border-[#FF6B00]/50" : ""}`}
             data-testid={`guide-${g.id}`}
           >
             <div className="flex items-center justify-between mb-2">
@@ -269,7 +269,7 @@ const GuidesModule = ({ slug }) => {
       <div className="surface rounded-md p-6 lg:sticky lg:top-24 h-fit">
         {active ? (
           <>
-            <div className="tactical-label text-[#E63946] mb-2">// {active.category}</div>
+            <div className="tactical-label text-[#FF6B00] mb-2">// {active.category}</div>
             <h2 className="font-display text-2xl font-bold tracking-tight">{active.title}</h2>
             <p className="text-sm text-zinc-400 mt-2 mb-5">{active.summary}</p>
             <div className="terminal-block">{active.content}</div>
@@ -309,7 +309,7 @@ const TasksModule = ({ slug }) => {
     refresh();
   };
 
-  const colors = { high: "#E63946", med: "#FFBA08", low: "#10B981" };
+  const colors = { high: "#FF6B00", med: "#FFBA08", low: "#FFAA33" };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-5">
@@ -320,7 +320,7 @@ const TasksModule = ({ slug }) => {
           {tasks.map(t => (
             <div key={t.id} className="surface rounded-md p-4 flex items-center gap-3 group" data-testid={`task-${t.id}`}>
               <button onClick={() => toggle(t)}
-                className={`w-5 h-5 rounded border flex items-center justify-center transition ${t.completed ? "bg-[#10B981] border-[#10B981]" : "border-white/20 hover:border-white/60"}`}
+                className={`w-5 h-5 rounded border flex items-center justify-center transition ${t.completed ? "bg-[#FFAA33] border-[#FFAA33]" : "border-white/20 hover:border-white/60"}`}
                 data-testid={`task-toggle-${t.id}`}>
                 {t.completed && <Check size={12} weight="bold" />}
               </button>
@@ -328,7 +328,7 @@ const TasksModule = ({ slug }) => {
                 <p className={`text-sm ${t.completed ? "line-through text-zinc-500" : ""}`}>{t.title}</p>
               </div>
               <span className="tag-chip" style={{ color: colors[t.priority], borderColor: colors[t.priority] + "40" }}>{t.priority.toUpperCase()}</span>
-              <button onClick={() => remove(t.id)} className="text-zinc-500 hover:text-[#E63946] opacity-0 group-hover:opacity-100" data-testid={`task-delete-${t.id}`}>
+              <button onClick={() => remove(t.id)} className="text-zinc-500 hover:text-[#FF6B00] opacity-0 group-hover:opacity-100" data-testid={`task-delete-${t.id}`}>
                 <Trash size={14} />
               </button>
             </div>
@@ -373,7 +373,7 @@ const GamePage = () => {
   }, [slug]);
 
   if (!game) return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="h-12 w-64 shimmer rounded mb-6" />
@@ -383,7 +383,7 @@ const GamePage = () => {
   );
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
 
       {/* Game header */}
@@ -419,7 +419,7 @@ const GamePage = () => {
               <button
                 key={t.key}
                 onClick={() => setTab(t.key)}
-                className={`flex items-center gap-2 px-4 py-3 text-sm border-b-2 transition whitespace-nowrap ${active ? "border-[#E63946] text-white" : "border-transparent text-zinc-500 hover:text-white"}`}
+                className={`flex items-center gap-2 px-4 py-3 text-sm border-b-2 transition whitespace-nowrap ${active ? "border-[#FF6B00] text-white" : "border-transparent text-zinc-500 hover:text-white"}`}
                 data-testid={`tab-${t.key}`}
               >
                 <Icon size={16} weight={active ? "duotone" : "regular"} /> {t.label}

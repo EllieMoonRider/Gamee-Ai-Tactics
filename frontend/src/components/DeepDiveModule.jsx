@@ -36,10 +36,10 @@ const UploadZone = ({ files, setFiles, max = 6 }) => {
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="w-full border-2 border-dashed border-white/15 hover:border-[#E63946]/60 rounded-md p-8 text-center transition group"
+        className="w-full border-2 border-dashed border-white/15 hover:border-[#FF6B00]/60 rounded-md p-8 text-center transition group"
         data-testid="deepdive-upload-zone"
       >
-        <UploadSimple size={28} className="mx-auto text-zinc-500 group-hover:text-[#E63946] mb-2" />
+        <UploadSimple size={28} className="mx-auto text-zinc-500 group-hover:text-[#FF6B00] mb-2" />
         <div className="text-sm font-semibold">Drop game screenshots here</div>
         <div className="text-xs text-zinc-500 mt-1">PNG/JPG · up to {max} files · 6MB each</div>
       </button>
@@ -152,7 +152,7 @@ const DeepDiveDetail = ({ id, onBack, onDelete }) => {
                 className="text-xs text-zinc-300 hover:text-white flex items-center gap-1 surface px-3 py-1.5 rounded" data-testid="deepdive-copy-share">
                 <LinkSimple size={12} /> Copy share link
               </button>
-              <button onClick={revokeShare} className="text-xs text-zinc-500 hover:text-[#E63946] flex items-center gap-1" data-testid="deepdive-revoke-share">
+              <button onClick={revokeShare} className="text-xs text-zinc-500 hover:text-[#FF6B00] flex items-center gap-1" data-testid="deepdive-revoke-share">
                 Revoke
               </button>
             </>
@@ -161,7 +161,7 @@ const DeepDiveDetail = ({ id, onBack, onDelete }) => {
               <Share size={12} /> Share read-only
             </button>
           )}
-          <button onClick={() => onDelete(dd.id)} className="text-xs text-zinc-500 hover:text-[#E63946] flex items-center gap-1" data-testid="deepdive-delete">
+          <button onClick={() => onDelete(dd.id)} className="text-xs text-zinc-500 hover:text-[#FF6B00] flex items-center gap-1" data-testid="deepdive-delete">
             <Trash size={12} /> Delete
           </button>
         </div>
@@ -170,7 +170,7 @@ const DeepDiveDetail = ({ id, onBack, onDelete }) => {
       <div className="surface rounded-md p-6">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
-            <div className="tactical-label text-[#E63946] mb-2">// BASELINE · {new Date(dd.created_at).toLocaleDateString()}</div>
+            <div className="tactical-label text-[#FF6B00] mb-2">// BASELINE · {new Date(dd.created_at).toLocaleDateString()}</div>
             <h2 className="font-display text-2xl font-bold tracking-tight">{dd.title}</h2>
             {dd.baseline_notes && <p className="text-xs text-zinc-500 italic mt-1">Notes: {dd.baseline_notes}</p>}
           </div>
@@ -284,11 +284,11 @@ const DeepDiveModule = ({ slug, gameName }) => {
   return (
     <div className="space-y-5">
       <div className="surface rounded-md p-6 flex items-start gap-4 flex-wrap" data-testid="deepdive-intro">
-        <div className="w-12 h-12 rounded-md bg-[#E63946]/10 border border-[#E63946]/30 flex items-center justify-center flex-shrink-0">
-          <Brain size={24} weight="duotone" className="text-[#E63946]" />
+        <div className="w-12 h-12 rounded-md bg-[#FF6B00]/10 border border-[#FF6B00]/30 flex items-center justify-center flex-shrink-0">
+          <Brain size={24} weight="duotone" className="text-[#FF6B00]" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="tactical-label text-[#E63946] mb-1">// CYPHERAI · DEEP DIVE</div>
+          <div className="tactical-label text-[#FF6B00] mb-1">// CYPHERAI · DEEP DIVE</div>
           <h2 className="font-display text-xl font-bold tracking-tight">Establish your {gameName} baseline</h2>
           <p className="text-sm text-zinc-400 mt-1 max-w-2xl">
             Upload screenshots of your account — heroes, HQ, formation, gear, alliance.
@@ -388,7 +388,7 @@ const DeepDiveModule = ({ slug, gameName }) => {
                 data-testid={`deepdive-card-${d.id}`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="tactical-label text-[#E63946]">// {new Date(d.created_at).toLocaleDateString()}</span>
+                  <span className="tactical-label text-[#FF6B00]">// {new Date(d.created_at).toLocaleDateString()}</span>
                   <span className="tactical-label text-[#FFBA08]">{d.followup_count || 0} BLOCK{d.followup_count === 1 ? "" : "S"}</span>
                 </div>
                 <h3 className="font-display font-bold text-base tracking-tight">{d.title}</h3>

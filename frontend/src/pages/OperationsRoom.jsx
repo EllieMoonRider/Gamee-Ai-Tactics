@@ -27,17 +27,17 @@ const MessageBubble = ({ m, isMine, currentUser }) => {
   if (m.type === "cyphr_a") {
     return (
       <div className="flex" data-testid={`msg-cyphr-a-${m.id}`}>
-        <div className="max-w-[90%] surface-elev rounded-md p-3 border-l-2 border-[#10B981]">
+        <div className="max-w-[90%] surface-elev rounded-md p-3 border-l-2 border-[#FFAA33]">
           <div className="flex items-center gap-1.5 mb-1">
-            <Brain size={12} weight="duotone" className="text-[#10B981]" />
-            <span className="tactical-label text-[#10B981]">// CYPHERAI · {m.refs?.asked_by || "alliance"}</span>
+            <Brain size={12} weight="duotone" className="text-[#FFAA33]" />
+            <span className="tactical-label text-[#FFAA33]">// CYPHERAI · {m.refs?.asked_by || "alliance"}</span>
           </div>
           <div className="text-sm markdown-output" dangerouslySetInnerHTML={{ __html: renderMd(m.content) }} />
         </div>
       </div>
     );
   }
-  const bg = isMine ? "bg-[#E63946] text-white" : "surface-elev";
+  const bg = isMine ? "bg-[#FF6B00] text-white" : "surface-elev";
   return (
     <div className={`flex ${isMine ? "justify-end" : "justify-start"}`} data-testid={`msg-${m.type}-${m.id}`}>
       <div className={`max-w-[80%] rounded-md p-3 ${bg}`}>
@@ -47,7 +47,7 @@ const MessageBubble = ({ m, isMine, currentUser }) => {
         {m.type === "share_deepdive" && (
           <Link to={`/share/d/${m.refs?.share_token}`} target="_blank" rel="noreferrer" className={`block surface ${isMine ? "!bg-white/10 !border-white/20" : ""} rounded p-2.5 mb-2`}>
             <div className="flex items-center gap-2 text-xs">
-              <Brain size={14} className={isMine ? "text-white" : "text-[#E63946]"} />
+              <Brain size={14} className={isMine ? "text-white" : "text-[#FF6B00]"} />
               <span className="font-display font-bold">{m.refs?.title || "Deep Dive"}</span>
             </div>
             <div className="text-[11px] opacity-70 mt-1">Deep Dive · {m.refs?.follow_ups || 0} building block{m.refs?.follow_ups === 1 ? "" : "s"} · click to view</div>
@@ -117,7 +117,7 @@ const ShareModal = ({ open, onClose, alliance, onShared }) => {
         </div>
         <div className="flex border-b border-white/5">
           {["deepdive", "build"].map(t => (
-            <button key={t} onClick={() => setTab(t)} className={`flex-1 py-3 text-sm border-b-2 ${tab === t ? "border-[#E63946] text-white" : "border-transparent text-zinc-500 hover:text-white"}`} data-testid={`share-tab-${t}`}>
+            <button key={t} onClick={() => setTab(t)} className={`flex-1 py-3 text-sm border-b-2 ${tab === t ? "border-[#FF6B00] text-white" : "border-transparent text-zinc-500 hover:text-white"}`} data-testid={`share-tab-${t}`}>
               {t === "deepdive" ? "Deep Dives" : "Builds"}
             </button>
           ))}
@@ -269,7 +269,7 @@ const OperationsRoom = () => {
   };
 
   if (!a) return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-10">
         <div className="h-12 w-64 shimmer rounded mb-6" />
@@ -279,7 +279,7 @@ const OperationsRoom = () => {
   );
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-5">
         <Link to="/operations" className="text-sm text-zinc-400 hover:text-white inline-flex items-center gap-1.5" data-testid="back-to-operations"><ArrowLeft size={14} /> Operations Center</Link>
@@ -301,7 +301,7 @@ const OperationsRoom = () => {
             <button onClick={() => setShowMembers(s => !s)} className="surface px-3 py-2 rounded text-xs flex items-center gap-1.5 hover:border-white/30" data-testid="alliance-members-toggle">
               <Users size={12} /> {a.member_count}
             </button>
-            <button onClick={leave} className="text-xs text-zinc-500 hover:text-[#E63946] px-2" data-testid="alliance-leave">
+            <button onClick={leave} className="text-xs text-zinc-500 hover:text-[#FF6B00] px-2" data-testid="alliance-leave">
               <SignOut size={14} />
             </button>
           </div>
@@ -338,7 +338,7 @@ const OperationsRoom = () => {
           <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[60vh]">
             {messages.length === 0 ? (
               <div className="text-center text-zinc-500 mt-12">
-                <ChatCircleText size={36} weight="duotone" className="text-[#E63946] mx-auto mb-2" />
+                <ChatCircleText size={36} weight="duotone" className="text-[#FF6B00] mx-auto mb-2" />
                 <p className="text-sm">No transmissions yet. Say hello.</p>
               </div>
             ) : messages.map(m => (
@@ -350,7 +350,7 @@ const OperationsRoom = () => {
           <form onSubmit={send} className="border-t border-white/5 p-3">
             <div className="flex gap-2 mb-2">
               <button type="button" onClick={() => setMode("text")} className={`tactical-label px-2 py-1 rounded border ${mode === "text" ? "border-white/40 text-white" : "border-white/10 text-zinc-500 hover:text-white"}`} data-testid="mode-text">// CHAT</button>
-              <button type="button" onClick={() => setMode("cyphr")} className={`tactical-label px-2 py-1 rounded border flex items-center gap-1 ${mode === "cyphr" ? "border-[#10B981]/60 text-[#10B981]" : "border-white/10 text-zinc-500 hover:text-[#10B981]"}`} data-testid="mode-cyphr">
+              <button type="button" onClick={() => setMode("cyphr")} className={`tactical-label px-2 py-1 rounded border flex items-center gap-1 ${mode === "cyphr" ? "border-[#FFAA33]/60 text-[#FFAA33]" : "border-white/10 text-zinc-500 hover:text-[#FFAA33]"}`} data-testid="mode-cyphr">
                 <Sparkle size={10} weight="fill" /> // ASK CYPHERAI
               </button>
             </div>

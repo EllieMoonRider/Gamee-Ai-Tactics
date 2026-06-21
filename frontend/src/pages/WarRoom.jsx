@@ -58,7 +58,7 @@ const WarRoom = () => {
   const doneTasks = tasks.filter(t => t.completed);
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
         <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white" data-testid="back-to-command-center">
@@ -66,7 +66,7 @@ const WarRoom = () => {
         </Link>
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="tactical-label text-[#E63946] mb-3">// PERSONAL WAR ROOM</div>
+          <div className="tactical-label text-[#FF6B00] mb-3">// PERSONAL WAR ROOM</div>
           <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tighter flex items-center gap-3">
             <MapTrifold size={42} weight="duotone" className="text-[#FFBA08]" />
             {user?.username}'s War Room
@@ -77,9 +77,9 @@ const WarRoom = () => {
         {/* Stat strip */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 border border-white/5 rounded">
           {[
-            { l: "Chats", v: sessions.length, c: "#E63946" },
+            { l: "Chats", v: sessions.length, c: "#FF6B00" },
             { l: "Builds", v: builds.length, c: "#FFBA08" },
-            { l: "Open tasks", v: openTasks.length, c: "#10B981" },
+            { l: "Open tasks", v: openTasks.length, c: "#FFAA33" },
             { l: "Completed", v: doneTasks.length, c: "#A1A1AA" },
           ].map(s => (
             <div key={s.l} className="bg-[#0A0A0A] p-6">
@@ -97,7 +97,7 @@ const WarRoom = () => {
             {/* Chats column */}
             <section className="surface rounded-md p-5" data-testid="war-room-chats">
               <div className="flex items-center gap-2 mb-4">
-                <ChatCircleText size={20} weight="duotone" className="text-[#E63946]" />
+                <ChatCircleText size={20} weight="duotone" className="text-[#FF6B00]" />
                 <h2 className="font-display font-bold tracking-tight">AI Chat sessions</h2>
                 <span className="ml-auto tactical-label">{sessions.length}</span>
               </div>
@@ -116,7 +116,7 @@ const WarRoom = () => {
                           </span>
                         </div>
                       </div>
-                      <button onClick={() => deleteSession(s.id)} className="text-zinc-500 hover:text-[#E63946] opacity-0 group-hover:opacity-100" data-testid={`war-chat-delete-${s.id}`}>
+                      <button onClick={() => deleteSession(s.id)} className="text-zinc-500 hover:text-[#FF6B00] opacity-0 group-hover:opacity-100" data-testid={`war-chat-delete-${s.id}`}>
                         <Trash size={14} />
                       </button>
                     </li>
@@ -146,7 +146,7 @@ const WarRoom = () => {
                           )}
                           <div className="mt-1.5"><GameTag slug={b.game_slug} games={games} /></div>
                         </div>
-                        <button onClick={() => deleteBuild(b.id)} className="text-zinc-500 hover:text-[#E63946] opacity-0 group-hover:opacity-100" data-testid={`war-build-delete-${b.id}`}>
+                        <button onClick={() => deleteBuild(b.id)} className="text-zinc-500 hover:text-[#FF6B00] opacity-0 group-hover:opacity-100" data-testid={`war-build-delete-${b.id}`}>
                           <Trash size={14} />
                         </button>
                       </div>
@@ -159,7 +159,7 @@ const WarRoom = () => {
             {/* Tasks column */}
             <section className="surface rounded-md p-5" data-testid="war-room-tasks">
               <div className="flex items-center gap-2 mb-4">
-                <ListChecks size={20} weight="duotone" className="text-[#10B981]" />
+                <ListChecks size={20} weight="duotone" className="text-[#FFAA33]" />
                 <h2 className="font-display font-bold tracking-tight">Mission Tasks</h2>
                 <span className="ml-auto tactical-label">{openTasks.length} OPEN</span>
               </div>
@@ -168,11 +168,11 @@ const WarRoom = () => {
               ) : (
                 <ul className="space-y-2 max-h-[55vh] overflow-y-auto">
                   {tasks.map(t => {
-                    const colors = { high: "#E63946", med: "#FFBA08", low: "#10B981" };
+                    const colors = { high: "#FF6B00", med: "#FFBA08", low: "#FFAA33" };
                     return (
                       <li key={t.id} className="surface-elev rounded p-3 flex items-center gap-3" data-testid={`war-task-${t.id}`}>
                         <button onClick={() => toggleTask(t)}
-                          className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${t.completed ? "bg-[#10B981] border-[#10B981]" : "border-white/20"}`}
+                          className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${t.completed ? "bg-[#FFAA33] border-[#FFAA33]" : "border-white/20"}`}
                           data-testid={`war-task-toggle-${t.id}`}
                         >
                           {t.completed && <span className="text-[10px] font-bold">✓</span>}

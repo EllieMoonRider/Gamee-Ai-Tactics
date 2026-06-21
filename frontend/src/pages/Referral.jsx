@@ -16,10 +16,10 @@ const Referral = () => {
     toast.success(label);
   };
 
-  if (!info) return <div className="min-h-screen"><Navbar /><div className="max-w-3xl mx-auto px-6 py-10"><div className="h-12 w-64 shimmer rounded" /></div></div>;
+  if (!info) return <div className="command-center min-h-screen"><Navbar /><div className="max-w-3xl mx-auto px-6 py-10"><div className="h-12 w-64 shimmer rounded" /></div></div>;
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-3xl mx-auto px-6 py-10 space-y-6">
         <div>
@@ -54,8 +54,8 @@ const Referral = () => {
             <div className="font-display text-3xl font-black flex items-center gap-1"><Users size={20} className="text-zinc-500" />{info.total_referred}</div>
           </div>
           <div className="surface rounded p-4">
-            <div className="tactical-label text-[#10B981] mb-1">// PAID</div>
-            <div className="font-display text-3xl font-black flex items-center gap-1"><Trophy size={20} className="text-[#10B981]" />{info.paid_referred}</div>
+            <div className="tactical-label text-[#FFAA33] mb-1">// PAID</div>
+            <div className="font-display text-3xl font-black flex items-center gap-1"><Trophy size={20} className="text-[#FFAA33]" />{info.paid_referred}</div>
           </div>
           <div className="surface rounded p-4">
             <div className="tactical-label text-[#FFBA08] mb-1">// EARNED 30D</div>
@@ -65,9 +65,9 @@ const Referral = () => {
 
         {/* Rules */}
         <div className="surface rounded-md p-5 text-sm text-zinc-300 space-y-2">
-          <div className="tactical-label text-[#E63946] mb-1">// HOW IT WORKS</div>
+          <div className="tactical-label text-[#FF6B00] mb-1">// HOW IT WORKS</div>
           <p>1. Share your code with a friend.</p>
-          <p>2. They register with the code → they get <strong className="text-[#10B981]">+1 free Deep Dive baseline</strong> as a welcome bonus.</p>
+          <p>2. They register with the code → they get <strong className="text-[#FFAA33]">+1 free Deep Dive baseline</strong> as a welcome bonus.</p>
           <p>3. When they pay for their first subscription or top-up → <strong className="text-[#FFBA08]">you also get +1 Deep Dive baseline</strong>.</p>
           <p>4. Max <strong>{info.cap} rewards</strong> per rolling 30 days. No farming, no bots — just friends helping friends rise.</p>
         </div>

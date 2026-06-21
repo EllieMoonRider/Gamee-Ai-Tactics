@@ -6,13 +6,13 @@ import { useAuth } from "../lib/auth";
 import { CalendarBlank, Plus, Trash, Trophy, Brain, FlagBanner, Target, ListChecks, Star } from "@phosphor-icons/react";
 
 const KIND_ICON = {
-  deep_dive_created: { icon: Brain, color: "#E63946", label: "Deep Dive" },
+  deep_dive_created: { icon: Brain, color: "#FF6B00", label: "Deep Dive" },
   building_block_added: { icon: Brain, color: "#FFBA08", label: "Building Block" },
   battle_report_posted: { icon: FlagBanner, color: "#FFBA08", label: "Battle Report" },
-  alliance_joined: { icon: Star, color: "#10B981", label: "Alliance" },
-  optimizer_run: { icon: Target, color: "#10B981", label: "Optimizer" },
+  alliance_joined: { icon: Star, color: "#FFAA33", label: "Alliance" },
+  optimizer_run: { icon: Target, color: "#FFAA33", label: "Optimizer" },
   build_saved: { icon: Target, color: "#FFBA08", label: "Build" },
-  task_completed: { icon: ListChecks, color: "#10B981", label: "Task" },
+  task_completed: { icon: ListChecks, color: "#FFAA33", label: "Task" },
   event_created: { icon: CalendarBlank, color: "#FFBA08", label: "Event" },
 };
 
@@ -68,7 +68,7 @@ const Calendar = () => {
   const past = events.filter(e => new Date(e.start_at) < new Date());
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
@@ -119,7 +119,7 @@ const Calendar = () => {
                     <div className="text-xs text-zinc-500 mt-0.5">{new Date(ev.start_at).toLocaleString()} · {g?.name || ev.game_slug}</div>
                     {ev.description && <p className="text-xs text-zinc-400 mt-1.5">{ev.description}</p>}
                   </div>
-                  <button onClick={() => del(ev.id)} className="text-zinc-500 hover:text-[#E63946]" data-testid={`cal-delete-${ev.id}`}><Trash size={14} /></button>
+                  <button onClick={() => del(ev.id)} className="text-zinc-500 hover:text-[#FF6B00]" data-testid={`cal-delete-${ev.id}`}><Trash size={14} /></button>
                 </div>
               );
             })}
@@ -140,7 +140,7 @@ const Calendar = () => {
 
           {/* Milestone feed */}
           <aside className="surface rounded p-4" data-testid="milestone-feed">
-            <div className="tactical-label text-[#10B981] mb-2 flex items-center gap-1"><Trophy size={12} /> // MILESTONES</div>
+            <div className="tactical-label text-[#FFAA33] mb-2 flex items-center gap-1"><Trophy size={12} /> // MILESTONES</div>
             <div className="space-y-2 max-h-[60vh] overflow-y-auto">
               {milestones.length === 0 ? (
                 <p className="text-xs text-zinc-500">CypherAI is watching — your milestones will appear as you use the app.</p>

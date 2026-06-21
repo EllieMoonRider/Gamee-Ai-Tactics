@@ -19,7 +19,7 @@ const AboutCypher = () => {
         >
           <div className="tactical-label cc-neon-text mb-4">// ABOUT</div>
           <div className="relative inline-block">
-            <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border-2 border-[#39FF14]/60 shadow-[0_0_28px_rgba(57,255,20,0.5)] mb-5">
+            <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border-2 border-[#FF6B00]/60 shadow-[0_0_28px_rgba(255,107,0,0.5)] mb-5">
               <img src={iconImg} alt="CypherAI Insignia" className="w-full h-full object-cover" />
             </div>
           </div>
@@ -27,8 +27,8 @@ const AboutCypher = () => {
             className="font-display text-4xl sm:text-5xl font-black tracking-widest"
             style={{
               fontFamily: "Orbitron, sans-serif",
-              color: "#39FF14",
-              textShadow: "0 0 10px rgba(57,255,20,0.65), 0 0 22px rgba(57,255,20,0.3)",
+              color: "#FF6B00",
+              textShadow: "0 0 10px rgba(255,107,0,0.65), 0 0 22px rgba(255,107,0,0.3)",
             }}
           >
             CYPHERAI
@@ -74,8 +74,8 @@ const AboutCypher = () => {
             return (
               <div key={i} className="cc-panel cc-tile p-5 text-center">
                 <span className="cc-tile-corner tl" /><span className="cc-tile-corner tr" /><span className="cc-tile-corner bl" /><span className="cc-tile-corner br" />
-                <div className="w-12 h-12 mx-auto mb-3 rounded-full border border-[#39FF14]/40 flex items-center justify-center"
-                     style={{ background: "radial-gradient(circle at center, rgba(57,255,20,0.18), rgba(57,255,20,0))" }}>
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full border border-[#FF6B00]/40 flex items-center justify-center"
+                     style={{ background: "radial-gradient(circle at center, rgba(255,107,0,0.18), rgba(255,107,0,0))" }}>
                   <Icon size={24} weight="duotone" className="cc-neon-text" />
                 </div>
                 <h3 className="font-display font-bold cc-neon-text tracking-widest text-xs">{b.title}</h3>
@@ -115,7 +115,7 @@ const AboutCypher = () => {
         {/* DEDICATION FROM THE GENERAL */}
         <motion.section
           initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}
-          className="cc-panel relative p-7 sm:p-9 overflow-hidden ring-1 ring-[#39FF14]/30"
+          className="cc-panel relative p-7 sm:p-9 overflow-hidden ring-1 ring-[#FF6B00]/30"
           data-testid="cypher-dedication"
         >
           <Heart size={28} weight="duotone" className="cc-neon-text mb-3" />
@@ -129,7 +129,7 @@ const AboutCypher = () => {
             </p>
           </blockquote>
           <div className="mt-6 flex items-center gap-3">
-            <div className="w-10 h-px bg-[#39FF14]/50" />
+            <div className="w-10 h-px bg-[#FF6B00]/50" />
             <div>
               <div className="font-display font-bold cc-neon-text tracking-wide" data-testid="general-name">EllieMoonRider</div>
               <div className="font-mono-tactical text-[10px] tracking-[0.25em] text-zinc-500">FOUNDER · GENERAL</div>

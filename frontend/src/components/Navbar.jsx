@@ -12,8 +12,8 @@ const Navbar = () => {
     <header className="glass-nav sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2.5" data-testid="navbar-logo">
-          <CrosshairSimple size={22} weight="duotone" className="text-[#E63946]" />
-          <span className="font-display text-lg font-bold tracking-tight">TACTICAL ALLY<span className="text-[#E63946]">.</span></span>
+          <CrosshairSimple size={22} weight="duotone" className="text-[#FF6B00]" />
+          <span className="font-display text-lg font-bold tracking-tight">TACTICAL ALLY<span className="text-[#FF6B00]">.</span></span>
           <span className="tactical-label hidden sm:inline ml-2">// 37GAMES WAR ROOM</span>
         </Link>
         <nav className="flex items-center gap-3">
@@ -22,7 +22,7 @@ const Navbar = () => {
               <Link to="/dashboard" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-dashboard">Command Center</Link>
               <Link to="/operations" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-operations">Operations</Link>
               <Link to="/scouts" className="text-sm text-zinc-300 hover:text-[#FFBA08] transition px-3 py-1.5" data-testid="navbar-scouts">Scouts</Link>
-              <Link to="/cypher" className="text-sm text-zinc-300 hover:text-[#39FF14] transition px-3 py-1.5" data-testid="navbar-cypher">Cypher</Link>
+              <Link to="/cypher" className="text-sm text-zinc-300 hover:text-[#FF6B00] transition px-3 py-1.5" data-testid="navbar-cypher">Cypher</Link>
               <Link to="/war-room" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-war-room">War Room</Link>
               <Link to="/pricing" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-pricing">Pricing</Link>
               <Link to="/help" className="text-sm text-zinc-400 hover:text-white transition px-3 py-1.5" data-testid="navbar-help" title="Help & Support">?</Link>

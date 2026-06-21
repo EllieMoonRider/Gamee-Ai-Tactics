@@ -1,4 +1,4 @@
-"""Generate Tactical Ally PWA icon (transparent, dark, neon green crosshair logo) via Nano Banana."""
+"""Generate Tactical Ally PWA icon (transparent, dark, neon orange crosshair logo) via Nano Banana."""
 import asyncio, os, base64
 from pathlib import Path
 from dotenv import load_dotenv
@@ -12,11 +12,11 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 PROMPT = """Generate a square 1024x1024 app icon for "Tactical Ally" — an AI gaming strategy companion.
 
 Composition:
-- DOMINANT centered DRAGON silhouette taking up about 60% of the icon — fierce, proud profile, wings partially outspread, dark silhouette with neon green outline glow
-- Behind the dragon, a faint tactical crosshair / scope reticle made of clean thin neon green lines
+- DOMINANT centered DRAGON silhouette taking up about 60% of the icon — fierce, proud profile, wings partially outspread, dark silhouette with neon orange outline glow
+- Behind the dragon, a faint tactical crosshair / scope reticle made of clean thin neon orange lines
 - Below the dragon, a tiny faint stylized castle turret silhouette at the bottom edge
 - Dark charcoal/near-black background (#0a0a0a)
-- Strong neon green glow accents (#39FF14)
+- Strong neon orange glow accents (#FF6B00)
 - Subtle holographic circular rings around the entire composition
 - Rounded square format with safe padding from the edges (about 10% margin) so it works as an iOS/Android home-screen icon
 - The DRAGON is the hero element — should be instantly recognizable as a dragon even at 64x64 thumbnail size

@@ -93,7 +93,7 @@ export const BattleReportsList = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
@@ -125,10 +125,10 @@ export const BattleReportsList = () => {
                   type="checkbox"
                   checked={autoAnalyze}
                   onChange={(e) => setAutoAnalyze(e.target.checked)}
-                  className="w-4 h-4 accent-[#10B981]"
+                  className="w-4 h-4 accent-[#FFAA33]"
                   data-testid="br-auto-checkbox"
                 />
-                <Brain size={14} weight="duotone" className="text-[#10B981]" />
+                <Brain size={14} weight="duotone" className="text-[#FFAA33]" />
                 <span className="text-sm">Auto-run CypherAI Take after saving</span>
                 <span className="tactical-label text-zinc-500 ml-auto">// COSTS 1 AI CALL</span>
               </label>
@@ -158,7 +158,7 @@ export const BattleReportsList = () => {
                   {r.notes && <p className="text-xs text-zinc-400 mt-1 line-clamp-2">{r.notes}</p>}
                   <div className="flex items-center justify-between mt-3 text-xs text-zinc-500">
                     <span>{(r.shots || []).length} shot{(r.shots || []).length !== 1 ? "s" : ""}</span>
-                    {r.cyphr_take && <span className="flex items-center gap-1 text-[#10B981]"><Brain size={12} /> CypherAI take</span>}
+                    {r.cyphr_take && <span className="flex items-center gap-1 text-[#FFAA33]"><Brain size={12} /> CypherAI take</span>}
                   </div>
                 </Link>
               );
@@ -220,13 +220,13 @@ export const BattleReportDetail = () => {
   };
 
   if (!br) return (
-    <div className="min-h-screen"><Navbar />
+    <div className="command-center min-h-screen"><Navbar />
       <div className="max-w-4xl mx-auto px-6 py-10"><div className="h-12 w-64 shimmer rounded mb-6" /><div className="h-64 shimmer rounded" /></div>
     </div>
   );
 
   return (
-    <div className="min-h-screen">
+    <div className="command-center min-h-screen">
       <Navbar />
       <div className="max-w-4xl mx-auto px-6 py-8 space-y-5">
         <Link to="/battle-reports" className="text-sm text-zinc-400 hover:text-white inline-flex items-center gap-1.5" data-testid="back-to-reports"><ArrowLeft size={14} /> Battle Reports</Link>
@@ -242,7 +242,7 @@ export const BattleReportDetail = () => {
               <button onClick={openShare} className="btn-outline !py-2 !px-3 text-xs flex items-center gap-1.5" data-testid="br-share">
                 <Share size={12} /> Share to alliance
               </button>
-              <button onClick={del} className="text-xs text-zinc-500 hover:text-[#E63946] flex items-center gap-1" data-testid="br-delete">
+              <button onClick={del} className="text-xs text-zinc-500 hover:text-[#FF6B00] flex items-center gap-1" data-testid="br-delete">
                 <Trash size={12} /> Delete
               </button>
             </div>
@@ -264,7 +264,7 @@ export const BattleReportDetail = () => {
         <div className="surface rounded-md p-6">
           <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
             <h2 className="font-display font-bold flex items-center gap-2">
-              <Brain size={18} weight="duotone" className="text-[#10B981]" /> CypherAI Take
+              <Brain size={18} weight="duotone" className="text-[#FFAA33]" /> CypherAI Take
               <span className="tactical-label text-zinc-500 ml-2">// OPTIONAL</span>
             </h2>
             {!br.cyphr_take && (

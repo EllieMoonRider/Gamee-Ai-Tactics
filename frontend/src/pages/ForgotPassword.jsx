@@ -40,7 +40,7 @@ const ForgotPassword = () => {
 
         {sent ? (
           <div className="surface rounded-md p-7 text-center space-y-4" data-testid="forgot-success">
-            <PaperPlaneTilt size={36} weight="duotone" className="text-[#10B981] mx-auto" />
+            <PaperPlaneTilt size={36} weight="duotone" className="text-[#FFAA33] mx-auto" />
             <h2 className="font-display text-xl font-bold">Check your inbox</h2>
             <p className="text-sm text-zinc-400">
               If an account exists for <span className="text-white">{email}</span>, a reset link has been delivered.
@@ -49,7 +49,7 @@ const ForgotPassword = () => {
               <div className="surface-elev rounded p-4 text-left">
                 <div className="tactical-label text-[#FFBA08] mb-2">// DEV MODE — no email service configured</div>
                 <p className="text-xs text-zinc-400 mb-2">Use this link directly:</p>
-                <a href={devLink} className="text-xs text-[#E63946] break-all underline" data-testid="dev-reset-link">{devLink}</a>
+                <a href={devLink} className="text-xs text-[#FF6B00] break-all underline" data-testid="dev-reset-link">{devLink}</a>
               </div>
             )}
             <Link to="/auth" className="btn-outline inline-block">← Back to Recruitment Center</Link>

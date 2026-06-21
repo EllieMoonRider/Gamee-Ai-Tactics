@@ -11,9 +11,9 @@
   --text-primary: #FFFFFF;
   --text-secondary: #A1A1AA;
   --text-muted: #71717A;
-  --accent-primary: #E63946;
+  --accent-primary: #FF6B00;
   --accent-secondary: #FFBA08;
-  --accent-tactical: #10B981;
+  --accent-tactical: #FFAA33;
   --border-default: rgba(255, 255, 255, 0.08);
 }
 
@@ -247,7 +247,7 @@ input:focus, textarea:focus, select:focus {
   --banner-fill: #14110d;
 }
 .war-banner {
-  filter: drop-shadow(0 22px 50px rgba(0,0,0,0.7)) drop-shadow(0 0 28px rgba(57,255,20,0.12));
+  filter: drop-shadow(0 22px 50px rgba(0,0,0,0.7)) drop-shadow(0 0 28px rgba(255,107,0,0.12));
   animation: banner-drop 0.9s cubic-bezier(0.25, 1, 0.32, 1) both;
 }
 @keyframes banner-drop {
@@ -256,8 +256,8 @@ input:focus, textarea:focus, select:focus {
 }
 .war-banner-body {
   background:
-    linear-gradient(180deg, rgba(57,255,20,0.03) 0%, rgba(0,0,0,0.0) 30%),
-    radial-gradient(ellipse at 50% 0%, rgba(57,255,20,0.06) 0%, rgba(0,0,0,0) 50%),
+    linear-gradient(180deg, rgba(255,107,0,0.03) 0%, rgba(0,0,0,0.0) 30%),
+    radial-gradient(ellipse at 50% 0%, rgba(255,107,0,0.06) 0%, rgba(0,0,0,0) 50%),
     repeating-linear-gradient(
       90deg,
       #14110d 0px,
@@ -266,20 +266,20 @@ input:focus, textarea:focus, select:focus {
       #181410 6px
     );
   background-color: #14110d;
-  border-left: 1px solid rgba(57,255,20,0.30);
-  border-right: 1px solid rgba(57,255,20,0.30);
+  border-left: 1px solid rgba(255,107,0,0.30);
+  border-right: 1px solid rgba(255,107,0,0.30);
   position: relative;
 }
 .war-banner-body::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 30%, rgba(57,255,20,0.06) 0%, rgba(0,0,0,0) 60%);
+  background: radial-gradient(ellipse at 50% 30%, rgba(255,107,0,0.06) 0%, rgba(0,0,0,0) 60%);
   pointer-events: none;
 }
 .recruit-input {
   background: rgba(8, 8, 6, 0.85);
-  border: 1px solid rgba(57, 255, 20, 0.28);
+  border: 1px solid rgba(255, 107, 0, 0.28);
   border-radius: 3px;
   padding: 10px 12px;
   color: #e4e4e7;
@@ -292,11 +292,11 @@ input:focus, textarea:focus, select:focus {
   font-size: 12px;
 }
 .recruit-input:focus {
-  border-color: rgba(57, 255, 20, 0.75);
-  box-shadow: 0 0 0 1px rgba(57, 255, 20, 0.25), 0 0 14px rgba(57, 255, 20, 0.18);
+  border-color: rgba(255, 107, 0, 0.75);
+  box-shadow: 0 0 0 1px rgba(255, 107, 0, 0.25), 0 0 14px rgba(255, 107, 0, 0.18);
 }
 .recruit-cta {
-  background: linear-gradient(180deg, #39FF14 0%, #2dcf0e 100%);
+  background: linear-gradient(180deg, #FF6B00 0%, #CC5500 100%);
   color: #050505;
   border: none;
   padding: 11px 16px;
@@ -306,12 +306,12 @@ input:focus, textarea:focus, select:focus {
   font-size: 13px;
   letter-spacing: 0.2em;
   cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(57,255,20,0.4) inset, 0 0 18px rgba(57,255,20,0.32);
+  box-shadow: 0 0 0 1px rgba(255,107,0,0.4) inset, 0 0 18px rgba(255,107,0,0.32);
   transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 .recruit-cta:hover:not(:disabled) {
   filter: brightness(1.1);
-  box-shadow: 0 0 0 1px rgba(57,255,20,0.6) inset, 0 0 28px rgba(57,255,20,0.5);
+  box-shadow: 0 0 0 1px rgba(255,107,0,0.6) inset, 0 0 28px rgba(255,107,0,0.5);
   transform: translateY(-1px);
 }
 .recruit-cta:disabled {
@@ -321,10 +321,12 @@ input:focus, textarea:focus, select:focus {
 
 
 /* ====== COMMAND CENTER · holographic command bridge theme ====== */
+:root {
+  --neon: #FF6B00;
+  --neon-soft: #FFAA33;
+  --neon-glow: rgba(255, 107, 0, 0.40);
+}
 .command-center {
-  --neon: #39FF14;
-  --neon-soft: #00FF94;
-  --neon-glow: rgba(57, 255, 20, 0.35);
   position: relative;
   isolation: isolate;
   min-height: 100vh;
@@ -347,20 +349,20 @@ input:focus, textarea:focus, select:focus {
 }
 .cc-neon-text {
   color: var(--neon);
-  text-shadow: 0 0 8px var(--neon-glow), 0 0 20px rgba(57, 255, 20, 0.18);
+  text-shadow: 0 0 8px var(--neon-glow), 0 0 20px rgba(255, 107, 0, 0.18);
 }
 .cc-panel {
   background: rgba(8, 12, 8, 0.72);
-  border: 1px solid rgba(57, 255, 20, 0.30);
-  box-shadow: 0 0 0 1px rgba(57, 255, 20, 0.08) inset, 0 0 24px rgba(57, 255, 20, 0.06);
+  border: 1px solid rgba(255, 107, 0, 0.30);
+  box-shadow: 0 0 0 1px rgba(255, 107, 0, 0.08) inset, 0 0 24px rgba(255, 107, 0, 0.06);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 6px;
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .cc-panel:hover {
-  border-color: rgba(57, 255, 20, 0.65);
-  box-shadow: 0 0 0 1px rgba(57, 255, 20, 0.12) inset, 0 0 36px rgba(57, 255, 20, 0.18);
+  border-color: rgba(255, 107, 0, 0.65);
+  box-shadow: 0 0 0 1px rgba(255, 107, 0, 0.12) inset, 0 0 36px rgba(255, 107, 0, 0.18);
 }
 .cc-tile {
   position: relative;
@@ -411,8 +413,8 @@ input:focus, textarea:focus, select:focus {
 @keyframes cc-blink { 50% { opacity: 0; } }
 .cc-grid-floor {
   background-image:
-    linear-gradient(rgba(57, 255, 20, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57, 255, 20, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(255, 107, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 107, 0, 0.08) 1px, transparent 1px);
   background-size: 32px 32px;
   background-position: -1px -1px;
 }
@@ -421,8 +423,8 @@ input:focus, textarea:focus, select:focus {
     180deg,
     transparent 0,
     transparent 3px,
-    rgba(57, 255, 20, 0.03) 3px,
-    rgba(57, 255, 20, 0.03) 4px
+    rgba(255, 107, 0, 0.03) 3px,
+    rgba(255, 107, 0, 0.03) 4px
   );
   pointer-events: none;
 }
