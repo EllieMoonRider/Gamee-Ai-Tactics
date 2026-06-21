@@ -20,6 +20,8 @@ import Calendar from "./pages/Calendar";
 import Scouts from "./pages/Scouts";
 import Help from "./pages/Help";
 import AdminSupport from "./pages/AdminSupport";
+import LandscapeOverlay from "./components/LandscapeOverlay";
+import InstallPwaPrompt from "./components/InstallPwaPrompt";
 import "./App.css";
 
 const Protected = ({ children }) => {
@@ -34,6 +36,8 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Toaster theme="dark" position="bottom-right" richColors />
+        <LandscapeOverlay />
+        <InstallPwaPrompt />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<AuthPage />} />
