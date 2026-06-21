@@ -22,6 +22,7 @@ const Navbar = () => {
               <Link to="/dashboard" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-dashboard">Command Center</Link>
               <Link to="/operations" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-operations">Operations</Link>
               <Link to="/scouts" className="text-sm text-zinc-300 hover:text-[#FFBA08] transition px-3 py-1.5" data-testid="navbar-scouts">Scouts</Link>
+              <Link to="/cypher" className="text-sm text-zinc-300 hover:text-[#39FF14] transition px-3 py-1.5" data-testid="navbar-cypher">Cypher</Link>
               <Link to="/war-room" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-war-room">War Room</Link>
               <Link to="/pricing" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-pricing">Pricing</Link>
               <Link to="/help" className="text-sm text-zinc-400 hover:text-white transition px-3 py-1.5" data-testid="navbar-help" title="Help & Support">?</Link>

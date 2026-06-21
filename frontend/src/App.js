@@ -22,6 +22,7 @@ import Calendar from "./pages/Calendar";
 import Scouts from "./pages/Scouts";
 import Help from "./pages/Help";
 import AdminSupport from "./pages/AdminSupport";
+import AboutCypher from "./pages/AboutCypher";
 import LandscapeOverlay from "./components/LandscapeOverlay";
 import InstallPwaPrompt from "./components/InstallPwaPrompt";
 import "./App.css";
@@ -56,6 +57,7 @@ function App() {
           <Route path="/billing/success" element={<BillingSuccess />} />
           <Route path="/billing/cancel" element={<BillingCancel />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/cypher" element={<AboutCypher />} />
           <Route path="/share/d/:token" element={<PublicDeepDive />} />
           <Route path="/share/b/:token" element={<PublicBuild />} />
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />

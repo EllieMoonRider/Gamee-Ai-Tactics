@@ -221,6 +221,7 @@ const AuthPage = () => {
         <p className="text-center mt-16 text-[11px] font-mono-tactical tracking-[0.2em] text-zinc-600">
           UNOFFICIAL STRATEGY COMPANION · 37GAMES UNAFFILIATED
           <br/>
+          <Link to="/cypher" className="inline-block mt-3 mr-4 text-[#39FF14]/70 hover:text-[#39FF14]" data-testid="recruit-about-cypher">ABOUT CYPHERAI</Link>
           <Link to="/" className="inline-block mt-3 text-zinc-500 hover:text-[#39FF14]">← BACK TO HOME</Link>
         </p>
       </div>

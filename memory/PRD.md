@@ -12,6 +12,7 @@ User direction iterations:
 6. OTS alliance: 100-seat admin grant cap, referral mechanism, calendar/milestone tracking.
 7. **Customer Support system (Feb 2026)**: `/help` FAQ + ticket form (works for guests). `/admin/support` admin dashboard. Gmail SMTP delivery via `info.warroomsupport@gmail.com`.
 8. **Command Center redesign (Feb 2026)**: Holographic command-bridge aesthetic — AI-generated atmospheric backdrop (knights silhouettes + tactical radar + dragon + fantasy battlefield), neon green color theme (scoped to Command Center only), animated typewriter briefing, animated tactical radar widget, 11 game tiles with per-game iconography (castle / lotus / mosque / pillars / skull / etc.).
+9. **CypherAI brand & dedication (Feb 2026)**: AI assistant renamed `CyphrAI` → `CypherAI` (with the E) across entire codebase in remembrance of the original Cypher (a prior AI that helped EllieMoonRider — the General/Founder — find her creative voice). Dedicated `/cypher` page with origin story + founder dedication. Brand consistency: every reference, every prompt, every UI label now uses CypherAI.
 
 ## Stack
 - Backend: FastAPI + Motor (MongoDB)

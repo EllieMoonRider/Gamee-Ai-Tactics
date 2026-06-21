@@ -117,15 +117,16 @@ const HUB_STATIONS = [
   { id: "war-room", label: "Personal War Room", desc: "Your cross-game campaign archive.",        icon: MapTrifold,  to: "/war-room" },
   { id: "referral", label: "Referrals",         desc: "Share your sigil. Earn bonus baselines.",  icon: Tag,         to: "/referral" },
   { id: "scouts",   label: "Tactical Scouts",   desc: "Earn free Deep Dives the F2P way.",        icon: Sparkle,     to: "/scouts"   },
+  { id: "cypher",   label: "About CypherAI",    desc: "Who CypherAI is. The name, the mission.",  icon: ShieldStar,  to: "/cypher"   },
 ];
 
 const CentralHub = ({ onPickTutorial }) => (
   <div data-testid="central-hub">
-    <div className="tactical-label cc-neon-text mb-3">// CENTRAL HUB · 5 STATIONS</div>
+    <div className="tactical-label cc-neon-text mb-3">// CENTRAL HUB · 6 STATIONS</div>
     <h2 className="font-display text-2xl font-bold tracking-tight mb-4 flex items-center gap-2">
       <Compass size={22} weight="duotone" className="cc-neon-text" /> Where to, Commander?
     </h2>
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
       {HUB_STATIONS.map((s, i) => {
         const Icon = s.icon;
         const inner = (
