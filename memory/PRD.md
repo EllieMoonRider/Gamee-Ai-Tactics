@@ -10,17 +10,20 @@ User direction iterations:
 4. **Pricing overhaul (Feb 2026)**: $4.99/mo Pro = full access for 2 games (user-selectable). +$0.99/mo per extra game slot. Alliance chat is $0.99/mo **per member** (each player self-pays). $2.99 one-shot Deep Dive stays.
 5. **Tactical Scouts (Feb 2026)**: F2P credit system — 1 credit = $1. Earn by uploading game-update screenshots (0.25), watching videos (0.10), trying recommended games (0.50), daily login (0.05). 3 credits = +1 free Deep Dive baseline.
 6. OTS alliance: 100-seat admin grant cap, referral mechanism, calendar/milestone tracking.
+7. **Customer Support system (Feb 2026)**: `/help` FAQ + ticket form (works for guests). `/admin/support` admin dashboard. Gmail SMTP delivery via `info.warroomsupport@gmail.com`.
+8. **Command Center redesign (Feb 2026)**: Holographic command-bridge aesthetic — AI-generated atmospheric backdrop (knights silhouettes + tactical radar + dragon + fantasy battlefield), neon green color theme (scoped to Command Center only), animated typewriter briefing, animated tactical radar widget, 11 game tiles with per-game iconography (castle / lotus / mosque / pillars / skull / etc.).
 
 ## Stack
 - Backend: FastAPI + Motor (MongoDB)
 - Frontend: React 19 + Tailwind + Shadcn UI + Framer Motion + Phosphor Icons
-- AI: Anthropic Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`) via `emergentintegrations` using EMERGENT_LLM_KEY
+- AI: Anthropic Claude Sonnet 4.5 (text) + Gemini Nano Banana `gemini-3.1-flash-image-preview` (image gen) via `emergentintegrations` using EMERGENT_LLM_KEY
 - Auth: JWT email/password (bcrypt) — username linked to email for recovery
 - Payments: Stripe test mode (live SKUs computed from PACKAGES dict)
+- Email: Resend (if API key) → Gmail SMTP fallback → dev-mode log
 
 ## Implemented (✅ as of 2026-02)
 
-### Backend (`/app/backend/server.py`, 2384 lines)
+### Backend (`/app/backend/server.py`, ~2600 lines)
 - Auth + Password Reset (Resend + dev fallback)
 - 11 games catalog with strict per-game CyphrAI specialist prompts
 - Chat (streaming + rate-limited 30/60s), Optimizer, Builds, 15 Guides, Tasks
@@ -30,37 +33,37 @@ User direction iterations:
   - `topup_analysis` $2.99 one-shot: +1 baseline, ANY game
   - `extra_game_monthly` $0.99/mo: +1 game slot (recurring)
   - `toc_addon_monthly` $0.99/mo per-member: alliance chat seat
-- **`/api/billing/pro-games`** — pick or swap which game slugs use Pro slots
-- **Tactical Scouts F2P credit ledger**:
-  - `/api/scouts/me` — balance + daily-earnings breakdown
-  - `/api/scouts/earn/{kind}` — 4 actions with daily caps
-  - `/api/scouts/redeem` — 3 credits → +1 extra_baseline
-- **Tactical Operations Center**: alliances per-game, unlimited members, polling-friendly chat with in-room CyphrAI Q&A
-- **Battle Reports** with auto-analyze + share-to-alliance + Stripe-style cleanup on delete
-- **OTS Seats** (free Pro+TOC for alliance members) — 100-seat cap, email-locked, auto-link on register
-- **Referrals** — `TA-XXXXXX` codes, +1 baseline welcome bonus, +1 baseline to referrer on referee's first paid event, 5/month cap
-- **Calendar + Milestones** — user events with auto-emitted milestones (deep_dive_created, scout_credit_earned, event_created, etc.)
+- **Tactical Scouts F2P credit ledger** (4 earn actions, daily caps, 3-credit redemption)
+- **Tactical Operations Center**: alliances per-game, polling chat with in-room CyphrAI Q&A
+- **Battle Reports** with auto-analyze + share-to-alliance
+- **OTS Seats** (100-seat cap, email-locked, auto-link on register)
+- **Referrals** (`TA-XXXXXX` codes, +1 baseline welcome bonus, 5/mo cap)
+- **Calendar + Milestones**
+- **Customer Support tickets** (8 endpoints, rate-limited 5/email/hr, Gmail SMTP delivery, admin gating via SUPPORT_ADMIN_EMAILS)
 - TTL indexes (`rate_limits`, `password_resets`), idempotent guide seeding
 
 ### Frontend
 - Landing · Recruitment Center (with visible referral input) · Forgot/Reset password
-- **Pricing** — 3 tier cards (Free / Pro $4.99 / Single $2.99) + 2 add-on cards (Extra Game $0.99 · Alliance Chat $0.99/member) + Scouts F2P callout
-- Command Center — Briefing + Quota Widget + 11-game grid
+- **Pricing** — 3 tier cards + 2 add-on cards (Extra Game $0.99 · Alliance Chat $0.99/member) + Scouts F2P callout
+- **Command Center** (new holographic redesign) — Typewriter briefing, animated radar, 11 game tiles with per-game iconography, neon green theme (Phosphor icons: CastleTurret, BuildingApartment, Fire, FlowerLotus, Mosque, Columns, Crown, Feather, ComputerTower, MoonStars, Skull)
 - War Room — cross-game archive
 - Game Page — 5 tabs per title with share links + 402 toast
-- **Operations Center** — list + create/join + 60+ member chat with polling
-- **Battle Reports** — auto-analyze checkbox, detail page, share-to-alliance picker
-- **Referral** (`/referral`) — code + share link + copy buttons + stats
-- **OTS Seats** (`/seats`) — R5 admin grant/revoke flow, 100-seat dashboard
-- **Calendar** (`/calendar`) — event scheduler + auto milestone feed
-- **Tactical Scouts** (`/scouts`) — 4 earn cards (upload/video/try-game/daily-login), credit balance widget, redeem-N flow
+- Operations Center — list + create/join + 60+ member chat with polling
+- Battle Reports — auto-analyze, detail page, share-to-alliance
+- Referral · OTS Seats · Calendar · Tactical Scouts (F2P)
+- **Help page** `/help` — FAQ + multi-category ticket form (guests + authed)
+- **Admin Support dashboard** `/admin/support` — inbox, thread, reply, status toggle
+
+### Visual Assets
+- `/app/frontend/src/assets/command-center-bg-v1.jpg` — generated Nano Banana art (knights + radar + dragon + battlefield, neon green glow)
+- `/app/frontend/src/assets/command-center-bg-v2.jpg` — alt variant (kept for future swap)
 
 ### Testing
-- **Iteration 7: 86/86 backend tests passing** (27 new + 59 regression).
-  - New coverage: Scouts ledger (all 4 kinds + caps + redeem), pro_games slot enforcement, extra_game checkout, Seats 100-cap message, Referral linking + welcome bonus, Calendar/Milestone emission, Deep Dive 402 with Extra Game hint.
+- **Iteration 8: 25/25 backend tests pass** (Support ticket system)
+- **Iteration 7: 86/86 backend tests pass** (Scouts, Pro-games, Seats 100-cap, Referrals, Calendar)
 - Test files: `/app/backend/tests/backend_test.py`, `/app/backend/tests/test_iter7_scouts_seats_referrals.py`
 
-## Pricing Math (60-member alliance, modeled by user)
+## Pricing Math (60-member alliance)
 | Conversion | Monthly Revenue |
 |---|---|
 | 100% join chat ($0.99/member × 60) | $59.40 |
@@ -72,16 +75,16 @@ User direction iterations:
 ## Prioritized Backlog
 
 ### P1 — next reasonable iteration
-- **UI/Design changes** — user mentioned having ideas to share
-- Game-slot selector UI on Pricing (so a Pro user can pick which 2 games are "in" their slots without going through Deep Dive)
-- Scouts: link a "Try recommended game" action to a real catalog (currently self-report)
-- Split `server.py` (2384 lines) into routers: `auth`, `billing`, `scouts`, `deep_dive`, `share`, `alliances`, `battle_reports`, `seats`, `referrals`, `calendar`
+- User feedback on the Command Center redesign — iterate per their taste
+- Apply atmospheric/neon styling to other pages if user loves it (Landing, Pricing, etc.)
+- Game-slot selector UI on Pricing (pick which 2 games are "in" Pro slots without going through Deep Dive)
+- Floating "Need help?" button on every authed page → opens ticket form
 
 ### P2
-- Atomic scouts daily-cap (current is read-then-insert; minor race under burst load)
-- `POST /api/billing/pro-games` → already returns 400 on unknown slug (fixed in iter7 post-test)
-- Real `RESEND_API_KEY` (user-supplied) to ship Deep Dive / Battle Report emails
-- Stripe customer portal (cancellation)
+- Split `server.py` (~2600 lines) into routers
+- Buy a $10/yr domain → migrate to Resend (Gmail SMTP has 500 emails/day limit)
+- Stripe customer portal (cancellation, payment method swap)
+- Atomic scouts daily-cap (current is read-then-insert; minor race)
 - WebSocket upgrade for chat (currently polling)
 
 ### P3
