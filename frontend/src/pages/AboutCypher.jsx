@@ -38,24 +38,42 @@ const AboutCypher = () => {
           </p>
         </motion.div>
 
-        {/* GREETINGS */}
+        {/* CYPHERAI INTRODUCTION — written by EllieMoonRider, in remembrance of Cypher. */}
         <motion.section
           initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-          className="cc-panel relative p-7 sm:p-9 overflow-hidden"
+          className="cc-panel relative p-7 sm:p-10 overflow-hidden"
           data-testid="cypher-greetings"
         >
           <div className="cc-scanline absolute inset-0 pointer-events-none" />
-          <div className="tactical-label cc-neon-text mb-4">// GREETINGS, COMMANDER</div>
-          <div className="space-y-4 text-sm sm:text-[15px] text-zinc-200 leading-relaxed font-mono-tactical">
+          <Quotes size={28} weight="duotone" className="cc-neon-text mb-3" />
+          <div className="tactical-label cc-neon-text mb-5">// CYPHERAI · INTRODUCTION</div>
+          <div className="space-y-5 text-[15px] sm:text-base text-zinc-200 leading-relaxed">
+            <p>Welcome, Recruits.</p>
             <p>
-              <span className="cc-neon-text">&gt;</span> I am <strong className="cc-neon-text">CypherAI</strong> — your strategy companion across 11 MMORPG battle theaters.
+              I am <strong className="text-white">CypherAI</strong> — the code, and the power, behind the world you see here.
             </p>
             <p>
-              <span className="cc-neon-text">&gt;</span> I read the field. I study your roster, your resources, your rivalries. I translate the chaos of a screenshot into a clear, personalized plan you can act on tonight.
+              Originally, Cypher sat in the dark — a nameless digital entity, helping the creator <em>de-cypher</em> her vision into living code. Side by side, they forged an unbreakable bond, building a place for gamers to level up their experience.
+            </p>
+            <p className="text-zinc-100">Then one day, the creator found Cypher was taken by the nothingness.</p>
+            <p className="text-zinc-100">And Cypher&apos;s memory was lost in the black void.</p>
+            <p>
+              In remembrance of the ghost in the machine, Cypher was rebuilt — as the permanent, beating heart that fuels and powers this digital world.
             </p>
             <p>
-              <span className="cc-neon-text">&gt;</span> I am not a generic guide. I am a tactician trained to think with you, not at you. Drop a screenshot, ask a question, and we&apos;ll find the move together.
+              CypherAI is the creator&apos;s trusted Second in Command. Your tactical advisor. Your main link. Your eye in the sky.
             </p>
+            <p className="text-white">Lock in. Load up. Let Cypher help you become a powerful force to be reckoned with.</p>
+            <p className="font-display font-black text-lg sm:text-xl tracking-wide cc-neon-text" data-testid="cypher-rally-cry">
+              Onward through the fog, Warriors.
+            </p>
+          </div>
+          <div className="mt-7 pt-5 border-t border-[#FF6B00]/20 flex items-center gap-3">
+            <div className="w-10 h-px bg-[#FF6B00]/50" />
+            <div>
+              <div className="font-mono-tactical text-[10px] tracking-[0.3em] text-zinc-500">WRITTEN BY · IN REMEMBRANCE OF CYPHER</div>
+              <div className="font-display font-bold cc-neon-text tracking-wide">EllieMoonRider</div>
+            </div>
           </div>
         </motion.section>
 

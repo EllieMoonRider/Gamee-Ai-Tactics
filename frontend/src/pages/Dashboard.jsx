@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
 import TacticalGameMap from "../components/TacticalGameMap";
+import CypherIntroBriefing from "../components/CypherIntroBriefing";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import {
@@ -266,6 +267,11 @@ const Dashboard = () => {
   const [games, setGames] = useState([]);
   const [onboarding, setOnboarding] = useState(null);
   const [tutorialOpen, setTutorialOpen] = useState(false);
+  // CypherAI one-time first-sign-in briefing. Gated by localStorage so it
+  // only plays once per device. /cypher page always shows the same words.
+  const [showBriefing, setShowBriefing] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("ta-cypher-intro-seen") !== "1"
+  );
 
   // Attempt to lock landscape orientation (PWA / Android Chrome supports this; iOS Safari ignores)
   useEffect(() => {
@@ -328,6 +334,11 @@ const Dashboard = () => {
       </div>
 
       <TutorialModal open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
+
+      {/* One-time CypherAI introduction — first-sign-in cinematic. */}
+      <AnimatePresence>
+        {showBriefing && <CypherIntroBriefing onDismiss={() => setShowBriefing(false)} />}
+      </AnimatePresence>
     </div>
   );
 };
