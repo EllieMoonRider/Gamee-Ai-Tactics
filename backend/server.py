@@ -2546,7 +2546,74 @@ async def admin_check(user=Depends(get_current_user)):
     return {"is_admin": _is_support_admin(user)}
 
 
+# ---------- User Onboarding (first-time vs returning briefing data) ----------
+@api.get("/user/onboarding")
+async def user_onboarding_status(user=Depends(get_current_user)):
+    """Returns whether the user is first-time + their last activity for the personalized briefing."""
+    uid = user["id"]
+    # Count activity across the main collections
+    counts = await asyncio.gather(
+        db.deep_dives.count_documents({"user_id": uid}),
+        db.chat_sessions.count_documents({"user_id": uid}),
+        db.builds.count_documents({"user_id": uid}),
+        db.battle_reports.count_documents({"user_id": uid}),
+    )
+    deep_dives, chats, builds, reports = counts
+    has_activity = (deep_dives + chats + builds + reports) > 0
+
+    # Find the most recent activity across the 4 sources
+    candidates = []
+    last_dd = await db.deep_dives.find_one({"user_id": uid}, {"_id": 0}, sort=[("created_at", -1)])
+    if last_dd:
+        candidates.append({
+            "type": "deep_dive",
+            "game_slug": last_dd.get("game_slug"),
+            "label": f"Deep Dive · {last_dd.get('game_slug', 'game').replace('-', ' ').title()}",
+            "link": f"/game/{last_dd.get('game_slug')}?tab=deep-dive",
+            "at_iso": last_dd.get("created_at"),
+        })
+    last_chat = await db.chat_sessions.find_one({"user_id": uid}, {"_id": 0}, sort=[("updated_at", -1)])
+    if last_chat:
+        candidates.append({
+            "type": "chat",
+            "game_slug": last_chat.get("game_slug"),
+            "label": f"CyphrAI Chat · {(last_chat.get('game_slug') or 'general').replace('-', ' ').title()}",
+            "link": f"/game/{last_chat.get('game_slug')}?tab=chat" if last_chat.get("game_slug") else "/dashboard",
+            "at_iso": last_chat.get("updated_at") or last_chat.get("created_at"),
+        })
+    last_build = await db.builds.find_one({"user_id": uid}, {"_id": 0}, sort=[("created_at", -1)])
+    if last_build:
+        candidates.append({
+            "type": "build",
+            "game_slug": last_build.get("game_slug"),
+            "label": f"Build · {last_build.get('hero_or_unit', last_build.get('game_slug', ''))}",
+            "link": f"/game/{last_build.get('game_slug')}?tab=builds",
+            "at_iso": last_build.get("created_at"),
+        })
+    last_report = await db.battle_reports.find_one({"user_id": uid}, {"_id": 0}, sort=[("created_at", -1)])
+    if last_report:
+        candidates.append({
+            "type": "battle_report",
+            "game_slug": last_report.get("game_slug"),
+            "label": f"Battle Report · {last_report.get('title', 'engagement')}",
+            "link": f"/battle-reports/{last_report.get('id')}",
+            "at_iso": last_report.get("created_at"),
+        })
+    # pick the freshest
+    candidates = [c for c in candidates if c.get("at_iso")]
+    candidates.sort(key=lambda c: c["at_iso"], reverse=True)
+    last_activity = candidates[0] if candidates else None
+
+    return {
+        "first_time": not has_activity,
+        "counts": {"deep_dives": deep_dives, "chats": chats, "builds": builds, "battle_reports": reports},
+        "last_activity": last_activity,
+        "username": user.get("username") or (user.get("email") or "").split("@")[0],
+    }
+
+
 # ---------- Init ----------
+# (User onboarding endpoint added above for Command Center briefing)
 @app.on_event("startup")
 async def seed_data():
     # Idempotent per-guide upsert so newly-added guides land on existing DBs

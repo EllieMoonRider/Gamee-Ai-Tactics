@@ -12,16 +12,18 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 PROMPT = """Generate a square 1024x1024 app icon for "Tactical Ally" — an AI gaming strategy companion.
 
 Composition:
-- Centered crosshair / tactical scope reticle made of clean neon green lines, with a small dragon silhouette in the center of the crosshair
-- Behind it, a faint stylized castle turret silhouette at the bottom
+- DOMINANT centered DRAGON silhouette taking up about 60% of the icon — fierce, proud profile, wings partially outspread, dark silhouette with neon green outline glow
+- Behind the dragon, a faint tactical crosshair / scope reticle made of clean thin neon green lines
+- Below the dragon, a tiny faint stylized castle turret silhouette at the bottom edge
 - Dark charcoal/near-black background (#0a0a0a)
 - Strong neon green glow accents (#39FF14)
-- Subtle holographic circular rings around the crosshair
-- Rounded square format with safe padding from the edges (about 12% margin) so it works as an iOS/Android home-screen icon
+- Subtle holographic circular rings around the entire composition
+- Rounded square format with safe padding from the edges (about 10% margin) so it works as an iOS/Android home-screen icon
+- The DRAGON is the hero element — should be instantly recognizable as a dragon even at 64x64 thumbnail size
 - No text, no letters, no words anywhere
-- Clean, modern, game-app style — readable at 64x64 thumbnail
+- Clean, modern, game-app style — readable at small thumbnail size
 
-Style: cinematic dark fantasy + tactical sci-fi, vector-like clean shapes, bold silhouettes."""
+Style: cinematic dark fantasy + tactical sci-fi, vector-like clean shapes, bold silhouettes, dragon-first design."""
 
 
 async def main():

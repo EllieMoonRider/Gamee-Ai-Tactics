@@ -1,141 +1,120 @@
 import { useEffect, useState } from "react";
-import bgImg from "../assets/command-center-bg-v1.jpg";
+import iconImg from "../assets/tactical-ally-icon.png";
 
 /**
- * SplashScreen — branded portrait-friendly intro for Tactical Ally.
+ * SplashScreen — 3-second cinematic intro using the actual app icon (dragon-centered)
+ * with "TACTICAL ALLY" curving around the top half and "CYPHERAI STRATEGIES" curving
+ * around the bottom half of the icon.
  *
- * Shows on first session mount (gated by sessionStorage) for ~3.4s, then fades out.
- * "TACTICAL ALLY" curves around the top half; "CYPHRAI POWERED" curves around the bottom half.
- * The command-center backdrop (radar + dragon + knights) sits behind everything.
- * Tap-to-skip is enabled.
+ * Auto-fades after HOLD_MS. Tap to skip.
  */
 const SplashScreen = ({ onDone }) => {
-  const [phase, setPhase] = useState("intro"); // intro | fading | gone
-  const HOLD_MS = 5500;   // ~5.5s of full splash before fade starts
-  const FADE_MS = 800;    // 0.8s gentle fade-out
-  const TOTAL_MS = HOLD_MS + FADE_MS;
+  const [phase, setPhase] = useState("intro"); // intro | fading
+  const HOLD_MS = 3000;
+  const FADE_MS = 700;
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("fading"), HOLD_MS);
-    const t2 = setTimeout(() => onDone?.(), TOTAL_MS);
+    const t2 = setTimeout(() => onDone?.(), HOLD_MS + FADE_MS);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onDone]);
 
-  const skip = () => { setPhase("fading"); setTimeout(() => onDone?.(), 350); };
+  const skip = () => { setPhase("fading"); setTimeout(() => onDone?.(), 300); };
 
   return (
     <div
-      className={`fixed inset-0 z-[400] bg-[#050505] flex items-center justify-center overflow-hidden cursor-pointer select-none transition-opacity duration-700 ${phase === "fading" ? "opacity-0" : "opacity-100"}`}
+      className={`fixed inset-0 z-[400] bg-[#050505] flex items-center justify-center overflow-hidden cursor-pointer select-none transition-opacity ${phase === "fading" ? "opacity-0" : "opacity-100"}`}
       onClick={skip}
       style={{ transitionDuration: `${FADE_MS}ms` }}
       data-testid="splash-screen"
     >
-      {/* Backdrop: radar + dragon + knights */}
-      <img
-        src={bgImg}
-        alt=""
-        aria-hidden
-        className="absolute inset-0 w-full h-full object-cover splash-bg-anim"
-        style={{ opacity: 0.55 }}
-      />
-      {/* Radial dim to push focus to center */}
-      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 0%, rgba(5,5,5,0.55) 60%, #050505 100%)" }} />
-      {/* Scanlines */}
+      {/* Scanline overlay */}
       <div className="absolute inset-0 cc-scanline" />
+      {/* Soft ambient green glow behind icon */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(circle at 50% 50%, rgba(57,255,20,0.10) 0%, rgba(57,255,20,0.02) 35%, rgba(5,5,5,0) 65%)",
+        }}
+      />
 
-      {/* Center SVG with curved text + mini animated radar */}
+      {/* Center: SVG with the icon as centerpiece + curved text around it */}
       <svg
-        viewBox="0 0 400 600"
+        viewBox="0 0 400 460"
         preserveAspectRatio="xMidYMid meet"
         className="relative w-[92vw] max-w-[420px] h-auto splash-fade-in"
         style={{ maxHeight: "92vh" }}
       >
         <defs>
-          {/* Top curve — opens downward, arches upward like a banner */}
-          <path id="topArc" d="M 40 230 Q 200 30 360 230" fill="none" />
-          {/* Bottom curve — opens upward, arches downward */}
-          <path id="bottomArc" d="M 40 400 Q 200 590 360 400" fill="none" />
-          {/* Sweep gradient for radar */}
-          <linearGradient id="splashSweep" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(57,255,20,0.8)" />
-            <stop offset="100%" stopColor="rgba(57,255,20,0)" />
-          </linearGradient>
-          <radialGradient id="splashGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(57,255,20,0.4)" />
-            <stop offset="60%" stopColor="rgba(57,255,20,0.08)" />
-            <stop offset="100%" stopColor="rgba(57,255,20,0)" />
-          </radialGradient>
+          <clipPath id="iconClip">
+            <circle cx="200" cy="230" r="120" />
+          </clipPath>
+          {/* Top text arc — opens DOWN, text reads left-to-right across the top of the icon */}
+          <path id="splashTopArc" d="M 35 230 A 165 165 0 0 1 365 230" fill="none" />
+          {/* Bottom text arc — opens UP, text reads left-to-right across the bottom of the icon */}
+          <path id="splashBottomArc" d="M 35 230 A 165 165 0 0 0 365 230" fill="none" />
         </defs>
 
-        {/* Top curved title */}
+        {/* App icon (clipped to circle) */}
+        <image
+          href={iconImg}
+          x="80" y="110" width="240" height="240"
+          clipPath="url(#iconClip)"
+          className="splash-icon-pop"
+        />
+
+        {/* Glow ring around the icon */}
+        <circle
+          cx="200" cy="230" r="122"
+          fill="none"
+          stroke="#39FF14"
+          strokeWidth="1.5"
+          opacity="0.7"
+          style={{ filter: "drop-shadow(0 0 10px rgba(57,255,20,0.8))" }}
+        />
+        <circle
+          cx="200" cy="230" r="135"
+          fill="none"
+          stroke="#39FF14"
+          strokeWidth="0.5"
+          opacity="0.35"
+          strokeDasharray="4 6"
+        />
+
+        {/* TOP curved text — TACTICAL ALLY */}
         <text
-          fontFamily="Orbitron, Rajdhani, sans-serif"
+          fontFamily="Orbitron, sans-serif"
           fontWeight="900"
-          fontSize="30"
+          fontSize="26"
           fill="#39FF14"
           letterSpacing="4"
-          style={{ filter: "drop-shadow(0 0 6px rgba(57,255,20,0.85)) drop-shadow(0 0 18px rgba(57,255,20,0.45))" }}
+          style={{ filter: "drop-shadow(0 0 6px rgba(57,255,20,0.9)) drop-shadow(0 0 18px rgba(57,255,20,0.4))" }}
         >
-          <textPath href="#topArc" startOffset="50%" textAnchor="middle">
+          <textPath href="#splashTopArc" startOffset="50%" textAnchor="middle">
             TACTICAL ALLY
           </textPath>
         </text>
 
-        {/* Center radar — concentric rings, crosshair, sweeping line, pulse */}
-        <g transform="translate(200, 315)">
-          {/* Outer rings */}
-          {[110, 85, 60, 35].map((r, i) => (
-            <circle key={i} cx="0" cy="0" r={r} fill="none" stroke="rgba(57,255,20,0.35)" strokeWidth="0.7" strokeDasharray={i === 0 ? "3 5" : "0"} />
-          ))}
-          {/* Crosshair */}
-          <line x1="-115" y1="0" x2="115" y2="0" stroke="rgba(57,255,20,0.18)" strokeWidth="0.5" />
-          <line x1="0" y1="-115" x2="0" y2="115" stroke="rgba(57,255,20,0.18)" strokeWidth="0.5" />
-          {/* Soft inner glow */}
-          <circle cx="0" cy="0" r="110" fill="url(#splashGlow)" />
-          {/* Animated sweep */}
-          <g className="splash-radar-sweep">
-            <path d="M 0 0 L 0 -110 A 110 110 0 0 1 76 -76 Z" fill="url(#splashGlow)" />
-            <line x1="0" y1="0" x2="0" y2="-110" stroke="url(#splashSweep)" strokeWidth="1.8" />
-          </g>
-          {/* Center dot + outward pulse */}
-          <circle cx="0" cy="0" r="4" fill="#39FF14" />
-          <circle cx="0" cy="0" r="6" fill="none" stroke="#39FF14" strokeWidth="1" className="splash-radar-pulse" />
-          {/* Blips */}
-          {[{a: 35, r: 0.55}, {a: 155, r: 0.42}, {a: 260, r: 0.6}, {a: 320, r: 0.32}].map((b, i) => {
-            const x = Math.cos(b.a * Math.PI / 180) * (b.r * 100);
-            const y = Math.sin(b.a * Math.PI / 180) * (b.r * 100);
-            return (
-              <g key={i}>
-                <circle cx={x} cy={y} r="2.5" fill="#39FF14">
-                  <animate attributeName="opacity" values="0.35;1;0.35" dur={`${1.4 + i * 0.4}s`} repeatCount="indefinite" />
-                </circle>
-              </g>
-            );
-          })}
-        </g>
-
-        {/* Bottom curved tagline */}
+        {/* BOTTOM curved text — CYPHERAI STRATEGIES */}
         <text
-          fontFamily="Orbitron, Rajdhani, sans-serif"
+          fontFamily="Orbitron, sans-serif"
           fontWeight="700"
-          fontSize="16"
+          fontSize="18"
           fill="#39FF14"
-          letterSpacing="4"
+          letterSpacing="3"
           style={{ filter: "drop-shadow(0 0 4px rgba(57,255,20,0.7))" }}
         >
-          <textPath href="#bottomArc" startOffset="50%" textAnchor="middle">
-            CYPHRAI POWERED
+          <textPath href="#splashBottomArc" startOffset="50%" textAnchor="middle">
+            CYPHERAI STRATEGIES
           </textPath>
         </text>
       </svg>
 
-      {/* Skip hint at bottom */}
+      {/* Progress + skip */}
       <div className="absolute bottom-6 left-0 right-0 text-center font-mono-tactical text-[10px] tracking-[0.3em] text-zinc-600" data-testid="splash-skip-hint">
         TAP TO SKIP
       </div>
-
-      {/* Subtle progress bar — fills over HOLD_MS so user feels the timing is intentional */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#39FF14]/10" data-testid="splash-progress">
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#39FF14]/10">
         <div
           className="h-full bg-[#39FF14]"
           style={{

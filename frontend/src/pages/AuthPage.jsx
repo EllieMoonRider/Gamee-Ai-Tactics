@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "../lib/auth";
-import Navbar from "../components/Navbar";
-import { ShieldStar, IdentificationBadge, Lock, EnvelopeSimple, Eye, EyeSlash, Sparkle } from "@phosphor-icons/react";
+import { IdentificationBadge, Lock, EnvelopeSimple, Eye, EyeSlash, Sparkle } from "@phosphor-icons/react";
+import iconImg from "../assets/tactical-ally-icon.png";
 
 const AuthPage = () => {
   const [params] = useSearchParams();
@@ -34,132 +34,194 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
-
-      {/* Recruitment Center background grid */}
-      <div className="fixed inset-0 -z-10 opacity-[0.05] pointer-events-none">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <div className="recruit-page min-h-screen relative overflow-x-hidden flex items-start sm:items-center justify-center py-6 px-4">
+      {/* Atmospheric dark/smoke background */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute inset-0" style={{
+          background: "radial-gradient(ellipse at 50% 0%, rgba(57,255,20,0.08) 0%, rgba(10,10,10,0) 55%), radial-gradient(ellipse at 50% 100%, rgba(230,57,70,0.07) 0%, rgba(10,10,10,0) 60%), #050505"
+        }} />
+        {/* Faint grid */}
+        <svg width="100%" height="100%" className="opacity-[0.04]">
           <defs>
-            <pattern id="rec-grid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="0.5" />
+            <pattern id="rec-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+              <path d="M 48 0 L 0 0 0 48" fill="none" stroke="white" strokeWidth="0.5" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#rec-grid)" />
         </svg>
       </div>
 
-      <div className="max-w-md mx-auto px-6 pt-12 pb-20">
-        <div className="text-center mb-8">
-          <div className="inline-flex w-14 h-14 rounded-full border border-[#E63946]/40 items-center justify-center mb-4 bg-[#E63946]/10">
-            <ShieldStar size={28} weight="duotone" className="text-[#E63946]" />
-          </div>
-          <div className="tactical-label text-[#FFBA08] mb-2">// RECRUITMENT CENTER</div>
-          <h1 className="font-display text-3xl font-black tracking-tighter">
-            {mode === "login" ? "Resume command" : "Enlist your Ally"}
-          </h1>
-          <p className="text-sm text-zinc-400 mt-2 max-w-xs mx-auto">
-            {mode === "login"
-              ? "Authenticate to enter the Command Center."
-              : "Register an email + codename. Your codename is your in-game identity; your email is the recovery key."}
-          </p>
+      {/* WAR BANNER */}
+      <div className="war-banner relative w-full max-w-[420px] mx-auto" data-testid="recruit-banner">
+        {/* Rope hangers at the top */}
+        <div className="flex justify-between px-8 mb-[-2px] relative z-10">
+          <div className="w-3 h-6 bg-gradient-to-b from-zinc-700 to-zinc-900 rounded-b-sm" />
+          <div className="w-3 h-6 bg-gradient-to-b from-zinc-700 to-zinc-900 rounded-b-sm" />
         </div>
 
-        <form onSubmit={submit} className="surface p-7 rounded-md space-y-4" data-testid="auth-form">
-          {mode === "register" && (
-            <div>
-              <label className="tactical-label flex items-center gap-1.5 mb-2">
-                <IdentificationBadge size={12} /> Codename / Username
-              </label>
-              <input
-                className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2.5 text-sm"
-                placeholder="e.g. IronCommander"
-                value={username} onChange={e => setUsername(e.target.value)}
-                required minLength={2} maxLength={30}
-                data-testid="auth-input-username"
-              />
-              <p className="text-[11px] text-zinc-500 mt-1.5">This is the name your Tactical Ally addresses you by.</p>
-            </div>
-          )}
-          <div>
-            <label className="tactical-label flex items-center gap-1.5 mb-2">
-              <EnvelopeSimple size={12} /> Email{mode === "register" && " · recovery"}
-            </label>
-            <input
-              type="email" required
-              placeholder="operator@frontline.com"
-              className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2.5 text-sm"
-              value={email} onChange={e => setEmail(e.target.value)}
-              data-testid="auth-input-email"
-            />
-            {mode === "register" && <p className="text-[11px] text-zinc-500 mt-1.5">Used to recover your codename if access is lost.</p>}
-          </div>
-          <div>
-            <label className="tactical-label flex items-center gap-1.5 mb-2">
-              <Lock size={12} /> Password
-            </label>
+        {/* Crossbar / banner top rod */}
+        <div className="h-2 mx-2 bg-gradient-to-r from-zinc-700 via-zinc-500 to-zinc-700 rounded-sm shadow-lg relative z-10" />
+
+        {/* Banner body */}
+        <div className="war-banner-body relative pt-9 px-7 pb-12">
+          {/* Top fringe decorative SVG (above content) */}
+          <svg viewBox="0 0 400 12" className="absolute top-2 left-0 right-0 w-full" preserveAspectRatio="none" style={{ height: 12 }}>
+            <path d="M0 0 L400 0 L400 4 Q380 12 360 4 Q340 12 320 4 Q300 12 280 4 Q260 12 240 4 Q220 12 200 4 Q180 12 160 4 Q140 12 120 4 Q100 12 80 4 Q60 12 40 4 Q20 12 0 4 Z" fill="#39FF14" opacity="0.18" />
+          </svg>
+
+          {/* INSIGNIA — circular crest with dragon icon */}
+          <div className="flex justify-center mb-5 relative">
             <div className="relative">
-              <input
-                type={showPw ? "text" : "password"} required minLength={6}
-                placeholder="Min. 6 characters"
-                className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2.5 pr-10 text-sm"
-                value={password} onChange={e => setPassword(e.target.value)}
-                data-testid="auth-input-password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPw(s => !s)}
-                className="absolute inset-y-0 right-2 flex items-center text-zinc-500 hover:text-white"
-                aria-label={showPw ? "Hide password" : "Show password"}
-                data-testid="auth-toggle-show-password"
-              >
-                {showPw ? <EyeSlash size={16} /> : <Eye size={16} />}
-              </button>
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#39FF14]/60 shadow-[0_0_24px_rgba(57,255,20,0.45)]">
+                <img src={iconImg} alt="Tactical Ally Insignia" className="w-full h-full object-cover" data-testid="recruit-insignia" />
+              </div>
+              {/* Crossing swords behind the crest */}
+              <svg viewBox="0 0 200 120" className="absolute -inset-x-12 top-1/2 -translate-y-1/2 -z-10 pointer-events-none" style={{ width: "calc(100% + 6rem)" }}>
+                <g stroke="#39FF14" strokeWidth="1.5" opacity="0.5" fill="none" strokeLinecap="round">
+                  <line x1="14" y1="100" x2="186" y2="20" />
+                  <line x1="186" y1="100" x2="14" y2="20" />
+                  <line x1="8" y1="106" x2="22" y2="92" strokeWidth="3" />
+                  <line x1="192" y1="106" x2="178" y2="92" strokeWidth="3" />
+                </g>
+              </svg>
             </div>
-            {mode === "login" && (
-              <div className="mt-2 text-right">
-                <Link to="/forgot-password" className="text-xs text-zinc-400 hover:text-[#FFBA08]" data-testid="auth-forgot-link">
-                  Forgot password?
-                </Link>
+          </div>
+
+          {/* TITLE */}
+          <div className="text-center mb-2" style={{ fontFamily: "Orbitron, sans-serif" }}>
+            <div className="font-mono-tactical text-[10px] tracking-[0.4em] text-[#39FF14] mb-2">// RECRUITMENT CENTER</div>
+            <h1
+              className="text-3xl font-black tracking-widest"
+              style={{
+                fontFamily: "Orbitron, sans-serif",
+                color: "#39FF14",
+                textShadow: "0 0 10px rgba(57,255,20,0.65), 0 0 22px rgba(57,255,20,0.3)",
+              }}
+            >
+              {mode === "login" ? "ENTER THE WAR ROOM" : "ENLIST"}
+            </h1>
+            <p className="text-xs text-zinc-400 mt-2 max-w-xs mx-auto leading-relaxed">
+              {mode === "login"
+                ? "Authenticate to advance to the Command Center."
+                : "Stake your codename. Take the oath. Join the alliance."}
+            </p>
+          </div>
+
+          {/* Divider with neon ticks */}
+          <div className="flex items-center gap-2 my-5">
+            <div className="flex-1 h-px bg-[#39FF14]/30" />
+            <div className="w-1.5 h-1.5 rotate-45 bg-[#39FF14]" />
+            <div className="flex-1 h-px bg-[#39FF14]/30" />
+          </div>
+
+          {/* FORM */}
+          <form onSubmit={submit} className="space-y-3.5" data-testid="auth-form">
+            {mode === "register" && (
+              <div>
+                <label className="font-mono-tactical text-[10px] tracking-[0.25em] text-[#39FF14] flex items-center gap-1.5 mb-1.5">
+                  <IdentificationBadge size={11} weight="bold" /> CODENAME
+                </label>
+                <input
+                  className="recruit-input w-full text-sm"
+                  placeholder="IronCommander"
+                  value={username} onChange={e => setUsername(e.target.value)}
+                  required minLength={2} maxLength={30}
+                  data-testid="auth-input-username"
+                />
               </div>
             )}
-          </div>
-          {mode === "register" && (
+
             <div>
-              <label className="tactical-label flex items-center gap-1.5 mb-2">
-                <Sparkle size={12} /> Referral code <span className="text-zinc-600">(optional)</span>
+              <label className="font-mono-tactical text-[10px] tracking-[0.25em] text-[#39FF14] flex items-center gap-1.5 mb-1.5">
+                <EnvelopeSimple size={11} weight="bold" /> EMAIL{mode === "register" && " · RECOVERY KEY"}
               </label>
               <input
-                className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2.5 text-sm font-mono-tactical tracking-widest uppercase"
-                placeholder="TA-XXXXXX"
-                value={referralCode} onChange={e => setReferralCode(e.target.value.toUpperCase())}
-                maxLength={12}
-                data-testid="auth-input-referral"
+                type="email" required
+                placeholder="operator@frontline.com"
+                className="recruit-input w-full text-sm"
+                value={email} onChange={e => setEmail(e.target.value)}
+                data-testid="auth-input-email"
               />
-              {refFromUrl && <p className="text-[11px] text-[#10B981] mt-1.5">Referral code auto-applied. You&apos;ll get a free Deep Dive baseline as welcome bonus.</p>}
             </div>
-          )}
-          <button
-            type="submit" disabled={loading}
-            className="btn-primary w-full mt-2" data-testid="auth-submit-btn"
-          >
-            {loading ? "Processing…" : mode === "login" ? "Authenticate" : "Enlist now"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode(mode === "login" ? "register" : "login")}
-            className="w-full text-sm text-zinc-400 hover:text-white mt-1"
-            data-testid="auth-toggle-mode"
-          >
-            {mode === "login"
-              ? "New operator? Enlist now →"
-              : "Already enlisted? Authenticate →"}
-          </button>
-        </form>
 
-        <p className="text-center mt-6 text-xs text-zinc-500">
-          Tactical Ally is an unofficial strategy companion.
-          <Link to="/" className="block text-zinc-400 hover:text-white mt-2">← Back to home</Link>
+            <div>
+              <label className="font-mono-tactical text-[10px] tracking-[0.25em] text-[#39FF14] flex items-center gap-1.5 mb-1.5">
+                <Lock size={11} weight="bold" /> CIPHER
+              </label>
+              <div className="relative">
+                <input
+                  type={showPw ? "text" : "password"} required minLength={6}
+                  placeholder="Min. 6 characters"
+                  className="recruit-input w-full pr-10 text-sm"
+                  value={password} onChange={e => setPassword(e.target.value)}
+                  data-testid="auth-input-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw(s => !s)}
+                  className="absolute inset-y-0 right-2 flex items-center text-zinc-500 hover:text-[#39FF14]"
+                  aria-label={showPw ? "Hide password" : "Show password"}
+                  data-testid="auth-toggle-show-password"
+                >
+                  {showPw ? <EyeSlash size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              {mode === "login" && (
+                <div className="mt-1.5 text-right">
+                  <Link to="/forgot-password" className="text-[11px] font-mono-tactical tracking-wider text-zinc-500 hover:text-[#39FF14]" data-testid="auth-forgot-link">
+                    LOST CIPHER?
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {mode === "register" && (
+              <div>
+                <label className="font-mono-tactical text-[10px] tracking-[0.25em] text-[#39FF14] flex items-center gap-1.5 mb-1.5">
+                  <Sparkle size={11} weight="bold" /> SIGIL <span className="text-zinc-600">· OPTIONAL</span>
+                </label>
+                <input
+                  className="recruit-input w-full text-sm font-mono-tactical tracking-widest uppercase"
+                  placeholder="TA-XXXXXX"
+                  value={referralCode} onChange={e => setReferralCode(e.target.value.toUpperCase())}
+                  maxLength={12}
+                  data-testid="auth-input-referral"
+                />
+                {refFromUrl && <p className="text-[10px] text-[#39FF14] mt-1.5">Sigil verified. Welcome bonus locked in: +1 Deep Dive.</p>}
+              </div>
+            )}
+
+            <button
+              type="submit" disabled={loading}
+              className="recruit-cta w-full mt-2"
+              data-testid="auth-submit-btn"
+            >
+              {loading ? "PROCESSING…" : mode === "login" ? "TAKE THE FIELD" : "SWEAR THE OATH"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMode(mode === "login" ? "register" : "login")}
+              className="w-full text-[11px] font-mono-tactical tracking-[0.25em] text-zinc-500 hover:text-[#39FF14] mt-1"
+              data-testid="auth-toggle-mode"
+            >
+              {mode === "login"
+                ? "NEW OPERATOR? · ENLIST →"
+                : "ALREADY ENLISTED? · AUTHENTICATE →"}
+            </button>
+          </form>
+
+          {/* Banner bottom fringe — pointed cloth tails */}
+          <svg viewBox="0 0 400 40" className="absolute bottom-[-39px] left-0 right-0 w-full" preserveAspectRatio="none" style={{ height: 40 }}>
+            <polygon points="0,0 400,0 400,4 380,38 360,4 340,38 320,4 300,38 280,4 260,38 240,4 220,38 200,4 180,38 160,4 140,38 120,4 100,38 80,4 60,38 40,4 20,38 0,4" fill="var(--banner-fill)" stroke="rgba(57,255,20,0.45)" strokeWidth="1" />
+          </svg>
+        </div>
+
+        {/* Footer text below banner */}
+        <p className="text-center mt-16 text-[11px] font-mono-tactical tracking-[0.2em] text-zinc-600">
+          UNOFFICIAL STRATEGY COMPANION · 37GAMES UNAFFILIATED
+          <br/>
+          <Link to="/" className="inline-block mt-3 text-zinc-500 hover:text-[#39FF14]">← BACK TO HOME</Link>
         </p>
       </div>
     </div>
