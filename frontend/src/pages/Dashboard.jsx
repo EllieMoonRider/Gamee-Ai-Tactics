@@ -37,9 +37,9 @@ const PersonalizedBriefing = ({ onboarding, onContinue, onPickNew }) => {
   const name = (onboarding?.username || "Commander").toUpperCase();
 
   const firstTimeLines = [
-    `> CYPHRAI ONLINE · WELCOME TO THE COMMAND CENTER, ${name}.`,
+    `> CYPHERAI ONLINE · WELCOME TO THE COMMAND CENTER, ${name}.`,
     `> Tactical Ally is your AI strategy companion across 11 active battle theaters.`,
-    `> Your mission: dominate the meta. Our method: drop a screenshot of your account → CYPHRAI analyzes your roster, resources, and current play state, then issues a personalized Deep Dive plan.`,
+    `> Your mission: dominate the meta. Our method: drop a screenshot of your account → CYPHERAI analyzes your roster, resources, and current play state, then issues a personalized Deep Dive plan.`,
     `> Stack follow-up Building Blocks to refine your strategy as you advance.`,
     `> Pick where you want to go below. The mission begins now.`,
   ];
@@ -47,7 +47,7 @@ const PersonalizedBriefing = ({ onboarding, onContinue, onPickNew }) => {
   const last = onboarding?.last_activity;
   const lastLabel = last?.label || "your last campaign";
   const returningLines = [
-    `> CYPHRAI ONLINE · WELCOME BACK, ${name}.`,
+    `> CYPHERAI ONLINE · WELCOME BACK, ${name}.`,
     last
       ? `> Last campaign on record: ${lastLabel}.`
       : `> Your war archive is ready.`,

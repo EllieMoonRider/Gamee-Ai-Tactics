@@ -48,7 +48,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
 
   if (!session) return (
     <div className="surface rounded-md p-10 text-center text-zinc-500 font-mono-tactical text-sm">
-      CYPHRAI IS PREPARING YOUR GUIDED PLAN…
+      CYPHERAI IS PREPARING YOUR GUIDED PLAN…
     </div>
   );
 
@@ -119,7 +119,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
       setSession(s => ({ ...s, qa: [...(s.qa || []), data] }));
       setAskInput("");
     } catch (err) {
-      toast.error(err?.response?.data?.detail || "Could not ask CyphrAI");
+      toast.error(err?.response?.data?.detail || "Could not ask CypherAI");
     } finally { setAsking(false); }
   };
 
@@ -144,9 +144,9 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
       <div className="surface rounded-md p-5">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
-            <div className="tactical-label text-[#10B981] mb-1">// CYPHRAI GUIDED MODE</div>
+            <div className="tactical-label text-[#10B981] mb-1">// CYPHERAI GUIDED MODE</div>
             <h2 className="font-display text-xl font-bold tracking-tight">{gameName} · step-by-step capture</h2>
-            <p className="text-xs text-zinc-400 mt-1">CyphrAI tells you exactly what to screenshot. Ask anything mid-flow.</p>
+            <p className="text-xs text-zinc-400 mt-1">CypherAI tells you exactly what to screenshot. Ask anything mid-flow.</p>
           </div>
           <div className="text-right">
             <div className="tactical-label text-zinc-500">// PROGRESS</div>
@@ -191,7 +191,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
           )}
           {skipped && (
             <div className="flex items-center gap-2 text-xs text-zinc-500 surface-elev rounded p-2.5">
-              <SkipForward size={14} /> Skipped — CyphrAI will note this in the analysis.
+              <SkipForward size={14} /> Skipped — CypherAI will note this in the analysis.
             </div>
           )}
 
@@ -242,7 +242,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
         <div className="surface rounded-md flex flex-col min-h-[400px]" data-testid="guided-qa">
           <div className="p-4 border-b border-white/5 flex items-center gap-2">
             <Brain size={16} weight="duotone" className="text-[#10B981]" />
-            <div className="font-display font-bold text-sm">Ask CyphrAI</div>
+            <div className="font-display font-bold text-sm">Ask CypherAI</div>
             <span className="tactical-label text-zinc-500 ml-auto">// {gameName}</span>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[50vh]">
@@ -279,7 +279,7 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
         <Lightning size={20} weight="duotone" className="text-[#E63946]" />
         <div className="flex-1 min-w-[200px]">
           <div className="font-display font-bold">Ready to generate your Deep Dive?</div>
-          <div className="text-xs text-zinc-400">CyphrAI will analyze all <strong className="text-white">{totalCaptured}</strong> captured screen{totalCaptured === 1 ? "" : "s"} and produce a full baseline. <strong className="text-[#FFBA08]">Costs 1 baseline from your quota.</strong></div>
+          <div className="text-xs text-zinc-400">CypherAI will analyze all <strong className="text-white">{totalCaptured}</strong> captured screen{totalCaptured === 1 ? "" : "s"} and produce a full baseline. <strong className="text-[#FFBA08]">Costs 1 baseline from your quota.</strong></div>
         </div>
         <button onClick={() => setShowFinalize(true)} disabled={!canFinalize} className="btn-primary" data-testid="guided-open-finalize">
           <Sparkle size={14} weight="fill" className="inline mr-1.5" /> Finalize ({totalCaptured})
@@ -300,14 +300,14 @@ const GuidedDeepDive = ({ slug, gameName, onFinalized }) => {
             >
               <h3 className="font-display text-xl font-bold">Finalize this Guided Deep Dive</h3>
               <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2 text-sm" data-testid="guided-finalize-title" />
-              <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} placeholder="Optional context for CyphrAI (e.g. F2P, focusing on KvK)" className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2 text-sm" data-testid="guided-finalize-notes" />
+              <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} placeholder="Optional context for CypherAI (e.g. F2P, focusing on KvK)" className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2 text-sm" data-testid="guided-finalize-notes" />
               <div className="flex items-center gap-2 text-xs text-zinc-400 surface rounded p-2.5">
                 <Lightning size={12} className="text-[#FFBA08]" /> This uses <strong className="text-[#FFBA08]">1 Deep Dive baseline</strong> from your quota.
               </div>
               <div className="flex gap-2">
                 <button onClick={() => setShowFinalize(false)} className="btn-outline flex-1">Not yet</button>
                 <button onClick={finalize} disabled={busy} className="btn-primary flex-1" data-testid="guided-finalize-confirm">
-                  {busy ? "CyphrAI analyzing…" : "Generate Deep Dive"}
+                  {busy ? "CypherAI analyzing…" : "Generate Deep Dive"}
                 </button>
               </div>
             </motion.div>

@@ -146,7 +146,7 @@ const AuthPage = () => {
 
             <div>
               <label className="font-mono-tactical text-[10px] tracking-[0.25em] text-[#39FF14] flex items-center gap-1.5 mb-1.5">
-                <Lock size={11} weight="bold" /> CIPHER
+                <Lock size={11} weight="bold" /> PASSWORD
               </label>
               <div className="relative">
                 <input
@@ -169,7 +169,7 @@ const AuthPage = () => {
               {mode === "login" && (
                 <div className="mt-1.5 text-right">
                   <Link to="/forgot-password" className="text-[11px] font-mono-tactical tracking-wider text-zinc-500 hover:text-[#39FF14]" data-testid="auth-forgot-link">
-                    LOST CIPHER?
+                    FORGOT PASSWORD?
                   </Link>
                 </div>
               )}

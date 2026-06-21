@@ -2,14 +2,14 @@
 export const TUTORIALS = [
   {
     id: "deep-dive",
-    label: "CyphrAI Deep Dive — Account Baselining",
+    label: "CypherAI Deep Dive — Account Baselining",
     duration: "2 min",
     steps: [
-      { title: "Pick a title & open Deep Dive tab", body: "Inside a game's workspace, open the Deep Dive tab. This is where CyphrAI reads your account." },
-      { title: "Upload screenshots", body: "Drop up to 6 screenshots of your heroes, HQ, formation, gear, alliance, resources — anything CyphrAI should see." },
-      { title: "Add context (optional)", body: "Tell CyphrAI your play style — F2P, focusing on cavalry, prepping for KvK. The deeper the context, the sharper the analysis." },
+      { title: "Pick a title & open Deep Dive tab", body: "Inside a game's workspace, open the Deep Dive tab. This is where CypherAI reads your account." },
+      { title: "Upload screenshots", body: "Drop up to 6 screenshots of your heroes, HQ, formation, gear, alliance, resources — anything CypherAI should see." },
+      { title: "Add context (optional)", body: "Tell CypherAI your play style — F2P, focusing on cavalry, prepping for KvK. The deeper the context, the sharper the analysis." },
       { title: "Read the baseline", body: "Account Snapshot, Strengths, Weaknesses, Top 5 Actions, Resource Split, 30/60/90 Milestones." },
-      { title: "Stack Building Blocks", body: "Every time you make progress, upload fresh screenshots as a Follow-Up. CyphrAI compares to baseline and updates priorities — your tactical archive grows." },
+      { title: "Stack Building Blocks", body: "Every time you make progress, upload fresh screenshots as a Follow-Up. CypherAI compares to baseline and updates priorities — your tactical archive grows." },
     ],
   },
   {

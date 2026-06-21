@@ -135,7 +135,7 @@ const DeepDiveDetail = ({ id, onBack, onDelete }) => {
       setFiles([]); setNotes(""); setShowFollowUp(false);
       refresh();
     } catch (err) {
-      toast.error("CyphrAI failed: " + err.message);
+      toast.error("CypherAI failed: " + err.message);
     } finally { setRunning(false); }
   };
 
@@ -204,7 +204,7 @@ const DeepDiveDetail = ({ id, onBack, onDelete }) => {
                 data-testid="deepdive-followup-notes"
               />
               <button type="submit" disabled={running || files.length === 0} className="btn-primary w-full flex items-center justify-center gap-2" data-testid="deepdive-followup-submit">
-                <Brain size={16} weight="bold" /> {running ? "CyphrAI analyzing…" : "Add building block"}
+                <Brain size={16} weight="bold" /> {running ? "CypherAI analyzing…" : "Add building block"}
               </button>
             </motion.form>
           )}
@@ -262,12 +262,12 @@ const DeepDiveModule = ({ slug, gameName }) => {
         throw new Error(detail);
       }
       const data = await r.json();
-      toast.success("CyphrAI baseline complete");
+      toast.success("CypherAI baseline complete");
       setFiles([]); setNotes(""); setTitle("Account Baseline"); setCreating(false);
       await refresh();
       setSelectedId(data.id);
     } catch (err) {
-      if (err.message !== "quota") toast.error("CyphrAI failed: " + err.message);
+      if (err.message !== "quota") toast.error("CypherAI failed: " + err.message);
     } finally { setRunning(false); }
   };
 
@@ -288,11 +288,11 @@ const DeepDiveModule = ({ slug, gameName }) => {
           <Brain size={24} weight="duotone" className="text-[#E63946]" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="tactical-label text-[#E63946] mb-1">// CYPHRAI · DEEP DIVE</div>
+          <div className="tactical-label text-[#E63946] mb-1">// CYPHERAI · DEEP DIVE</div>
           <h2 className="font-display text-xl font-bold tracking-tight">Establish your {gameName} baseline</h2>
           <p className="text-sm text-zinc-400 mt-1 max-w-2xl">
             Upload screenshots of your account — heroes, HQ, formation, gear, alliance.
-            CyphrAI analyzes everything visible and produces a strategic baseline.
+            CypherAI analyzes everything visible and produces a strategic baseline.
             Every time you make progress, drop new screenshots to add a <strong className="text-[#FFBA08]">building block</strong> — your tactical archive grows with you.
           </p>
         </div>
@@ -309,7 +309,7 @@ const DeepDiveModule = ({ slug, gameName }) => {
               <Lightning size={12} weight={mode === "quick" ? "fill" : "regular"} /> Quick — upload everything at once
             </button>
             <button onClick={() => setMode("guided")} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded text-xs transition ${mode === "guided" ? "bg-white/10 text-white" : "text-zinc-500 hover:text-white"}`} data-testid="mode-guided">
-              <Compass size={12} weight={mode === "guided" ? "fill" : "regular"} /> Guided — CyphrAI walks you through it
+              <Compass size={12} weight={mode === "guided" ? "fill" : "regular"} /> Guided — CypherAI walks you through it
             </button>
           </motion.div>
         )}
@@ -352,7 +352,7 @@ const DeepDiveModule = ({ slug, gameName }) => {
             </div>
             <UploadZone files={files} setFiles={setFiles} />
             <div>
-              <label className="tactical-label block mb-2">Context for CyphrAI (optional)</label>
+              <label className="tactical-label block mb-2">Context for CypherAI (optional)</label>
               <textarea
                 value={notes} onChange={e => setNotes(e.target.value)}
                 rows={2}
@@ -364,7 +364,7 @@ const DeepDiveModule = ({ slug, gameName }) => {
             <div className="flex gap-2">
               <button type="button" onClick={() => { setCreating(false); setFiles([]); }} className="btn-outline flex-1">Cancel</button>
               <button type="submit" disabled={running || files.length === 0} className="btn-primary flex-1 flex items-center justify-center gap-2" data-testid="deepdive-new-submit">
-                <Sparkle size={16} weight="bold" /> {running ? "CyphrAI analyzing…" : "Run deep dive"}
+                <Sparkle size={16} weight="bold" /> {running ? "CypherAI analyzing…" : "Run deep dive"}
               </button>
             </div>
           </motion.form>

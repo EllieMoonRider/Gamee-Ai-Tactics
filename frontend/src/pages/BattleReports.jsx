@@ -102,7 +102,7 @@ export const BattleReportsList = () => {
             <h1 className="font-display text-3xl sm:text-4xl font-black tracking-tighter flex items-center gap-3">
               <FlagBanner size={32} weight="duotone" className="text-[#FFBA08]" /> Battle Reports
             </h1>
-            <p className="text-sm text-zinc-400 mt-2 max-w-xl">Log engagements with screenshots & notes. Get an optional CyphrAI quick-take. Share to your alliance with one click.</p>
+            <p className="text-sm text-zinc-400 mt-2 max-w-xl">Log engagements with screenshots & notes. Get an optional CypherAI quick-take. Share to your alliance with one click.</p>
           </div>
           <button onClick={() => setCreating(c => !c)} className="btn-primary flex items-center gap-1.5" data-testid="br-new-btn">
             <Plus size={14} weight="bold" /> {creating ? "Cancel" : "New report"}
@@ -129,7 +129,7 @@ export const BattleReportsList = () => {
                   data-testid="br-auto-checkbox"
                 />
                 <Brain size={14} weight="duotone" className="text-[#10B981]" />
-                <span className="text-sm">Auto-run CyphrAI Take after saving</span>
+                <span className="text-sm">Auto-run CypherAI Take after saving</span>
                 <span className="tactical-label text-zinc-500 ml-auto">// COSTS 1 AI CALL</span>
               </label>
               <button type="submit" disabled={busy} className="btn-primary w-full" data-testid="br-submit">
@@ -158,7 +158,7 @@ export const BattleReportsList = () => {
                   {r.notes && <p className="text-xs text-zinc-400 mt-1 line-clamp-2">{r.notes}</p>}
                   <div className="flex items-center justify-between mt-3 text-xs text-zinc-500">
                     <span>{(r.shots || []).length} shot{(r.shots || []).length !== 1 ? "s" : ""}</span>
-                    {r.cyphr_take && <span className="flex items-center gap-1 text-[#10B981]"><Brain size={12} /> CyphrAI take</span>}
+                    {r.cyphr_take && <span className="flex items-center gap-1 text-[#10B981]"><Brain size={12} /> CypherAI take</span>}
                   </div>
                 </Link>
               );
@@ -186,7 +186,7 @@ export const BattleReportDetail = () => {
     try {
       const r = await api.post(`/battle-reports/${id}/analyze`);
       setBr(b => ({ ...b, cyphr_take: r.data.cyphr_take }));
-      toast.success(r.data.cached ? "Loaded cached take" : "CyphrAI take generated");
+      toast.success(r.data.cached ? "Loaded cached take" : "CypherAI take generated");
     } catch (err) {
       toast.error(err?.response?.data?.detail || "Analyze failed");
     } finally { setBusy(false); }
@@ -260,21 +260,21 @@ export const BattleReportDetail = () => {
           )}
         </div>
 
-        {/* CyphrAI take */}
+        {/* CypherAI take */}
         <div className="surface rounded-md p-6">
           <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
             <h2 className="font-display font-bold flex items-center gap-2">
-              <Brain size={18} weight="duotone" className="text-[#10B981]" /> CyphrAI Take
+              <Brain size={18} weight="duotone" className="text-[#10B981]" /> CypherAI Take
               <span className="tactical-label text-zinc-500 ml-2">// OPTIONAL</span>
             </h2>
             {!br.cyphr_take && (
               <button onClick={runAnalyze} disabled={busy} className="btn-primary !py-2 !px-4 text-xs flex items-center gap-1.5" data-testid="br-analyze">
-                <Sparkle size={12} weight="fill" /> {busy ? "Analyzing…" : "Get CyphrAI take"}
+                <Sparkle size={12} weight="fill" /> {busy ? "Analyzing…" : "Get CypherAI take"}
               </button>
             )}
           </div>
           {!br.cyphr_take ? (
-            <p className="text-sm text-zinc-500">No take yet. Click to have CyphrAI analyze your engagement — what worked, what didn't, what to do next time.</p>
+            <p className="text-sm text-zinc-500">No take yet. Click to have CypherAI analyze your engagement — what worked, what didn't, what to do next time.</p>
           ) : (
             <div className="terminal-block markdown-output" data-testid="br-cyphr-take" dangerouslySetInnerHTML={{ __html: renderMd(br.cyphr_take) }} />
           )}

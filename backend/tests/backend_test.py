@@ -211,7 +211,7 @@ def test_tasks_crud(auth_headers):
 
 
 
-# --- Deep Dive (CyphrAI vision) ---
+# --- Deep Dive (CypherAI vision) ---
 def _tiny_png_bytes():
     """Returns 100x100 red PNG bytes (Anthropic vision rejects sub-tiny images)."""
     import struct, zlib

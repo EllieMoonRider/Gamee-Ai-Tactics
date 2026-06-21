@@ -40,7 +40,7 @@ const Pricing = () => {
           <div className="tactical-label text-[#E63946] mb-2">// PRICING TIERS</div>
           <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tighter">Pick your loadout</h1>
           <p className="text-zinc-400 mt-3 max-w-2xl mx-auto">
-            CyphrAI Chat, Optimizer, Guides, and Daily Planner are <strong className="text-[#10B981]">free forever</strong>. Deep Dive vision analyses & Alliance Chat are paid — pricing scales with how many games and how big your alliance is.
+            CypherAI Chat, Optimizer, Guides, and Daily Planner are <strong className="text-[#10B981]">free forever</strong>. Deep Dive vision analyses & Alliance Chat are paid — pricing scales with how many games and how big your alliance is.
           </p>
           {quota && quota.plan === "pro" && (
             <div className="mt-4 inline-flex items-center gap-2 surface px-4 py-2 rounded text-sm" data-testid="pricing-current-plan">
@@ -60,7 +60,7 @@ const Pricing = () => {
               <span className="text-zinc-500"> / forever</span>
             </div>
             <ul className="space-y-2.5 text-sm text-zinc-300 flex-1">
-              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> CyphrAI Chat (30 msgs/min)</li>
+              <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> CypherAI Chat (30 msgs/min)</li>
               <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Build Optimizer (10/min)</li>
               <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> 13+ curated Guides</li>
               <li className="flex gap-2"><CheckCircle size={16} weight="duotone" className="text-[#10B981] mt-0.5 flex-shrink-0" /> Daily Planner across 11 titles</li>
@@ -151,7 +151,7 @@ const Pricing = () => {
                   <div className="tactical-label text-[#10B981] mb-1">// ALLIANCE CHAT · PER MEMBER</div>
                   <h3 className="font-display text-xl font-bold tracking-tight">Operations Center — <span className="text-[#10B981]">$0.99/mo</span></h3>
                   <p className="text-xs text-zinc-400 mt-2">
-                    Each member pays their own seat. Unlocks alliance chat rooms, share Deep Dives & Battle Reports, ask CyphrAI in-room. Built for 60-active-member alliances.
+                    Each member pays their own seat. Unlocks alliance chat rooms, share Deep Dives & Battle Reports, ask CypherAI in-room. Built for 60-active-member alliances.
                   </p>
                   <button
                     onClick={() => buy("toc_addon_monthly")}

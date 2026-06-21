@@ -77,7 +77,7 @@ const Calendar = () => {
             <h1 className="font-display text-3xl font-black tracking-tighter flex items-center gap-3">
               <CalendarBlank size={32} weight="duotone" className="text-[#FFBA08]" /> {user?.username}'s Calendar
             </h1>
-            <p className="text-sm text-zinc-400 mt-1 max-w-xl">Schedule events. Track milestones automatically. CyphrAI learns your rhythm to give better strategic advice.</p>
+            <p className="text-sm text-zinc-400 mt-1 max-w-xl">Schedule events. Track milestones automatically. CypherAI learns your rhythm to give better strategic advice.</p>
           </div>
           <button onClick={() => setCreating(c => !c)} className="btn-primary flex items-center gap-1.5" data-testid="cal-new-btn">
             <Plus size={14} weight="bold" /> {creating ? "Cancel" : "New event"}
@@ -143,7 +143,7 @@ const Calendar = () => {
             <div className="tactical-label text-[#10B981] mb-2 flex items-center gap-1"><Trophy size={12} /> // MILESTONES</div>
             <div className="space-y-2 max-h-[60vh] overflow-y-auto">
               {milestones.length === 0 ? (
-                <p className="text-xs text-zinc-500">CyphrAI is watching — your milestones will appear as you use the app.</p>
+                <p className="text-xs text-zinc-500">CypherAI is watching — your milestones will appear as you use the app.</p>
               ) : milestones.map(m => {
                 const meta = KIND_ICON[m.kind] || { icon: Trophy, color: "#A1A1AA", label: m.kind };
                 const Icon = meta.icon;

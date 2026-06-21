@@ -19,7 +19,7 @@ const CATEGORY_OPTIONS = [
 const FAQS = [
   {
     q: "How do Deep Dive baselines work?",
-    a: "A baseline is your initial CyphrAI analysis of a game screenshot. Each Pro subscription gives 2 baselines per month. After the baseline, you can ask unlimited follow-up Building Block questions about that same Deep Dive — those don't count against your quota.",
+    a: "A baseline is your initial CypherAI analysis of a game screenshot. Each Pro subscription gives 2 baselines per month. After the baseline, you can ask unlimited follow-up Building Block questions about that same Deep Dive — those don't count against your quota.",
   },
   {
     q: "Can I get a refund?",

@@ -6,7 +6,7 @@
 User direction iterations:
 1. Focus on the top 10 most popular 37Games MMORPGs, including Puzzles & Conquest.
 2. Rebrand to **Tactical Ally** with a **War Room** aesthetic. Renamed views: **Recruitment Center** (auth), **Command Center** (dashboard), personal **War Room**.
-3. Players can upload account screenshots → **CyphrAI Deep Dive** analysis as a baseline, with a **Building-Block** system of follow-up analyses.
+3. Players can upload account screenshots → **CypherAI Deep Dive** analysis as a baseline, with a **Building-Block** system of follow-up analyses.
 4. **Pricing overhaul (Feb 2026)**: $4.99/mo Pro = full access for 2 games (user-selectable). +$0.99/mo per extra game slot. Alliance chat is $0.99/mo **per member** (each player self-pays). $2.99 one-shot Deep Dive stays.
 5. **Tactical Scouts (Feb 2026)**: F2P credit system — 1 credit = $1. Earn by uploading game-update screenshots (0.25), watching videos (0.10), trying recommended games (0.50), daily login (0.05). 3 credits = +1 free Deep Dive baseline.
 6. OTS alliance: 100-seat admin grant cap, referral mechanism, calendar/milestone tracking.
@@ -25,7 +25,7 @@ User direction iterations:
 
 ### Backend (`/app/backend/server.py`, ~2600 lines)
 - Auth + Password Reset (Resend + dev fallback)
-- 11 games catalog with strict per-game CyphrAI specialist prompts
+- 11 games catalog with strict per-game CypherAI specialist prompts
 - Chat (streaming + rate-limited 30/60s), Optimizer, Builds, 15 Guides, Tasks
 - Deep Dive — GridFS storage, MIME validation, rate-limited, quota-gated 402, **per-game gating via pro_games[]**
 - **Stripe billing — 4 SKUs**:
@@ -34,7 +34,7 @@ User direction iterations:
   - `extra_game_monthly` $0.99/mo: +1 game slot (recurring)
   - `toc_addon_monthly` $0.99/mo per-member: alliance chat seat
 - **Tactical Scouts F2P credit ledger** (4 earn actions, daily caps, 3-credit redemption)
-- **Tactical Operations Center**: alliances per-game, polling chat with in-room CyphrAI Q&A
+- **Tactical Operations Center**: alliances per-game, polling chat with in-room CypherAI Q&A
 - **Battle Reports** with auto-analyze + share-to-alliance
 - **OTS Seats** (100-seat cap, email-locked, auto-link on register)
 - **Referrals** (`TA-XXXXXX` codes, +1 baseline welcome bonus, 5/mo cap)

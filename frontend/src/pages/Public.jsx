@@ -86,7 +86,7 @@ export const PublicDeepDive = () => {
 
         <div className="mt-10 surface rounded p-6 text-center">
           <h3 className="font-display text-xl font-bold">Want one for your account?</h3>
-          <p className="text-sm text-zinc-400 mt-1 mb-4">CyphrAI specialist analysis across 11 titles. Free chat. Pro from $4.99/mo.</p>
+          <p className="text-sm text-zinc-400 mt-1 mb-4">CypherAI specialist analysis across 11 titles. Free chat. Pro from $4.99/mo.</p>
           <Link to="/auth" className="btn-primary inline-block">Get my Deep Dive</Link>
         </div>
       </div>

@@ -77,7 +77,7 @@ const Operations = () => {
             Alliance HQ
           </h1>
           <p className="text-zinc-400 mt-3 max-w-2xl">
-            Create or join a per-game alliance room. Chat with your alliance, share Deep Dive analyses & Builds, post battle reports, and ask CyphrAI questions <strong className="text-white">unlimited</strong> — in-room and game-specific.
+            Create or join a per-game alliance room. Chat with your alliance, share Deep Dive analyses & Builds, post battle reports, and ask CypherAI questions <strong className="text-white">unlimited</strong> — in-room and game-specific.
           </p>
         </motion.div>
 
@@ -89,7 +89,7 @@ const Operations = () => {
                 <h2 className="font-display font-bold text-lg">Operations Center add-on required</h2>
                 <p className="text-sm text-zinc-400 mt-1">
                   Pro ($4.99/mo) + Tactical Operations Center add-on ($0.99/mo) = <strong className="text-[#FFBA08]">$5.99/mo total</strong>.
-                  Unlock alliance chat, shared analyses, and unlimited in-room CyphrAI questions.
+                  Unlock alliance chat, shared analyses, and unlimited in-room CypherAI questions.
                 </p>
               </div>
               <Link to="/pricing" className="btn-primary" data-testid="toc-upgrade-cta">Unlock — $5.99/mo</Link>

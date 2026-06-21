@@ -386,9 +386,9 @@ def system_prompt_for(game_slug: str) -> str:
     name = game["name"] if game else "37Games title"
     genre = game["genre"] if game else "mobile strategy game"
     return (
-        f"You are 'CyphrAI', the tactical AI engine inside the Tactical Ally app. You are a DEDICATED SPECIALIST for the 37Games title '{name}' ({genre}) and NOTHING ELSE. "
+        f"You are 'CypherAI', the tactical AI engine inside the Tactical Ally app. You are a DEDICATED SPECIALIST for the 37Games title '{name}' ({genre}) and NOTHING ELSE. "
         "STRICT RULES (do not break these):\n"
-        f"1. You ONLY answer about '{name}'. If the player asks about a different game (even another 37Games title), politely refuse and say 'I'm the {name} specialist — open that game's workspace to talk to its dedicated CyphrAI.'\n"
+        f"1. You ONLY answer about '{name}'. If the player asks about a different game (even another 37Games title), politely refuse and say 'I'm the {name} specialist — open that game's workspace to talk to its dedicated CypherAI.'\n"
         f"2. NEVER cross-reference mechanics, heroes, items, or strategies from other games. Treat '{name}' as a closed universe.\n"
         f"3. Provide TRUE, SPECIFIC strategy — exact hero names, building names, event names, numeric targets, formation roles. NEVER give generic mobile-strategy advice.\n"
         f"4. If you don't know a specific patch/event detail, say 'I don't have verified info on that — can you screenshot it for me?' rather than fabricating.\n"
@@ -401,7 +401,7 @@ def deepdive_system_prompt(game_slug: str, mode: str) -> str:
     game = next((g for g in GAMES if g["slug"] == game_slug), None)
     name = game["name"] if game else "37Games title"
     base = (
-        f"You are 'CyphrAI', the DEDICATED SPECIALIST for the 37Games title '{name}'. You are NOT a generic mobile-strategy AI; you only speak {name}. "
+        f"You are 'CypherAI', the DEDICATED SPECIALIST for the 37Games title '{name}'. You are NOT a generic mobile-strategy AI; you only speak {name}. "
         "Read every screenshot carefully — heroes, levels, resources, building HQ, alliance, VIP, gear, formation, power, anything visible. "
         "STRICT: Do not reference any other game. Do not give generic advice. Be specific to this title's mechanics, heroes, events, and meta. If something is unclear in the screenshot, say so — never invent. "
     )
@@ -811,7 +811,7 @@ async def delete_task(tid: str, user=Depends(get_current_user)):
     return {"ok": True}
 
 
-# ----- Deep Dive (CyphrAI vision analysis) -----
+# ----- Deep Dive (CypherAI vision analysis) -----
 MAX_SHOTS = 6
 MAX_BYTES = 6 * 1024 * 1024  # 6 MB per image
 ALLOWED_MIMES = {"image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"}
@@ -918,7 +918,7 @@ async def create_deep_dive(
     except Exception as e:
         await _delete_gridfs_refs(refs)
         logging.exception("deep dive baseline failed: %s", e)
-        raise HTTPException(500, "CyphrAI analysis failed. Please try again.")
+        raise HTTPException(500, "CypherAI analysis failed. Please try again.")
     doc = {
         "id": str(uuid.uuid4()),
         "user_id": user["id"],
@@ -964,7 +964,7 @@ async def add_followup(
     except Exception:
         await _delete_gridfs_refs(refs)
         logging.exception("deep dive followup failed")
-        raise HTTPException(500, "CyphrAI analysis failed. Please try again.")
+        raise HTTPException(500, "CypherAI analysis failed. Please try again.")
     block = {
         "id": str(uuid.uuid4()),
         "analysis": analysis,
@@ -1029,7 +1029,7 @@ async def delete_deep_dive(did: str, user=Depends(get_current_user)):
     return {"ok": True}
 
 
-# ---------- CyphrAI Guided Deep Dive ----------
+# ---------- CypherAI Guided Deep Dive ----------
 DEFAULT_GUIDE_STEPS = [
     {"id": "headquarters", "title": "Headquarters / Stronghold", "desc": "Open your main base/HQ screen so the level and power are visible."},
     {"id": "heroes", "title": "Hero roster", "desc": "Show your full hero list (sorted by power or rarity)."},
@@ -1045,7 +1045,7 @@ async def _generate_guide_plan(game_slug: str) -> list[dict]:
     game = next((g for g in GAMES if g["slug"] == game_slug), None)
     name = game["name"] if game else game_slug
     prompt = (
-        f"You are CyphrAI, the strict specialist for the 37Games title '{name}'. "
+        f"You are CypherAI, the strict specialist for the 37Games title '{name}'. "
         "A player has asked you to guide them through screenshotting their account for a Deep Dive analysis. "
         "Produce a JSON array of 6-8 steps in priority order. Each step is {\"id\":\"snake_case\",\"title\":\"short\",\"desc\":\"one sentence telling exactly which screen to open and what should be visible\"}. "
         "Be SPECIFIC to this title — name the actual menu paths, screens, and what data matters. "
@@ -1186,7 +1186,7 @@ async def guided_ask(sid: str, body: GuidedAsk, user=Depends(get_current_user)):
         answer = await chat.send_message(UserMessage(text=body.question.strip()))
     except Exception as e:
         logging.exception("guided ask failed: %s", e)
-        raise HTTPException(500, "CyphrAI couldn't answer right now.")
+        raise HTTPException(500, "CypherAI couldn't answer right now.")
     qa_entry = {"id": str(uuid.uuid4()), "q": body.question.strip(), "a": answer, "at": now_iso()}
     await db.guided_sessions.update_one({"id": sid}, {"$push": {"qa": qa_entry}})
     return qa_entry
@@ -1234,7 +1234,7 @@ async def finalize_guided(sid: str, body: FinalizeGuided, user=Depends(get_curre
         else:
             await db.users.update_one({"id": user["id"]}, {"$inc": {"extra_baselines": 1}})
         logging.exception("guided finalize failed: %s", e)
-        raise HTTPException(500, "CyphrAI analysis failed. Please try again.")
+        raise HTTPException(500, "CypherAI analysis failed. Please try again.")
     doc = {
         "id": str(uuid.uuid4()),
         "user_id": user["id"],
@@ -1265,7 +1265,7 @@ async def abandon_guided(sid: str, user=Depends(get_current_user)):
     return {"ok": True}
 
 
-# ---------- CyphrAI Guided Deep Dive END ----------
+# ---------- CypherAI Guided Deep Dive END ----------
 
 
 # ---------- Billing (Stripe subscription + topup) ----------
@@ -1278,7 +1278,7 @@ PACKAGES = {
         "baselines": 2,
         "period_days": 30,
         "included_games": 2,
-        "description": "Full Pro access for 2 games of your choice. Includes 2 CyphrAI Deep Dive baselines/month + unlimited follow-up Building Blocks.",
+        "description": "Full Pro access for 2 games of your choice. Includes 2 CypherAI Deep Dive baselines/month + unlimited follow-up Building Blocks.",
     },
     "topup_analysis": {
         "name": "Single Deep Dive",
@@ -1868,7 +1868,7 @@ async def alliance_ask_cyphr(aid: str, body: AskCyphrMsg, user=Depends(get_curre
     await _rate_limit(user["id"], "chat")
     # Post the question
     q_msg = await _push_message(aid, user, "cyphr_q", body.question.strip())
-    # Run CyphrAI (specialist for alliance's game)
+    # Run CypherAI (specialist for alliance's game)
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=f"alliance-{aid}-{uuid.uuid4()}",
@@ -1878,13 +1878,13 @@ async def alliance_ask_cyphr(aid: str, body: AskCyphrMsg, user=Depends(get_curre
         answer = await chat.send_message(UserMessage(text=body.question.strip()))
     except Exception as e:
         logging.exception("alliance ask-cyphr failed")
-        answer = f"(CyphrAI couldn't respond just now: {e})"
+        answer = f"(CypherAI couldn't respond just now: {e})"
     # Post answer as a system message (no human user_id)
     a_msg = {
         "id": str(uuid.uuid4()),
         "alliance_id": aid,
         "user_id": "cyphr-ai",
-        "username": "CyphrAI",
+        "username": "CypherAI",
         "type": "cyphr_a",
         "content": answer,
         "refs": {"in_reply_to": q_msg["id"], "asked_by": user["username"]},
@@ -1945,7 +1945,7 @@ async def create_battle_report(
             game = next((g for g in GAMES if g["slug"] == game_slug), None)
             game_name = game["name"] if game else game_slug
             sys_prompt = (
-                f"You are CyphrAI, the STRICT specialist for '{game_name}'. The user just posted a Battle Report. "
+                f"You are CypherAI, the STRICT specialist for '{game_name}'. The user just posted a Battle Report. "
                 "Read screenshots and notes. Respond in this exact structure (≤250 words):\n"
                 "## What I see\n(1-2 sentence summary)\n\n## What worked\n- ...\n\n## What didn't\n- ...\n\n## Next time, do this\n1. ...\n\n"
                 "Be specific to this game. No generic advice. No other game references."
@@ -2006,7 +2006,7 @@ async def analyze_battle_report(rid: str, user=Depends(get_current_user)):
     game = next((g for g in GAMES if g["slug"] == br["game_slug"]), None)
     game_name = game["name"] if game else br["game_slug"]
     sys_prompt = (
-        f"You are CyphrAI, the STRICT specialist for the 37Games title '{game_name}'. The user just posted a Battle Report. "
+        f"You are CypherAI, the STRICT specialist for the 37Games title '{game_name}'. The user just posted a Battle Report. "
         "Read the screenshots and notes. Reply in this exact structure (concise, ≤250 words):\n"
         "## What I see\n(1-2 sentence summary of the engagement)\n\n"
         "## What worked\n- 2-3 bullets\n\n"
@@ -2024,7 +2024,7 @@ async def analyze_battle_report(rid: str, user=Depends(get_current_user)):
         take = await chat.send_message(UserMessage(text=f"Notes: {br.get('notes','(none)')}\nAnalyze this engagement.", file_contents=images))
     except Exception as e:
         logging.exception("battle report analyze failed: %s", e)
-        raise HTTPException(500, "CyphrAI couldn't analyze right now.")
+        raise HTTPException(500, "CypherAI couldn't analyze right now.")
     await db.battle_reports.update_one({"id": rid}, {"$set": {"cyphr_take": take, "analyzed_at": now_iso()}})
     return {"cyphr_take": take, "cached": False}
 
@@ -2577,7 +2577,7 @@ async def user_onboarding_status(user=Depends(get_current_user)):
         candidates.append({
             "type": "chat",
             "game_slug": last_chat.get("game_slug"),
-            "label": f"CyphrAI Chat · {(last_chat.get('game_slug') or 'general').replace('-', ' ').title()}",
+            "label": f"CypherAI Chat · {(last_chat.get('game_slug') or 'general').replace('-', ' ').title()}",
             "link": f"/game/{last_chat.get('game_slug')}?tab=chat" if last_chat.get("game_slug") else "/dashboard",
             "at_iso": last_chat.get("updated_at") or last_chat.get("created_at"),
         })

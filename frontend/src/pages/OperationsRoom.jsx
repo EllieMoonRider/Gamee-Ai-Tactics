@@ -30,7 +30,7 @@ const MessageBubble = ({ m, isMine, currentUser }) => {
         <div className="max-w-[90%] surface-elev rounded-md p-3 border-l-2 border-[#10B981]">
           <div className="flex items-center gap-1.5 mb-1">
             <Brain size={12} weight="duotone" className="text-[#10B981]" />
-            <span className="tactical-label text-[#10B981]">// CYPHRAI · {m.refs?.asked_by || "alliance"}</span>
+            <span className="tactical-label text-[#10B981]">// CYPHERAI · {m.refs?.asked_by || "alliance"}</span>
           </div>
           <div className="text-sm markdown-output" dangerouslySetInnerHTML={{ __html: renderMd(m.content) }} />
         </div>
@@ -42,7 +42,7 @@ const MessageBubble = ({ m, isMine, currentUser }) => {
     <div className={`flex ${isMine ? "justify-end" : "justify-start"}`} data-testid={`msg-${m.type}-${m.id}`}>
       <div className={`max-w-[80%] rounded-md p-3 ${bg}`}>
         <div className={`tactical-label mb-1 opacity-70 ${isMine ? "text-white" : "text-[#FFBA08]"}`}>
-          {m.username}{m.type === "cyphr_q" && " · asked CyphrAI"}
+          {m.username}{m.type === "cyphr_q" && " · asked CypherAI"}
         </div>
         {m.type === "share_deepdive" && (
           <Link to={`/share/d/${m.refs?.share_token}`} target="_blank" rel="noreferrer" className={`block surface ${isMine ? "!bg-white/10 !border-white/20" : ""} rounded p-2.5 mb-2`}>
@@ -351,13 +351,13 @@ const OperationsRoom = () => {
             <div className="flex gap-2 mb-2">
               <button type="button" onClick={() => setMode("text")} className={`tactical-label px-2 py-1 rounded border ${mode === "text" ? "border-white/40 text-white" : "border-white/10 text-zinc-500 hover:text-white"}`} data-testid="mode-text">// CHAT</button>
               <button type="button" onClick={() => setMode("cyphr")} className={`tactical-label px-2 py-1 rounded border flex items-center gap-1 ${mode === "cyphr" ? "border-[#10B981]/60 text-[#10B981]" : "border-white/10 text-zinc-500 hover:text-[#10B981]"}`} data-testid="mode-cyphr">
-                <Sparkle size={10} weight="fill" /> // ASK CYPHRAI
+                <Sparkle size={10} weight="fill" /> // ASK CYPHERAI
               </button>
             </div>
             <div className="flex gap-2">
               <input
                 value={input} onChange={e => setInput(e.target.value)}
-                placeholder={mode === "cyphr" ? "Ask CyphrAI a game-specific question…" : "Send a message to your alliance…"}
+                placeholder={mode === "cyphr" ? "Ask CypherAI a game-specific question…" : "Send a message to your alliance…"}
                 className="flex-1 bg-[#0c0c0c] border border-white/10 rounded px-3 py-2.5 text-sm"
                 disabled={busy} data-testid="alliance-input"
               />

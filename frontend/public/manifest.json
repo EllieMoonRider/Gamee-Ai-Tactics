@@ -1,7 +1,7 @@
 {
   "name": "Tactical Ally — 37Games War Room",
   "short_name": "Tactical Ally",
-  "description": "AI-powered strategy companion for 11 top 37Games MMORPGs. CyphrAI Deep Dives, Alliance Operations, Battle Reports.",
+  "description": "AI-powered strategy companion for 11 top 37Games MMORPGs. CypherAI Deep Dives, Alliance Operations, Battle Reports.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

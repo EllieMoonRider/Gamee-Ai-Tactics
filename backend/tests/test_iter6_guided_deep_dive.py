@@ -1,4 +1,4 @@
-"""Iteration 6 backend tests: CyphrAI Guided Deep Dive.
+"""Iteration 6 backend tests: CypherAI Guided Deep Dive.
 
 Covers:
  - GET /api/deep-dive-guide-plan (auth + caching + invalid game)

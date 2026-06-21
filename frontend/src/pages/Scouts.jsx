@@ -7,7 +7,7 @@ import { Sparkle, UploadSimple, FilmStrip, GameController, Lightning, Coins, Tro
 
 const KIND_META = {
   upload_game_screenshot: { icon: UploadSimple, color: "#FFBA08", title: "Upload game update screenshot", help: "Snap your latest 37Games loading screen / patch notes / event banner. Helps the community track new content." },
-  watch_video: { icon: FilmStrip, color: "#10B981", title: "Watch a recommended video", help: "Open a CyphrAI-curated strategy video. Bonus credit on first daily click." },
+  watch_video: { icon: FilmStrip, color: "#10B981", title: "Watch a recommended video", help: "Open a CypherAI-curated strategy video. Bonus credit on first daily click." },
   try_recommended_game: { icon: GameController, color: "#E63946", title: "Try a recommended game", help: "Open another 37Games title from the catalog and play 5+ min. Self-report; we trust commanders." },
   daily_login: { icon: Lightning, color: "#A1A1AA", title: "Daily login bonus", help: "Just for showing up." },
 };

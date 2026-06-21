@@ -49,7 +49,7 @@ export const BillingSuccess = () => {
             <CheckCircle size={56} weight="duotone" className="text-[#10B981] mx-auto mb-3" />
             <div className="tactical-label text-[#10B981] mb-2">// PAYMENT CONFIRMED</div>
             <h1 className="font-display text-3xl font-black tracking-tighter">Welcome to Pro, commander.</h1>
-            <p className="text-sm text-zinc-400 mt-3">Your CyphrAI Deep Dive analyses are unlocked.</p>
+            <p className="text-sm text-zinc-400 mt-3">Your CypherAI Deep Dive analyses are unlocked.</p>
             <Link to="/dashboard" className="btn-primary inline-flex items-center gap-2 mt-8" data-testid="billing-paid-cta">
               Enter Command Center <ArrowRight size={16} weight="bold" />
             </Link>

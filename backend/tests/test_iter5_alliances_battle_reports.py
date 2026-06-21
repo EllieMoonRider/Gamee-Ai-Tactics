@@ -1,6 +1,6 @@
 """Iteration 5 backend tests: Tactical Operations Center (alliances + chat)
 and first-class Battle Reports. Uses direct Mongo grant for Pro+TOC entitlements
-to avoid real Stripe charges and to keep CyphrAI/vision LLM cost low.
+to avoid real Stripe charges and to keep CypherAI/vision LLM cost low.
 """
 import os
 import io
@@ -252,7 +252,7 @@ def test_iter5_ask_cyphr_specialist(alliance_ctx):
     assert q["type"] == "cyphr_q"
     assert a["type"] == "cyphr_a"
     assert a["user_id"] == "cyphr-ai"
-    assert a["username"] == "CyphrAI"
+    assert a["username"] == "CypherAI"
     assert isinstance(a["content"], str) and len(a["content"]) > 20
     # Specialist behavior: ensure no leakage to wrong-game refs
     lower = a["content"].lower()
