@@ -23,7 +23,6 @@ import Scouts from "./pages/Scouts";
 import Help from "./pages/Help";
 import AdminSupport from "./pages/AdminSupport";
 import AboutCypher from "./pages/AboutCypher";
-import LandscapeOverlay from "./components/LandscapeOverlay";
 import InstallPwaPrompt from "./components/InstallPwaPrompt";
 import "./App.css";
 

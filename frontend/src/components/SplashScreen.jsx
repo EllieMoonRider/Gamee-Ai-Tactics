@@ -65,11 +65,22 @@ const SplashScreen = ({ onDone }) => {
       />
 
       {/* Center: SVG with the icon as centerpiece + curved text around it */}
+      <div
+        className="absolute splash-fade-in"
+        style={{
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "min(92vw, 420px)",
+          maxHeight: "85vh",
+        }}
+      >
       <svg
         viewBox="0 0 400 460"
         preserveAspectRatio="xMidYMid meet"
-        className="relative w-[92vw] max-w-[420px] h-auto splash-fade-in"
-        style={{ maxHeight: "92vh" }}
+        width="100%"
+        height="auto"
+        style={{ display: "block", maxHeight: "85vh" }}
       >
         <defs>
           <clipPath id="iconClip">
@@ -135,6 +146,7 @@ const SplashScreen = ({ onDone }) => {
           </textPath>
         </text>
       </svg>
+      </div>
 
       {/* Progress + skip */}
       <div className="absolute bottom-6 left-0 right-0 text-center font-mono-tactical text-[10px] tracking-[0.3em] text-zinc-600" data-testid="splash-skip-hint">
