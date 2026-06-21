@@ -428,3 +428,218 @@ input:focus, textarea:focus, select:focus {
   );
   pointer-events: none;
 }
+
+
+/* ============================================================================
+   TACTICAL MAP — green holo grid floor + hovering radar + game piece beacons
+   ============================================================================ */
+.map-green  { color: #00FF80; text-shadow: 0 0 8px rgba(0,255,128,0.55); }
+.map-orange { color: #FF6B00; text-shadow: 0 0 8px rgba(255,107,0,0.55); }
+
+.tactical-map { position: relative; }
+
+.map-viewport {
+  position: relative;
+  width: 100%;
+  /* responsive cinematic aspect — never collapses on mobile */
+  aspect-ratio: 16 / 10;
+  min-height: 360px;
+  background: radial-gradient(ellipse at 50% 35%, rgba(0,255,128,0.06) 0%, rgba(0,0,0,0.0) 60%), #050908;
+  border: 1px solid rgba(0,255,128,0.18);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 60px rgba(0,255,128,0.08),
+    0 0 28px rgba(0,255,128,0.06);
+}
+
+/* Perspective wrapper — sits at the bottom 60% acting as the "floor" */
+.map-perspective {
+  position: absolute;
+  inset: 35% 0 0 0;
+  perspective: 900px;
+  perspective-origin: 50% 0%;
+  pointer-events: none;
+}
+.map-floor {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0%;
+  transform: rotateX(58deg) translateY(-2%);
+  transform-style: preserve-3d;
+}
+.map-floor-grid {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 0 6px rgba(0,255,128,0.35));
+}
+
+/* The pieces layer sits ON TOP of the floor (not transformed) so the icons
+   remain crisp and upright while the floor recedes behind them. The piece
+   "scale" prop simulates near/far perspective. */
+.map-pieces-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.map-piece {
+  position: absolute;
+  pointer-events: auto;
+  width: 78px;
+  height: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  transition: filter 220ms ease, transform 220ms ease;
+}
+.map-piece:focus-visible { filter: drop-shadow(0 0 8px #00FF80); }
+
+/* Pedestal base — a glowing oval that sits "on the floor" */
+.map-piece-base {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  transform: translateX(-50%);
+  width: 56px; height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0,255,128,0.55) 0%, rgba(0,255,128,0.05) 60%, transparent 75%);
+  filter: blur(0.5px);
+}
+/* Soft ambient glow under the whole piece */
+.map-piece-glow {
+  position: absolute;
+  inset: -6px;
+  background: radial-gradient(circle at 50% 70%, rgba(0,255,128,0.22) 0%, rgba(0,255,128,0) 60%);
+  filter: blur(4px);
+  pointer-events: none;
+}
+/* Rotating ring on the icon disc */
+.map-piece-ring {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 1.4px solid rgba(0,255,128,0.55);
+  box-shadow:
+    0 0 14px rgba(0,255,128,0.45),
+    inset 0 0 12px rgba(0,255,128,0.18);
+  background: radial-gradient(circle at center, rgba(0,255,128,0.10), rgba(0,0,0,0.55));
+  animation: mapPieceRing 4.5s linear infinite;
+}
+@keyframes mapPieceRing {
+  from { box-shadow: 0 0 12px rgba(0,255,128,0.30), inset 0 0 10px rgba(0,255,128,0.14); }
+  50%  { box-shadow: 0 0 22px rgba(0,255,128,0.55), inset 0 0 16px rgba(0,255,128,0.28); }
+  to   { box-shadow: 0 0 12px rgba(0,255,128,0.30), inset 0 0 10px rgba(0,255,128,0.14); }
+}
+.map-piece-icon {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translate(-50%, 0);
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  color: #00FF80;
+  filter: drop-shadow(0 0 6px rgba(0,255,128,0.7));
+}
+.map-piece-label {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  transform: translateX(-50%);
+  font-family: "Share Tech Mono", "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: #B8FFD8;
+  text-shadow: 0 0 6px rgba(0,255,128,0.6);
+  white-space: nowrap;
+  text-transform: uppercase;
+  background: rgba(0,12,6,0.7);
+  padding: 2px 6px;
+  border: 1px solid rgba(0,255,128,0.35);
+  border-radius: 2px;
+  pointer-events: none;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.map-piece:hover .map-piece-label {
+  color: #fff;
+  border-color: rgba(0,255,128,0.7);
+  box-shadow: 0 0 10px rgba(0,255,128,0.5);
+}
+/* Claimed (Pro theater) state — pulsing brighter, with a star marker */
+.map-piece.claimed .map-piece-ring {
+  border-color: #00FF80;
+  box-shadow:
+    0 0 20px rgba(0,255,128,0.85),
+    inset 0 0 14px rgba(0,255,128,0.35);
+}
+.map-piece.claimed .map-piece-icon { color: #B8FFD8; }
+.map-piece-star {
+  position: absolute;
+  top: 18px; right: 8px;
+  color: #FF6B00;
+  filter: drop-shadow(0 0 4px rgba(255,107,0,0.9));
+}
+
+/* Hovering radar — floats above the back of the map */
+.map-radar {
+  position: absolute;
+  top: -2%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(120px, 28%, 220px);
+  height: clamp(120px, 28%, 220px);
+  z-index: 2;
+  filter: drop-shadow(0 0 18px rgba(0,255,128,0.45));
+  animation: mapRadarHover 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes mapRadarHover {
+  0%, 100% { transform: translate(-50%, 0); }
+  50%      { transform: translate(-50%, -8px); }
+}
+@keyframes mapRadarSweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes mapRadarPing {
+  0%   { opacity: 0.0; r: 6; }
+  50%  { opacity: 0.7; }
+  100% { opacity: 0.0; r: 60; }
+}
+
+/* Identify / Claim modal panel */
+.map-piece-detail {
+  background: linear-gradient(180deg, rgba(8,18,12,0.95), rgba(2,10,6,0.95));
+  border: 1px solid rgba(0,255,128,0.35);
+  border-radius: 6px;
+  padding: 22px;
+  box-shadow:
+    0 0 40px rgba(0,255,128,0.18),
+    0 12px 50px rgba(0,0,0,0.7);
+}
+.cc-panel-thin {
+  border: 1px solid rgba(0,255,128,0.25);
+  background: rgba(0,12,6,0.55);
+  border-radius: 3px;
+}
+
+/* Smaller pieces on narrow screens so 11 fit without overlap */
+@media (max-width: 640px) {
+  .map-piece { width: 64px; height: 78px; }
+  .map-piece-ring,
+  .map-piece-icon { width: 44px; height: 44px; bottom: 18px; }
+  .map-piece-icon svg { width: 22px; height: 22px; }
+  .map-piece-label { font-size: 8px; padding: 1px 4px; max-width: 90px; }
+}

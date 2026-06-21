@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
+import TacticalGameMap from "../components/TacticalGameMap";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import {
@@ -321,44 +322,9 @@ const Dashboard = () => {
         {/* Quota strip */}
         <QuotaWidget />
 
-        {/* Battle Theaters (11 games) */}
-        <div>
-          <div className="tactical-label cc-neon-text mb-3">// BATTLE THEATERS · {games.length} ACTIVE</div>
-          <h2 className="font-display text-2xl font-bold tracking-tight mb-4 flex items-center gap-2">
-            <Brain size={22} weight="duotone" className="cc-neon-text" /> Select your theater
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 cc-grid-floor p-4 -m-4 rounded-md" data-testid="game-grid">
-            {games.map((g, i) => {
-              const Icon = GAME_ICONS[g.slug] || CastleTurret;
-              return (
-                <motion.div
-                  key={g.slug}
-                  initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                >
-                  <Link
-                    to={`/game/${g.slug}`}
-                    className="cc-panel cc-tile p-5 h-full flex flex-col items-center text-center group hover:-translate-y-1 transition"
-                    data-testid={`game-card-${g.slug}`}
-                  >
-                    <span className="cc-tile-corner tl" />
-                    <span className="cc-tile-corner tr" />
-                    <span className="cc-tile-corner bl" />
-                    <span className="cc-tile-corner br" />
-                    <div className="w-16 h-16 rounded-full border border-[#FF6B00]/40 flex items-center justify-center mb-3"
-                         style={{ background: "radial-gradient(circle at center, rgba(255,107,0,0.18), rgba(255,107,0,0))" }}>
-                      <Icon size={32} weight="duotone" className="cc-neon-text" />
-                    </div>
-                    <h3 className="font-display text-sm font-bold tracking-tight leading-tight">{g.name}</h3>
-                    <p className="text-[10px] uppercase tracking-widest font-mono-tactical text-zinc-500 mt-1">{g.genre.split(" / ")[0]}</p>
-                    <div className="mt-3 flex items-center gap-2 text-zinc-600 group-hover:text-[#FF6B00] transition">
-                      <ChatCircleText size={12} /> <Target size={12} /> <BookOpen size={12} /> <ListChecks size={12} />
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+        {/* Battle Theaters — 3D tactical map with game-piece beacons.
+            Tap a piece to identify the title and (Pro) claim it as a theater. */}
+        <TacticalGameMap games={games} />
       </div>
 
       <TutorialModal open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
