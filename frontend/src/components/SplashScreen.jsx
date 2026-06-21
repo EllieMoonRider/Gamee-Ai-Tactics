@@ -11,10 +11,13 @@ import bgImg from "../assets/command-center-bg-v1.jpg";
  */
 const SplashScreen = ({ onDone }) => {
   const [phase, setPhase] = useState("intro"); // intro | fading | gone
+  const HOLD_MS = 5500;   // ~5.5s of full splash before fade starts
+  const FADE_MS = 800;    // 0.8s gentle fade-out
+  const TOTAL_MS = HOLD_MS + FADE_MS;
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("fading"), 3000);
-    const t2 = setTimeout(() => onDone?.(), 3700);
+    const t1 = setTimeout(() => setPhase("fading"), HOLD_MS);
+    const t2 = setTimeout(() => onDone?.(), TOTAL_MS);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onDone]);
 
@@ -24,6 +27,7 @@ const SplashScreen = ({ onDone }) => {
     <div
       className={`fixed inset-0 z-[400] bg-[#050505] flex items-center justify-center overflow-hidden cursor-pointer select-none transition-opacity duration-700 ${phase === "fading" ? "opacity-0" : "opacity-100"}`}
       onClick={skip}
+      style={{ transitionDuration: `${FADE_MS}ms` }}
       data-testid="splash-screen"
     >
       {/* Backdrop: radar + dragon + knights */}
@@ -67,9 +71,9 @@ const SplashScreen = ({ onDone }) => {
         <text
           fontFamily="Orbitron, Rajdhani, sans-serif"
           fontWeight="900"
-          fontSize="36"
+          fontSize="30"
           fill="#39FF14"
-          letterSpacing="8"
+          letterSpacing="4"
           style={{ filter: "drop-shadow(0 0 6px rgba(57,255,20,0.85)) drop-shadow(0 0 18px rgba(57,255,20,0.45))" }}
         >
           <textPath href="#topArc" startOffset="50%" textAnchor="middle">
@@ -114,9 +118,9 @@ const SplashScreen = ({ onDone }) => {
         <text
           fontFamily="Orbitron, Rajdhani, sans-serif"
           fontWeight="700"
-          fontSize="18"
+          fontSize="16"
           fill="#39FF14"
-          letterSpacing="6"
+          letterSpacing="4"
           style={{ filter: "drop-shadow(0 0 4px rgba(57,255,20,0.7))" }}
         >
           <textPath href="#bottomArc" startOffset="50%" textAnchor="middle">
@@ -128,6 +132,17 @@ const SplashScreen = ({ onDone }) => {
       {/* Skip hint at bottom */}
       <div className="absolute bottom-6 left-0 right-0 text-center font-mono-tactical text-[10px] tracking-[0.3em] text-zinc-600" data-testid="splash-skip-hint">
         TAP TO SKIP
+      </div>
+
+      {/* Subtle progress bar — fills over HOLD_MS so user feels the timing is intentional */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#39FF14]/10" data-testid="splash-progress">
+        <div
+          className="h-full bg-[#39FF14]"
+          style={{
+            animation: `splashProgress ${HOLD_MS}ms linear forwards`,
+            boxShadow: "0 0 8px rgba(57,255,20,0.7)",
+          }}
+        />
       </div>
     </div>
   );
