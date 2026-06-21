@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./lib/auth";
 import SplashScreen from "./components/SplashScreen";
-import Landing from "./pages/Landing";
 import AuthPage from "./pages/AuthPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -33,6 +32,14 @@ const Protected = ({ children }) => {
   return children;
 };
 
+// Root entry: skip the marketing/landing page entirely.
+// If logged in → Command Center. If not → Recruitment Center (sign-in War Banner).
+const RootEntry = () => {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-zinc-500 font-mono-tactical text-sm">LOADING…</div>;
+  return <Navigate to={user ? "/dashboard" : "/auth"} replace />;
+};
+
 function App() {
   // Show splash on first session mount; sessionStorage avoids re-showing on hot-reload / route changes.
   const [showSplash, setShowSplash] = useState(() => sessionStorage.getItem("ta-splash-shown") !== "1");
@@ -45,10 +52,9 @@ function App() {
       {showSplash && <SplashScreen onDone={dismissSplash} />}
       <BrowserRouter>
         <Toaster theme="dark" position="bottom-right" richColors />
-        <LandscapeOverlay />
         <InstallPwaPrompt />
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<RootEntry />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />

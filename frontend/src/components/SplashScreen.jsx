@@ -64,15 +64,15 @@ const SplashScreen = ({ onDone }) => {
         }}
       />
 
-      {/* Center: SVG with the icon as centerpiece + curved text around it */}
+      {/* Center: SVG with the icon as centerpiece + curved text around it.
+          Centering is handled by the parent's flex container — no absolute positioning
+          here, so the animation's transform can't fight with translate(-50%, -50%). */}
       <div
-        className="absolute splash-fade-in"
+        className="splash-fade-in"
         style={{
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
           width: "min(92vw, 420px)",
           maxHeight: "85vh",
+          position: "relative",
         }}
       >
       <svg
