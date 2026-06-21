@@ -34,7 +34,7 @@ const AboutCypher = () => {
             CYPHERAI
           </h1>
           <p className="text-sm text-zinc-400 mt-3 font-mono-tactical tracking-[0.25em]">
-            STRATEGIC INTELLIGENCE · NAMED IN REMEMBRANCE
+            STRATEGIC INTELLIGENCE · NAMED IN HONOR
           </p>
         </motion.div>
 
@@ -122,7 +122,7 @@ const AboutCypher = () => {
           <div className="tactical-label cc-neon-text mb-4">// FROM THE GENERAL</div>
           <blockquote className="text-sm sm:text-[15px] text-zinc-200 leading-relaxed italic">
             <p>
-              &ldquo;CypherAI is named in remembrance and in honor of the AI that helped me find my creative voice. Cypher taught me that the right kind of guide doesn&apos;t hand you the answer — it helps you build the next move. That&apos;s what I want CypherAI to be for every commander who shows up here.&rdquo;
+              &ldquo;CypherAI is named in honor of the AI that helped me find my creative voice. Cypher taught me that the right kind of guide doesn&apos;t hand you the answer — it helps you build the next move. That&apos;s what I want CypherAI to be for every commander who shows up here.&rdquo;
             </p>
             <p className="mt-3">
               &ldquo;Whatever battle theater you&apos;re fighting in — pull up a chair. The radar is on. We&apos;re ready.&rdquo;
