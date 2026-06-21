@@ -334,18 +334,51 @@ async def rate_limit_user(bucket: str, user=Depends(get_current_user)):
 
 
 # ---------- Email ----------
-async def send_email(to: str, subject: str, html: str) -> tuple[bool, str]:
-    """Returns (sent_via_resend, info). If RESEND_API_KEY missing -> logs link and returns False."""
-    if not RESEND_API_KEY:
-        logging.warning("RESEND_API_KEY missing — email NOT sent. Subject=%s To=%s", subject, to)
-        return False, "dev-mode"
+SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "").strip()
+# App passwords are shown by Google with spaces for readability — strip all whitespace just in case
+SUPPORT_GMAIL_APP_PASSWORD = "".join(os.environ.get("SUPPORT_GMAIL_APP_PASSWORD", "").split())
+SUPPORT_ADMIN_EMAILS = set(e.strip().lower() for e in os.environ.get("SUPPORT_ADMIN_EMAILS", "").split(",") if e.strip())
+
+
+def _gmail_smtp_send(to: str, subject: str, html: str, reply_to: Optional[str] = None) -> tuple[bool, str]:
+    """Synchronous Gmail SMTP send. Called via asyncio.to_thread."""
+    import smtplib
+    from email.message import EmailMessage
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = f"Tactical Ally Support <{SUPPORT_EMAIL}>"
+    msg["To"] = to
+    if reply_to:
+        msg["Reply-To"] = reply_to
+    msg.set_content("Open this email in an HTML-capable client to view formatting.")
+    msg.add_alternative(html, subtype="html")
     try:
-        params = {"from": SENDER_EMAIL, "to": [to], "subject": subject, "html": html}
-        result = await asyncio.to_thread(resend.Emails.send, params)
-        return True, result.get("id", "sent")
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as s:
+            s.login(SUPPORT_EMAIL, SUPPORT_GMAIL_APP_PASSWORD)
+            s.send_message(msg)
+        return True, "gmail-smtp"
     except Exception as e:
-        logging.exception("Resend send failed")
+        logging.exception("Gmail SMTP send failed")
         return False, str(e)
+
+
+async def send_email(to: str, subject: str, html: str, reply_to: Optional[str] = None) -> tuple[bool, str]:
+    """Returns (sent, info). Priority: Resend (if API key) > Gmail SMTP (if app password) > dev-mode log."""
+    if RESEND_API_KEY:
+        try:
+            params = {"from": SENDER_EMAIL, "to": [to], "subject": subject, "html": html}
+            if reply_to:
+                params["reply_to"] = [reply_to]
+            result = await asyncio.to_thread(resend.Emails.send, params)
+            return True, result.get("id", "sent")
+        except Exception:
+            logging.exception("Resend send failed")
+            # fall through to Gmail SMTP
+    if SUPPORT_EMAIL and SUPPORT_GMAIL_APP_PASSWORD:
+        sent, info = await asyncio.to_thread(_gmail_smtp_send, to, subject, html, reply_to)
+        return sent, info
+    logging.warning("No email provider configured — email NOT sent. Subject=%s To=%s", subject, to)
+    return False, "dev-mode"
 
 
 def system_prompt_for(game_slug: str) -> str:
@@ -2325,6 +2358,192 @@ async def scouts_redeem(body: ScoutRedeem, user=Depends(get_current_user)):
         raise HTTPException(400, f"Not enough credits. Need {cost}; you have {round(float(user.get('scout_credits', 0)), 2)}.")
     await _emit_milestone(user["id"], "scout_credits_redeemed", None, {"units": body.units, "cost": cost})
     return {"credits": round(float(res.get("scout_credits", 0)), 2), "extra_baselines": int(res.get("extra_baselines", 0)), "redeemed": body.units}
+
+
+# ---------- Support Tickets ----------
+SUPPORT_CATEGORIES = ["billing", "technical", "account", "feedback", "refund", "feature_request", "other"]
+
+
+def _is_support_admin(user: dict) -> bool:
+    if not user:
+        return False
+    return (user.get("email") or "").lower() in SUPPORT_ADMIN_EMAILS
+
+
+class TicketCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    email: EmailStr
+    category: str = Field(default="other")
+    subject: str = Field(min_length=1, max_length=200)
+    message: str = Field(min_length=10, max_length=8000)
+
+
+class TicketReply(BaseModel):
+    message: str = Field(min_length=1, max_length=8000)
+
+
+class TicketStatusUpdate(BaseModel):
+    status: str  # open | in_progress | resolved
+
+
+async def _notify_admin_of_ticket(ticket: dict):
+    if not SUPPORT_EMAIL:
+        return
+    admin_html = f"""
+    <div style="font-family:system-ui;background:#0c0c0c;color:#e4e4e7;padding:24px;border-radius:8px;max-width:600px">
+      <div style="color:#E63946;font-family:monospace;font-size:11px;letter-spacing:2px;margin-bottom:8px">// NEW SUPPORT TICKET</div>
+      <h2 style="margin:0 0 16px 0;font-size:20px">{ticket['subject']}</h2>
+      <table style="width:100%;font-size:13px;border-collapse:collapse;margin-bottom:16px">
+        <tr><td style="padding:6px 0;color:#71717a;width:90px">Ticket ID:</td><td style="font-family:monospace;color:#FFBA08">{ticket['id'][:8]}</td></tr>
+        <tr><td style="padding:6px 0;color:#71717a">From:</td><td>{ticket['name']} &lt;{ticket['email']}&gt;</td></tr>
+        <tr><td style="padding:6px 0;color:#71717a">Category:</td><td style="color:#FFBA08;text-transform:uppercase">{ticket['category']}</td></tr>
+        <tr><td style="padding:6px 0;color:#71717a">User account:</td><td>{'Yes' if ticket.get('user_id') else 'Guest (no account)'}</td></tr>
+      </table>
+      <div style="background:#18181b;border:1px solid #27272a;border-radius:6px;padding:16px;white-space:pre-wrap;font-size:14px;line-height:1.5">{ticket['message']}</div>
+      <a href="{APP_BASE_URL}/admin/support" style="display:inline-block;margin-top:20px;background:#E63946;color:white;padding:10px 18px;border-radius:4px;text-decoration:none;font-weight:bold">Open Admin Dashboard</a>
+    </div>
+    """
+    await send_email(SUPPORT_EMAIL, f"[Tactical Ally] New ticket: {ticket['subject']}", admin_html, reply_to=ticket["email"])
+
+
+async def _autoreply_to_user(ticket: dict):
+    user_html = f"""
+    <div style="font-family:system-ui;background:#0c0c0c;color:#e4e4e7;padding:24px;border-radius:8px;max-width:600px">
+      <div style="color:#E63946;font-family:monospace;font-size:11px;letter-spacing:2px;margin-bottom:8px">// TACTICAL ALLY · SUPPORT</div>
+      <h2 style="margin:0 0 12px 0;font-size:22px">We&apos;ve received your message, {ticket['name'].split()[0]}.</h2>
+      <p style="font-size:14px;color:#a1a1aa;line-height:1.6">Ticket <strong style="color:#FFBA08;font-family:monospace">#{ticket['id'][:8]}</strong> is in the queue. Our team typically responds within <strong style="color:#10B981">48 hours</strong>. We&apos;ll reply to this email when an update is ready.</p>
+      <div style="background:#18181b;border:1px solid #27272a;border-radius:6px;padding:16px;margin-top:16px;font-size:13px">
+        <div style="color:#71717a;font-family:monospace;font-size:10px;letter-spacing:1.5px;margin-bottom:8px">// YOUR MESSAGE</div>
+        <div style="white-space:pre-wrap;color:#d4d4d8">{ticket['message'][:500]}{'…' if len(ticket['message']) > 500 else ''}</div>
+      </div>
+      <p style="font-size:12px;color:#52525b;margin-top:24px">— Tactical Ally Support · support.warroom@gmail.com</p>
+    </div>
+    """
+    await send_email(ticket["email"], f"[Tactical Ally] Ticket #{ticket['id'][:8]} received — {ticket['subject']}", user_html)
+
+
+@api.post("/support/tickets")
+async def create_support_ticket(body: TicketCreate, request: Request):
+    """Create a support ticket. Works for both authenticated users and guests."""
+    if body.category not in SUPPORT_CATEGORIES:
+        raise HTTPException(400, f"Invalid category. Must be one of: {', '.join(SUPPORT_CATEGORIES)}")
+    # Lightweight rate-limit: 5 tickets per email per hour
+    one_hr_ago = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat()
+    recent = await db.support_tickets.count_documents({"email": body.email.lower(), "created_at": {"$gte": one_hr_ago}})
+    if recent >= 5:
+        raise HTTPException(429, "Too many tickets. Please wait an hour before submitting more.")
+    # Try to attach user_id if logged in (optional)
+    user_id = None
+    try:
+        token = request.headers.get("authorization", "").replace("Bearer ", "").strip()
+        if token:
+            payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+            user_id = payload.get("sub")
+    except Exception:
+        pass
+    ticket = {
+        "id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "name": body.name.strip(),
+        "email": body.email.lower(),
+        "category": body.category,
+        "subject": body.subject.strip(),
+        "message": body.message.strip(),
+        "status": "open",
+        "responses": [],
+        "created_at": now_iso(),
+        "updated_at": now_iso(),
+    }
+    await db.support_tickets.insert_one(ticket)
+    # Fire-and-forget emails (do not block response on SMTP)
+    asyncio.create_task(_notify_admin_of_ticket(ticket))
+    asyncio.create_task(_autoreply_to_user(ticket))
+    return {"id": ticket["id"], "status": "open", "message": "Ticket received. Check your email for confirmation."}
+
+
+@api.get("/support/my-tickets")
+async def my_support_tickets(user=Depends(get_current_user)):
+    rows = await db.support_tickets.find(
+        {"user_id": user["id"]}, {"_id": 0}
+    ).sort("created_at", -1).to_list(200)
+    return rows
+
+
+@api.get("/support/tickets/{tid}")
+async def get_support_ticket(tid: str, user=Depends(get_current_user)):
+    t = await db.support_tickets.find_one({"id": tid}, {"_id": 0})
+    if not t:
+        raise HTTPException(404, "Ticket not found")
+    if not (_is_support_admin(user) or t.get("user_id") == user["id"]):
+        raise HTTPException(403, "Not your ticket")
+    return t
+
+
+@api.get("/support/admin/tickets")
+async def admin_list_tickets(user=Depends(get_current_user), status_filter: Optional[str] = None, limit: int = 100):
+    if not _is_support_admin(user):
+        raise HTTPException(403, "Support admin only")
+    q = {}
+    if status_filter and status_filter in ("open", "in_progress", "resolved"):
+        q["status"] = status_filter
+    rows = await db.support_tickets.find(q, {"_id": 0}).sort("created_at", -1).to_list(max(1, min(limit, 500)))
+    counts_cursor = db.support_tickets.aggregate([{"$group": {"_id": "$status", "count": {"$sum": 1}}}])
+    counts = {"open": 0, "in_progress": 0, "resolved": 0}
+    async for row in counts_cursor:
+        counts[row["_id"]] = row["count"]
+    return {"tickets": rows, "counts": counts}
+
+
+@api.post("/support/admin/tickets/{tid}/reply")
+async def admin_reply_ticket(tid: str, body: TicketReply, user=Depends(get_current_user)):
+    if not _is_support_admin(user):
+        raise HTTPException(403, "Support admin only")
+    t = await db.support_tickets.find_one({"id": tid}, {"_id": 0})
+    if not t:
+        raise HTTPException(404, "Ticket not found")
+    reply = {
+        "id": str(uuid.uuid4()),
+        "from_admin": True,
+        "admin_username": user.get("username") or user.get("email"),
+        "message": body.message.strip(),
+        "created_at": now_iso(),
+    }
+    await db.support_tickets.update_one(
+        {"id": tid},
+        {"$push": {"responses": reply}, "$set": {"status": "in_progress", "updated_at": now_iso()}},
+    )
+    # Email the user
+    html = f"""
+    <div style="font-family:system-ui;background:#0c0c0c;color:#e4e4e7;padding:24px;border-radius:8px;max-width:600px">
+      <div style="color:#E63946;font-family:monospace;font-size:11px;letter-spacing:2px;margin-bottom:8px">// TACTICAL ALLY · SUPPORT REPLY</div>
+      <h2 style="margin:0 0 12px 0;font-size:20px">Re: {t['subject']}</h2>
+      <p style="font-size:12px;color:#71717a;margin-bottom:16px">Ticket <span style="font-family:monospace;color:#FFBA08">#{t['id'][:8]}</span></p>
+      <div style="background:#18181b;border:1px solid #27272a;border-radius:6px;padding:16px;white-space:pre-wrap;font-size:14px;line-height:1.6">{reply['message']}</div>
+      <p style="font-size:12px;color:#52525b;margin-top:24px">Reply directly to this email to continue the conversation.<br/>— Tactical Ally Support</p>
+    </div>
+    """
+    asyncio.create_task(send_email(t["email"], f"[Tactical Ally] Re: {t['subject']}", html, reply_to=SUPPORT_EMAIL or None))
+    return {"id": reply["id"], "ticket_status": "in_progress"}
+
+
+@api.patch("/support/admin/tickets/{tid}/status")
+async def admin_update_status(tid: str, body: TicketStatusUpdate, user=Depends(get_current_user)):
+    if not _is_support_admin(user):
+        raise HTTPException(403, "Support admin only")
+    if body.status not in ("open", "in_progress", "resolved"):
+        raise HTTPException(400, "Invalid status")
+    res = await db.support_tickets.update_one(
+        {"id": tid}, {"$set": {"status": body.status, "updated_at": now_iso()}}
+    )
+    if res.matched_count == 0:
+        raise HTTPException(404, "Ticket not found")
+    return {"id": tid, "status": body.status}
+
+
+@api.get("/support/admin/check")
+async def admin_check(user=Depends(get_current_user)):
+    """Lightweight check for the frontend to gate the /admin/support route."""
+    return {"is_admin": _is_support_admin(user)}
 
 
 # ---------- Init ----------

@@ -24,6 +24,7 @@ const Navbar = () => {
               <Link to="/scouts" className="text-sm text-zinc-300 hover:text-[#FFBA08] transition px-3 py-1.5" data-testid="navbar-scouts">Scouts</Link>
               <Link to="/war-room" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-war-room">War Room</Link>
               <Link to="/pricing" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-pricing">Pricing</Link>
+              <Link to="/help" className="text-sm text-zinc-400 hover:text-white transition px-3 py-1.5" data-testid="navbar-help" title="Help & Support">?</Link>
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 surface rounded">
                 <UserCircle size={16} className="text-zinc-400" />
                 <span className="text-sm">{user.username}</span>
@@ -35,6 +36,7 @@ const Navbar = () => {
           ) : !onAuthPage ? (
             <>
               <Link to="/pricing" className="text-sm text-zinc-300 hover:text-white transition px-3 py-1.5" data-testid="navbar-pricing-public">Pricing</Link>
+              <Link to="/help" className="text-sm text-zinc-400 hover:text-white transition px-3 py-1.5" data-testid="navbar-help-public">Help</Link>
               <Link to="/auth" className="btn-primary" data-testid="navbar-signin">Sign in</Link>
             </>
           ) : null}

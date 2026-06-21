@@ -1,0 +1,39 @@
+{
+  "summary": "Backend testing for Iteration 8 Customer Support system (tickets + FAQ + admin dashboard). Created /app/backend/tests/test_iter8_support_tickets.py with 25 pytest cases covering all support endpoints + key regression checks. All 25 tests PASSED. Gmail SMTP fails (BadCredentials, as documented) but APIs correctly return 200 — email send is fire-and-forget via asyncio.create_task().",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter8_support_tickets.py",
+    "/app/test_reports/pytest/iter8_results.xml"
+  ],
+  "action_items": [
+    "(NON-CODE) Gmail App-Password (SUPPORT_GMAIL_APP_PASSWORD) is rejected by Google with 5.7.8 BadCredentials. Backend gracefully logs and continues — no code fix needed. User must regenerate App Password from Google account (with 2FA on) to enable real email delivery."
+  ],
+  "critical_code_review_comments": [
+    "server.py is ~2588 lines — past the recommended 700-line ceiling. Consider splitting support endpoints into /app/backend/routers/support.py for maintainability.",
+    "Rate-limit (5/email/hour) is purely DB-count-based and uses string ISO comparison on created_at — works because timestamps are ISO-8601 lexically sortable, but susceptible to clock skew. Consider storing created_at as native datetime and querying with datetime objects.",
+    "send_email + _gmail_smtp_send do synchronous SMTP inside an async context (via smtplib). Even though wrapped in asyncio.create_task, the blocking smtplib call can stall the event loop. Consider aiosmtplib or running smtplib in run_in_executor.",
+    "EmailStr is validated but the in-route 400 for invalid category fires only after Pydantic accepts the body — fine, but could move to Pydantic Literal[...] for category to get a 422 with field details instead of free-form 400.",
+    "GET /api/support/tickets/{id} returns 403 'Not your ticket' but does not differentiate from 404 — acceptable for security (no info disclosure)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter8_support_tickets.py (new)"
+  ],
+  "success_rate": {
+    "backend": "100% (25/25)",
+    "frontend": "N/A (frontend testing not requested)"
+  },
+  "test_credentials": "Admin: test@tactician.gg / strongpw1 (in SUPPORT_ADMIN_EMAILS). Non-admin: fresh TEST_nonadmin_<uuid>@tactician.gg registered per test session.",
+  "seed_data_creation": "Each test creates its own ticket(s) and cleans up via cleanup_tickets fixture (deletes by id from db.support_tickets). Rate-limit test pre-deletes any prior tickets for its unique email. Daily-login regression resets db.scout_earnings for the admin user.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Iter8 support endpoints all green. Test file /app/backend/tests/test_iter8_support_tickets.py is the canonical regression suite for support tickets. Reuse the admin_auth (login) and non_admin_auth (fresh register) fixtures pattern for future role-gated tests. SUPPORT_ADMIN_EMAILS is read from env at import time in server.py — if you change the env var, restart backend. Gmail SMTP will continue to log BadCredentials until the user re-issues an App Password; this is a credentials issue, not a code issue.",
+  "rca of the issue": "N/A — no functional issues found. Documented Gmail SMTP BadCredentials produces logged errors only; the API layer correctly isolates the response from the email side-effect via asyncio.create_task, verified in test_create_ticket_guest_returns_200 and the rate-limit test."
+}

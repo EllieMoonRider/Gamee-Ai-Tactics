@@ -18,6 +18,8 @@ import Referral from "./pages/Referral";
 import Seats from "./pages/Seats";
 import Calendar from "./pages/Calendar";
 import Scouts from "./pages/Scouts";
+import Help from "./pages/Help";
+import AdminSupport from "./pages/AdminSupport";
 import "./App.css";
 
 const Protected = ({ children }) => {
@@ -40,6 +42,7 @@ function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/billing/success" element={<BillingSuccess />} />
           <Route path="/billing/cancel" element={<BillingCancel />} />
+          <Route path="/help" element={<Help />} />
           <Route path="/share/d/:token" element={<PublicDeepDive />} />
           <Route path="/share/b/:token" element={<PublicBuild />} />
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
@@ -53,6 +56,7 @@ function App() {
           <Route path="/seats" element={<Protected><Seats /></Protected>} />
           <Route path="/calendar" element={<Protected><Calendar /></Protected>} />
           <Route path="/scouts" element={<Protected><Scouts /></Protected>} />
+          <Route path="/admin/support" element={<Protected><AdminSupport /></Protected>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
