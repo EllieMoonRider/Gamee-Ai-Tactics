@@ -2416,7 +2416,7 @@ async def _autoreply_to_user(ticket: dict):
         <div style="color:#71717a;font-family:monospace;font-size:10px;letter-spacing:1.5px;margin-bottom:8px">// YOUR MESSAGE</div>
         <div style="white-space:pre-wrap;color:#d4d4d8">{ticket['message'][:500]}{'…' if len(ticket['message']) > 500 else ''}</div>
       </div>
-      <p style="font-size:12px;color:#52525b;margin-top:24px">— Tactical Ally Support · support.warroom@gmail.com</p>
+      <p style="font-size:12px;color:#52525b;margin-top:24px">— Tactical Ally Support · info.warroomsupport@gmail.com</p>
     </div>
     """
     await send_email(ticket["email"], f"[Tactical Ally] Ticket #{ticket['id'][:8]} received — {ticket['subject']}", user_html)

@@ -194,7 +194,7 @@ const Help = () => {
             </button>
 
             <p className="text-[11px] text-zinc-500 text-center">
-              Or email us directly: <a href="mailto:support.warroom@gmail.com" className="text-[#FFBA08] hover:underline" data-testid="support-direct-email">support.warroom@gmail.com</a>
+              Or email us directly: <a href="mailto:info.warroomsupport@gmail.com" className="text-[#FFBA08] hover:underline" data-testid="support-direct-email">info.warroomsupport@gmail.com</a>
             </p>
           </form>
         )}
