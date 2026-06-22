@@ -826,16 +826,25 @@ input:focus, textarea:focus, select:focus {
   transform: translateY(-1px);
 }
 
-/* On very tall narrow screens, give the text more room inside the radar */
+/* On phones the radar circle is small — let the text use almost the full
+   interior with tighter typography so all 11 story lines + rally cry stay
+   inside the visual frame. */
 @media (max-width: 480px) {
-  .cypher-briefing-radar { max-height: 58vh; }
+  .cypher-briefing-radar { max-height: 64vh; width: min(96vw, 460px); }
   .briefing-lines {
-    top: 12%; bottom: 12%; left: 10%; right: 10%;
-    font-size: 10.5px;
-    line-height: 1.4;
-    gap: 0.35em;
+    top: 12%; bottom: 8%; left: 6%; right: 6%;
+    font-size: 10px;
+    line-height: 1.32;
+    gap: 0.25em;
+    padding: 2px 0;
   }
-  .briefing-line.rally { font-size: 14px; }
-  .briefing-header { top: 7%; font-size: 9px; letter-spacing: 0.22em; }
+  .briefing-line.rally { font-size: 13px; margin-top: 0.25em; }
+  .briefing-line.sacred { font-size: 10.5px; }
+  .briefing-header { top: 6%; font-size: 9px; letter-spacing: 0.2em; }
+}
+/* And on really small phones (older Androids / iPhone SE), trim further */
+@media (max-width: 380px) {
+  .briefing-lines { font-size: 9.5px; line-height: 1.28; }
+  .briefing-line.rally { font-size: 12px; }
 }
 
