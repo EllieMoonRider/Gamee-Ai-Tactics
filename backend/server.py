@@ -1,5 +1,6 @@
 """37Games AI Strategy Assistant — backend."""
 import os
+import re
 import uuid
 import asyncio
 import logging
@@ -185,7 +186,9 @@ class UserRegister(BaseModel):
 
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    # Accepts either an email address OR a username (codename).
+    # The login handler resolves which it is.
+    email: str
     password: str
 
 
@@ -488,7 +491,19 @@ async def register(data: UserRegister):
 
 @api.post("/auth/login", response_model=AuthResponse)
 async def login(data: UserLogin):
-    user = await db.users.find_one({"email": data.email.lower()}, {"_id": 0})
+    # `data.email` is actually an identifier — accept email OR username (codename).
+    ident = (data.email or "").strip()
+    if not ident:
+        raise HTTPException(401, "Invalid credentials")
+    if "@" in ident:
+        # Looks like an email
+        user = await db.users.find_one({"email": ident.lower()}, {"_id": 0})
+    else:
+        # Username (codename) — case-insensitive exact match
+        user = await db.users.find_one(
+            {"username": {"$regex": f"^{re.escape(ident)}$", "$options": "i"}},
+            {"_id": 0},
+        )
     if not user or not verify_password(data.password, user["password_hash"]):
         raise HTTPException(401, "Invalid credentials")
     token = create_jwt(user["id"])
