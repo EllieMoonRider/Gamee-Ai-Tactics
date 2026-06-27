@@ -70,9 +70,9 @@ const AuthPage = () => {
           <div className="recruit-bolt br" aria-hidden="true"><MilitaryBolt size={36} testid="ots-bolt-br" /></div>
 
           <div className="recruit-card-inner relative">
-            {/* BRAND LOGO — smaller on enlistment */}
-            <div className="flex justify-center mb-3 relative">
-              <BrandLogo size={isRegister ? 150 : 210} className="recruit-logo" testid="recruit-brand-logo" />
+            {/* BRAND LOGO — smaller, with text rings brought close to the dragon circle */}
+            <div className="flex justify-center mb-2 relative">
+              <BrandLogo size={isRegister ? 130 : 170} className="recruit-logo" testid="recruit-brand-logo" />
             </div>
 
             {/* TITLE — single word, centered.

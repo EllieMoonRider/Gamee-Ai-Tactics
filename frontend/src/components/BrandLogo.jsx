@@ -24,16 +24,18 @@ const BrandLogo = ({ size = 220, showText = true, className = "", testid = "bran
         <clipPath id="bl-icon-clip">
           <circle cx={VB / 2} cy={VB / 2} r={140} />
         </clipPath>
-        {/* Top arc — text reads L→R curving across the top above the circle */}
+        {/* Top arc — text reads L→R curving across the top above the circle.
+            Brought CLOSER to the circle outline so the words read as "almost
+            touching" the orange outer ring without actually crossing it. */}
         <path
           id="bl-top-arc"
-          d={`M ${VB / 2 - 195} ${VB / 2} A 195 195 0 0 1 ${VB / 2 + 195} ${VB / 2}`}
+          d={`M ${VB / 2 - 168} ${VB / 2} A 168 168 0 0 1 ${VB / 2 + 168} ${VB / 2}`}
           fill="none"
         />
         {/* Bottom arc — text reads L→R curving across the bottom below the circle */}
         <path
           id="bl-bottom-arc"
-          d={`M ${VB / 2 - 195} ${VB / 2} A 195 195 0 0 0 ${VB / 2 + 195} ${VB / 2}`}
+          d={`M ${VB / 2 - 168} ${VB / 2} A 168 168 0 0 0 ${VB / 2 + 168} ${VB / 2}`}
           fill="none"
         />
       </defs>
