@@ -22,32 +22,30 @@ const BrandLogo = ({ size = 220, showText = true, className = "", testid = "bran
     >
       <defs>
         <clipPath id="bl-icon-clip">
-          <circle cx={VB / 2} cy={VB / 2} r={140} />
+          <circle cx={VB / 2} cy={VB / 2} r={110} />
         </clipPath>
-        {/* Top arc — text reads L→R curving across the top above the circle.
-            Brought CLOSER to the circle outline so the words read as "almost
-            touching" the orange outer ring without actually crossing it. */}
+        {/* Top arc — brought close to the smaller circle's outer edge */}
         <path
           id="bl-top-arc"
-          d={`M ${VB / 2 - 168} ${VB / 2} A 168 168 0 0 1 ${VB / 2 + 168} ${VB / 2}`}
+          d={`M ${VB / 2 - 132} ${VB / 2} A 132 132 0 0 1 ${VB / 2 + 132} ${VB / 2}`}
           fill="none"
         />
-        {/* Bottom arc — text reads L→R curving across the bottom below the circle */}
+        {/* Bottom arc — same close spacing on the underside */}
         <path
           id="bl-bottom-arc"
-          d={`M ${VB / 2 - 168} ${VB / 2} A 168 168 0 0 0 ${VB / 2 + 168} ${VB / 2}`}
+          d={`M ${VB / 2 - 132} ${VB / 2} A 132 132 0 0 0 ${VB / 2 + 132} ${VB / 2}`}
           fill="none"
         />
       </defs>
 
-      {/* Dragon icon clipped into the circle */}
-      <image href={iconImg} x={VB / 2 - 140} y={VB / 2 - 140} width={280} height={280} clipPath="url(#bl-icon-clip)" />
+      {/* Dragon icon clipped into the (smaller) circle */}
+      <image href={iconImg} x={VB / 2 - 110} y={VB / 2 - 110} width={220} height={220} clipPath="url(#bl-icon-clip)" />
 
       {/* Inner glow ring */}
-      <circle cx={VB / 2} cy={VB / 2} r={142} fill="none" stroke="#FF6B00" strokeWidth="1.5" opacity="0.75"
+      <circle cx={VB / 2} cy={VB / 2} r={112} fill="none" stroke="#FF6B00" strokeWidth="1.5" opacity="0.75"
               style={{ filter: "drop-shadow(0 0 10px rgba(255,107,0,0.8))" }} />
       {/* Outer dashed ring */}
-      <circle cx={VB / 2} cy={VB / 2} r={158} fill="none" stroke="#FF6B00" strokeWidth="0.6" opacity="0.4" strokeDasharray="4 6" />
+      <circle cx={VB / 2} cy={VB / 2} r={124} fill="none" stroke="#FF6B00" strokeWidth="0.6" opacity="0.4" strokeDasharray="4 6" />
 
       {showText && (
         <>
