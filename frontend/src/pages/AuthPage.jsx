@@ -155,7 +155,7 @@ const AuthPage = () => {
                   <button
                     type="button"
                     onClick={() => setShowPw(s => !s)}
-                    className="absolute inset-y-0 right-2 flex items-center text-zinc-500 hover:text-[#FF6B00]"
+                    className="absolute inset-y-0 right-2 z-10 flex items-center text-zinc-500 hover:text-[#FF6B00]"
                     aria-label={showPw ? "Hide password" : "Show password"}
                     data-testid="auth-toggle-show-password"
                   >
@@ -188,7 +188,7 @@ const AuthPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowConfirmPw(s => !s)}
-                      className="absolute inset-y-0 right-2 flex items-center text-zinc-500 hover:text-[#FF6B00]"
+                      className="absolute inset-y-0 right-2 z-10 flex items-center text-zinc-500 hover:text-[#FF6B00]"
                       aria-label={showConfirmPw ? "Hide password" : "Show password"}
                       data-testid="auth-toggle-show-confirm-password"
                     >
