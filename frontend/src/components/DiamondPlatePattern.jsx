@@ -11,20 +11,22 @@ const DiamondPlatePattern = ({ className = "" }) => (
     aria-hidden="true"
   >
     <defs>
-      {/* Pattern tile — two diamonds per tile, offset rows for staggered look */}
+      {/* Pattern tile — same diamonds, MORE space between them so the plate
+          reads less cluttered. Larger tile width + height with diamonds
+          offset on alternate rows. */}
       <pattern
         id="gunmetal-plate"
         x="0" y="0"
-        width="80" height="42"
+        width="120" height="64"
         patternUnits="userSpaceOnUse"
       >
         {/* Gunmetal base */}
-        <rect width="80" height="42" fill="#3a4046" />
+        <rect width="120" height="64" fill="#3a4046" />
         {/* Subtle matte grain wash */}
-        <rect width="80" height="42" fill="url(#gm-grain)" />
+        <rect width="120" height="64" fill="url(#gm-grain)" />
 
         {/* --- Diamond 1 (upper-left position) --- */}
-        <g transform="translate(20 11)">
+        <g transform="translate(30 18)">
           {/* Soft cast shadow beneath the raised diamond */}
           <ellipse cx="0" cy="6.5" rx="20" ry="3.6" fill="rgba(0,0,0,0.42)" />
           {/* Diamond body — slightly elongated horizontal */}
@@ -42,7 +44,7 @@ const DiamondPlatePattern = ({ className = "" }) => (
         </g>
 
         {/* --- Diamond 2 (lower-right position, offset for staggered rows) --- */}
-        <g transform="translate(60 32)">
+        <g transform="translate(90 50)">
           <ellipse cx="0" cy="6.5" rx="20" ry="3.6" fill="rgba(0,0,0,0.42)" />
           <path d="M -20 0 L 0 -7 L 20 0 L 0 7 Z" fill="#4b525a" />
           <path d="M -20 0 L 0 -7 L 20 0 Z" fill="#5d6571" />
