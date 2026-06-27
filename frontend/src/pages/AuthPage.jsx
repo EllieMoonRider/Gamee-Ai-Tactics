@@ -204,7 +204,7 @@ const AuthPage = () => {
               {isRegister && (
                 <div>
                   <label className="font-mono-tactical text-[10px] tracking-[0.25em] text-[#FF6B00] flex items-center gap-1.5 mb-1.5">
-                    <Sparkle size={11} weight="bold" /> SIGIL <span className="text-zinc-600">· OPTIONAL</span>
+                    <Sparkle size={11} weight="bold" /> REFERRAL CODE <span className="text-zinc-600">· OPTIONAL</span>
                   </label>
                   <input
                     className="recruit-input w-full text-sm font-mono-tactical tracking-widest uppercase"
@@ -213,7 +213,7 @@ const AuthPage = () => {
                     maxLength={12}
                     data-testid="auth-input-referral"
                   />
-                  {refFromUrl && <p className="text-[10px] text-[#FF6B00] mt-1.5">Sigil verified. Welcome bonus locked in: +1 Deep Dive.</p>}
+                  {refFromUrl && <p className="text-[10px] text-[#FF6B00] mt-1.5">Referral verified. Welcome bonus locked in: +1 Deep Dive.</p>}
                 </div>
               )}
 

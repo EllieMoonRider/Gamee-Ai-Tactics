@@ -11,9 +11,9 @@ const DiamondPlatePattern = ({ className = "" }) => (
     aria-hidden="true"
   >
     <defs>
-      {/* Pattern tile — same diamonds, MORE space between them so the plate
-          reads less cluttered. Larger tile width + height with diamonds
-          offset on alternate rows. */}
+      {/* Pattern tile — LARGER diamonds, same staggered offset. The diamonds
+          themselves are more prominent so the print reads clearly while the
+          extra negative space around each one keeps it from feeling cluttered. */}
       <pattern
         id="gunmetal-plate"
         x="0" y="0"
@@ -25,33 +25,33 @@ const DiamondPlatePattern = ({ className = "" }) => (
         {/* Subtle matte grain wash */}
         <rect width="120" height="64" fill="url(#gm-grain)" />
 
-        {/* --- Diamond 1 (upper-left position) --- */}
+        {/* --- Diamond 1 (upper-left position) — bigger, bolder --- */}
         <g transform="translate(30 18)">
           {/* Soft cast shadow beneath the raised diamond */}
-          <ellipse cx="0" cy="6.5" rx="20" ry="3.6" fill="rgba(0,0,0,0.42)" />
+          <ellipse cx="0" cy="9" rx="28" ry="4.4" fill="rgba(0,0,0,0.5)" />
           {/* Diamond body — slightly elongated horizontal */}
-          <path d="M -20 0 L 0 -7 L 20 0 L 0 7 Z" fill="#4b525a" />
+          <path d="M -28 0 L 0 -10 L 28 0 L 0 10 Z" fill="#4b525a" />
           {/* Upper-half highlight (light from above) */}
-          <path d="M -20 0 L 0 -7 L 20 0 Z" fill="#5d6571" />
+          <path d="M -28 0 L 0 -10 L 28 0 Z" fill="#5e6671" />
           {/* Bright crest line along top edge */}
-          <path d="M -18 -0.5 L 0 -6.5 L 18 -0.5" stroke="rgba(210,220,232,0.55)" strokeWidth="0.75" fill="none" strokeLinecap="round" />
+          <path d="M -25 -0.7 L 0 -9.3 L 25 -0.7" stroke="rgba(215,225,235,0.65)" strokeWidth="1" fill="none" strokeLinecap="round" />
           {/* Soft highlight gleam on upper-left face */}
-          <path d="M -16 -1 L -4 -5.5 L -1 -3 L -10 0 Z" fill="rgba(195,208,222,0.30)" />
+          <path d="M -22 -1.5 L -6 -8 L -1.5 -4.5 L -14 0 Z" fill="rgba(200,212,225,0.32)" />
           {/* Bottom-half shadow */}
-          <path d="M -20 0 L 0 7 L 20 0 Z" fill="#2e3338" />
+          <path d="M -28 0 L 0 10 L 28 0 Z" fill="#2d3237" />
           {/* Dark edge along bottom */}
-          <path d="M -18 0.5 L 0 6.5 L 18 0.5" stroke="rgba(8,12,16,0.6)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+          <path d="M -25 0.7 L 0 9.3 L 25 0.7" stroke="rgba(8,12,16,0.7)" strokeWidth="0.9" fill="none" strokeLinecap="round" />
         </g>
 
         {/* --- Diamond 2 (lower-right position, offset for staggered rows) --- */}
         <g transform="translate(90 50)">
-          <ellipse cx="0" cy="6.5" rx="20" ry="3.6" fill="rgba(0,0,0,0.42)" />
-          <path d="M -20 0 L 0 -7 L 20 0 L 0 7 Z" fill="#4b525a" />
-          <path d="M -20 0 L 0 -7 L 20 0 Z" fill="#5d6571" />
-          <path d="M -18 -0.5 L 0 -6.5 L 18 -0.5" stroke="rgba(210,220,232,0.55)" strokeWidth="0.75" fill="none" strokeLinecap="round" />
-          <path d="M -16 -1 L -4 -5.5 L -1 -3 L -10 0 Z" fill="rgba(195,208,222,0.30)" />
-          <path d="M -20 0 L 0 7 L 20 0 Z" fill="#2e3338" />
-          <path d="M -18 0.5 L 0 6.5 L 18 0.5" stroke="rgba(8,12,16,0.6)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+          <ellipse cx="0" cy="9" rx="28" ry="4.4" fill="rgba(0,0,0,0.5)" />
+          <path d="M -28 0 L 0 -10 L 28 0 L 0 10 Z" fill="#4b525a" />
+          <path d="M -28 0 L 0 -10 L 28 0 Z" fill="#5e6671" />
+          <path d="M -25 -0.7 L 0 -9.3 L 25 -0.7" stroke="rgba(215,225,235,0.65)" strokeWidth="1" fill="none" strokeLinecap="round" />
+          <path d="M -22 -1.5 L -6 -8 L -1.5 -4.5 L -14 0 Z" fill="rgba(200,212,225,0.32)" />
+          <path d="M -28 0 L 0 10 L 28 0 Z" fill="#2d3237" />
+          <path d="M -25 0.7 L 0 9.3 L 25 0.7" stroke="rgba(8,12,16,0.7)" strokeWidth="0.9" fill="none" strokeLinecap="round" />
         </g>
       </pattern>
 
