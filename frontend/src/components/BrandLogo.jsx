@@ -51,14 +51,14 @@ const BrandLogo = ({ size = 220, showText = true, className = "", testid = "bran
 
       {showText && (
         <>
-          {/* TOP — TACTICAL ALLY */}
+          {/* TOP — TACTICAL ALLY — same font size as bottom for visual symmetry */}
           <text
             fontFamily="Orbitron, sans-serif"
             fontWeight="900"
-            fontSize="30"
+            fontSize="20"
             fill="#FF6B00"
-            letterSpacing="4"
-            style={{ filter: "drop-shadow(0 0 6px rgba(255,107,0,0.9)) drop-shadow(0 0 18px rgba(255,107,0,0.4))" }}
+            letterSpacing="3"
+            style={{ filter: "drop-shadow(0 0 4px rgba(255,107,0,0.85)) drop-shadow(0 0 14px rgba(255,107,0,0.35))" }}
           >
             <textPath href="#bl-top-arc" startOffset="50%" textAnchor="middle">
               TACTICAL ALLY

@@ -239,9 +239,11 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* Footer text below plate */}
+        {/* Footer text below plate — two centered lines, no separator bullet */}
         <p className="text-center mt-5 text-[11px] font-mono-tactical tracking-[0.2em] text-zinc-600">
-          UNOFFICIAL STRATEGY COMPANION · 37GAMES UNAFFILIATED
+          UNOFFICIAL STRATEGY COMPANION
+          <br/>
+          37 GAMES UNAFFILIATED
           <br/>
           <Link to="/cypher" className="inline-block mt-2 text-[#FF6B00]/70 hover:text-[#FF6B00]" data-testid="recruit-about-cypher">ABOUT CYPHERAI</Link>
         </p>

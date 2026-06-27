@@ -44,11 +44,33 @@ const MilitaryBolt = ({ size = 42, className = "", testid = "ots-bolt" }) => {
       data-testid={testid}
       style={{ display: "block", filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.7))" }}
     >
-      {/* LIGHT GRAY countersink ring — defines where the bolt meets the plate */}
-      <ellipse cx={cx} cy={cy + 0.5} rx={hexR + 2.5} ry={hexR + 2.5}
-               fill="none" stroke="rgba(180,188,196,0.35)" strokeWidth="1" />
-      <ellipse cx={cx} cy={cy + 0.5} rx={hexR + 1.5} ry={hexR + 1.5}
-               fill="none" stroke="rgba(140,148,156,0.45)" strokeWidth="0.6" />
+      {/* HEX-shaped countersink outline that follows the bolt shape (no circle) */}
+      <path
+        d={(() => {
+          const pts = [];
+          for (let i = 0; i < 6; i++) {
+            const a = (Math.PI / 180) * (60 * i - 90);
+            pts.push([cx + (hexR + 2.5) * Math.cos(a), cy + (hexR + 2.5) * Math.sin(a)]);
+          }
+          return pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join(" ") + " Z";
+        })()}
+        fill="none"
+        stroke="rgba(180,188,196,0.35)"
+        strokeWidth="1"
+      />
+      <path
+        d={(() => {
+          const pts = [];
+          for (let i = 0; i < 6; i++) {
+            const a = (Math.PI / 180) * (60 * i - 90);
+            pts.push([cx + (hexR + 1.4) * Math.cos(a), cy + (hexR + 1.4) * Math.sin(a)]);
+          }
+          return pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join(" ") + " Z";
+        })()}
+        fill="none"
+        stroke="rgba(140,148,156,0.45)"
+        strokeWidth="0.6"
+      />
 
       {/* Cast shadow under the bolt (offset down) */}
       <path d={hexPath} fill="rgba(0,0,0,0.65)" transform="translate(0.6, 1.6)" />
