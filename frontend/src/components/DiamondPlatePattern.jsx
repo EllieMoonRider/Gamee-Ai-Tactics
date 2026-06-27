@@ -1,8 +1,8 @@
 /**
- * DiamondPlatePattern — RAISED industrial aluminum tread plate (truck toolbox style).
- * Each diamond reads as a physically raised stud with a strong bright highlight on
- * the upper-left face and a deep shadow underneath, sitting on a brushed gunmetal
- * base. The plate has a warm orange-tinted brand sheen across the surface.
+ * DiamondPlatePattern — Gunmetal gray industrial diamond plate.
+ * Matches the reference image: elongated horizontal "I-bar" / stretched-diamond
+ * shapes raised from a matte gunmetal-gray surface, arranged in offset rows.
+ * Cool gray palette (no warm tints), matte finish (no specular gleam).
  */
 const DiamondPlatePattern = ({ className = "" }) => (
   <svg
@@ -11,58 +11,64 @@ const DiamondPlatePattern = ({ className = "" }) => (
     aria-hidden="true"
   >
     <defs>
+      {/* Pattern tile — two diamonds per tile, offset rows for staggered look */}
       <pattern
-        id="diamond-plate-v2"
+        id="gunmetal-plate"
         x="0" y="0"
-        width="46" height="24"
+        width="80" height="42"
         patternUnits="userSpaceOnUse"
       >
-        {/* Brushed metal base — gradient gives faint sheen */}
-        <rect width="46" height="24" fill="#23201c" />
-        <rect width="46" height="24" fill="url(#dp-brush)" />
+        {/* Gunmetal base */}
+        <rect width="80" height="42" fill="#3a4046" />
+        {/* Subtle matte grain wash */}
+        <rect width="80" height="42" fill="url(#gm-grain)" />
 
-        {/* === Diamond 1 (left of cell) === */}
-        {/* Subtle drop-shadow on the surface beneath the raised diamond */}
-        <ellipse cx="12" cy="14.5" rx="10" ry="3.5" fill="rgba(0,0,0,0.35)" />
-        {/* Raised body — mid-tone diamond */}
-        <path d="M 12 2 L 22 12 L 12 22 L 2 12 Z" fill="#3a342d" />
-        {/* Strong top-left bevel highlight (light source upper-left) */}
-        <path d="M 12 2 L 17 7 L 12 12 L 7 7 Z" fill="rgba(255,210,170,0.32)" />
-        {/* Specular gleam — small bright spot on upper-left face */}
-        <path d="M 9 5 L 12 8 L 9.5 9.5 L 7 7 Z" fill="rgba(255,235,200,0.5)" />
-        {/* Mid-tone right face */}
-        <path d="M 12 2 L 17 7 L 22 12 L 17 7 Z" fill="rgba(255,170,90,0.07)" />
-        {/* Strong bottom-right shadow */}
-        <path d="M 12 22 L 17 17 L 22 12 L 17 17 Z" fill="rgba(0,0,0,0.55)" />
-        <path d="M 12 22 L 7 17 L 12 17 Z" fill="rgba(0,0,0,0.35)" />
+        {/* --- Diamond 1 (upper-left position) --- */}
+        <g transform="translate(20 11)">
+          {/* Soft cast shadow beneath the raised diamond */}
+          <ellipse cx="0" cy="6.5" rx="20" ry="3.6" fill="rgba(0,0,0,0.42)" />
+          {/* Diamond body — slightly elongated horizontal */}
+          <path d="M -20 0 L 0 -7 L 20 0 L 0 7 Z" fill="#4b525a" />
+          {/* Upper-half highlight (light from above) */}
+          <path d="M -20 0 L 0 -7 L 20 0 Z" fill="#5d6571" />
+          {/* Bright crest line along top edge */}
+          <path d="M -18 -0.5 L 0 -6.5 L 18 -0.5" stroke="rgba(210,220,232,0.55)" strokeWidth="0.75" fill="none" strokeLinecap="round" />
+          {/* Soft highlight gleam on upper-left face */}
+          <path d="M -16 -1 L -4 -5.5 L -1 -3 L -10 0 Z" fill="rgba(195,208,222,0.30)" />
+          {/* Bottom-half shadow */}
+          <path d="M -20 0 L 0 7 L 20 0 Z" fill="#2e3338" />
+          {/* Dark edge along bottom */}
+          <path d="M -18 0.5 L 0 6.5 L 18 0.5" stroke="rgba(8,12,16,0.6)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+        </g>
 
-        {/* === Diamond 2 (right of cell, offset half row) === */}
-        <ellipse cx="35" cy="14.5" rx="10" ry="3.5" fill="rgba(0,0,0,0.35)" />
-        <path d="M 35 2 L 45 12 L 35 22 L 25 12 Z" fill="#3a342d" />
-        <path d="M 35 2 L 40 7 L 35 12 L 30 7 Z" fill="rgba(255,210,170,0.32)" />
-        <path d="M 32 5 L 35 8 L 32.5 9.5 L 30 7 Z" fill="rgba(255,235,200,0.5)" />
-        <path d="M 35 2 L 40 7 L 45 12 L 40 7 Z" fill="rgba(255,170,90,0.07)" />
-        <path d="M 35 22 L 40 17 L 45 12 L 40 17 Z" fill="rgba(0,0,0,0.55)" />
-        <path d="M 35 22 L 30 17 L 35 17 Z" fill="rgba(0,0,0,0.35)" />
+        {/* --- Diamond 2 (lower-right position, offset for staggered rows) --- */}
+        <g transform="translate(60 32)">
+          <ellipse cx="0" cy="6.5" rx="20" ry="3.6" fill="rgba(0,0,0,0.42)" />
+          <path d="M -20 0 L 0 -7 L 20 0 L 0 7 Z" fill="#4b525a" />
+          <path d="M -20 0 L 0 -7 L 20 0 Z" fill="#5d6571" />
+          <path d="M -18 -0.5 L 0 -6.5 L 18 -0.5" stroke="rgba(210,220,232,0.55)" strokeWidth="0.75" fill="none" strokeLinecap="round" />
+          <path d="M -16 -1 L -4 -5.5 L -1 -3 L -10 0 Z" fill="rgba(195,208,222,0.30)" />
+          <path d="M -20 0 L 0 7 L 20 0 Z" fill="#2e3338" />
+          <path d="M -18 0.5 L 0 6.5 L 18 0.5" stroke="rgba(8,12,16,0.6)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+        </g>
       </pattern>
 
-      {/* Brushed-metal grain for the base */}
-      <linearGradient id="dp-brush" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"  stopColor="rgba(255,255,255,0.04)" />
+      {/* Matte brushed-metal grain — soft top-to-bottom vignette */}
+      <linearGradient id="gm-grain" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"  stopColor="rgba(255,255,255,0.03)" />
         <stop offset="50%" stopColor="rgba(0,0,0,0)" />
-        <stop offset="100%" stopColor="rgba(0,0,0,0.20)" />
+        <stop offset="100%" stopColor="rgba(0,0,0,0.18)" />
       </linearGradient>
 
-      {/* Faint warming wash across the whole plate */}
-      <linearGradient id="dp-warm-v2" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"  stopColor="rgba(255,107,0,0.06)" />
-        <stop offset="50%" stopColor="rgba(0,0,0,0)" />
+      {/* Subtle overall darken at the edges so the plate has depth */}
+      <radialGradient id="gm-vignette" cx="50%" cy="50%" r="75%">
+        <stop offset="60%" stopColor="rgba(0,0,0,0)" />
         <stop offset="100%" stopColor="rgba(0,0,0,0.30)" />
-      </linearGradient>
+      </radialGradient>
     </defs>
 
-    <rect width="100%" height="100%" fill="url(#diamond-plate-v2)" />
-    <rect width="100%" height="100%" fill="url(#dp-warm-v2)" />
+    <rect width="100%" height="100%" fill="url(#gunmetal-plate)" />
+    <rect width="100%" height="100%" fill="url(#gm-vignette)" />
   </svg>
 );
 

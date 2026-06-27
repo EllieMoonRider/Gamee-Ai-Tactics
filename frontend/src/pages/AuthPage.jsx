@@ -5,6 +5,7 @@ import { useAuth } from "../lib/auth";
 import { IdentificationBadge, Lock, EnvelopeSimple, Eye, EyeSlash, Sparkle } from "@phosphor-icons/react";
 import BrandLogo from "../components/BrandLogo";
 import MilitaryBolt from "../components/MilitaryBolt";
+import DiamondPlatePattern from "../components/DiamondPlatePattern";
 
 const AuthPage = () => {
   const [params] = useSearchParams();
@@ -59,6 +60,9 @@ const AuthPage = () => {
       {/* RECRUITMENT PLATE — industrial diamond-plate rectangle */}
       <div className={`recruit-card relative w-full max-w-[420px] mx-auto ${isRegister ? "is-enlist" : "is-login"}`} data-testid="recruit-banner">
         <div className="recruit-card-body relative">
+          {/* Gunmetal industrial diamond-plate background */}
+          <DiamondPlatePattern className="recruit-plate-bg" />
+
           {/* OTS military bolts in the four corners */}
           <div className="recruit-bolt tl" aria-hidden="true"><MilitaryBolt size={36} testid="ots-bolt-tl" /></div>
           <div className="recruit-bolt tr" aria-hidden="true"><MilitaryBolt size={36} testid="ots-bolt-tr" /></div>
