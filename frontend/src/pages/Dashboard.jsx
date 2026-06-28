@@ -15,6 +15,9 @@ import {
 } from "@phosphor-icons/react";
 import { TUTORIALS } from "../data/tutorials";
 import commandCenterBg from "../assets/command-center-bg-v1.jpg";
+// LAYER 1 ART — cinematic War Room scene (AI-generated to match reference).
+// Layers 2+ will mount text, briefings, panels, beacons on top of this scene.
+import warRoomScene from "../assets/war-room-scene-v1.jpg";
 
 /* === Per-game iconography === */
 const GAME_ICONS = {
@@ -299,43 +302,26 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="command-center">
-      <div className="cc-backdrop" style={{ backgroundImage: `url(${commandCenterBg})` }} />
+    <div className="command-center min-h-screen relative overflow-hidden bg-black">
+      {/* === LAYER 1 — Cinematic War Room scene only ===
+          The AI-painted backdrop IS the design. No panels, no headers, no
+          briefing rectangle, no central hub, no tactical map yet — those
+          arrive in Layer 2+. Data hooks above (games, onboarding) stay wired
+          so we can layer functionality on top without rebuilding logic. */}
       <Navbar />
-      <div className="max-w-7xl mx-auto px-6 py-10 space-y-8 relative z-10">
-        {/* Header */}
-        <div>
-          <div className="tactical-label cc-neon-text mb-2">// COMMAND CENTER</div>
-          <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tighter">
-            {onboarding?.first_time === false ? "Welcome back, " : "Welcome to the Command Center, "}
-            <br />
-            <span className="cc-neon-text">{user?.username || "Commander"}</span>.
-          </h1>
-        </div>
 
-        {/* Personalized briefing (first-time vs returning) */}
-        {onboarding && (
-          <PersonalizedBriefing
-            onboarding={onboarding}
-            onContinue={handleContinue}
-            onPickNew={handlePickNew}
-          />
-        )}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url(${warRoomScene})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+        }}
+        data-testid="war-room-scene"
+      />
 
-        {/* Central Hub — 5 clickable mission stations */}
-        <CentralHub onPickTutorial={() => setTutorialOpen(true)} />
-
-        {/* Quota strip */}
-        <QuotaWidget />
-
-        {/* Battle Theaters — 3D tactical map with game-piece beacons.
-            Tap a piece to identify the title and (Pro) claim it as a theater. */}
-        <TacticalGameMap games={games} />
-      </div>
-
-      <TutorialModal open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
-
-      {/* One-time CypherAI introduction — first-sign-in cinematic. */}
+      {/* One-time CypherAI introduction — overlay only, plays once per device. */}
       <AnimatePresence>
         {showBriefing && <CypherIntroBriefing onDismiss={() => setShowBriefing(false)} />}
       </AnimatePresence>
