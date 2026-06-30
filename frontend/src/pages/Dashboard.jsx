@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import TacticalGameMap from "../components/TacticalGameMap";
 import CypherIntroBriefing from "../components/CypherIntroBriefing";
 import HolographicGridFloor from "../components/HolographicGridFloor";
+import LandscapePrompt from "../components/LandscapePrompt";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import {
@@ -332,6 +333,10 @@ const Dashboard = () => {
       <AnimatePresence>
         {showBriefing && <CypherIntroBriefing onDismiss={() => setShowBriefing(false)} />}
       </AnimatePresence>
+
+      {/* Mobile-portrait gate — auto-shows on portrait phones, auto-hides
+          when the user rotates to landscape. CSS-driven, no JS toggling. */}
+      <LandscapePrompt />
     </div>
   );
 };

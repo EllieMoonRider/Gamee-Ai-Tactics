@@ -58,6 +58,9 @@ User direction iterations:
 ### Visual Assets
 - `/app/frontend/src/assets/command-center-bg-v1.jpg` — generated Nano Banana art (knights + radar + dragon + battlefield, neon green glow)
 - `/app/frontend/src/assets/command-center-bg-v2.jpg` — alt variant (kept for future swap)
+- `/app/frontend/src/assets/war-room-scene-v1.jpg` — initial cinematic War Room scene
+- `/app/frontend/src/assets/war-room-scene-v3-1.jpg` — v3 variant (dragon smaller, tanks removed)
+- `/app/frontend/src/assets/war-room-scene-v4-1.jpg` — **LIVE** — knights placed BEHIND castle wall (only upper body visible above battlements), positioned at 25% / 75% width, ~33% larger. Approved by General Feb 2026.
 
 ### Testing
 - **Iteration 8: 25/25 backend tests pass** (Support ticket system)
@@ -76,10 +79,14 @@ User direction iterations:
 ## Prioritized Backlog
 
 ### P1 — next reasonable iteration
-- User feedback on the Command Center redesign — iterate per their taste
-- Apply atmospheric/neon styling to other pages if user loves it (Landing, Pricing, etc.)
+- **Command Center Layer 2: 11 Game Beacons** — design + glow color + shape pending General's pick (signature colors vs uniform green vs hybrid; discs vs hexes vs pyramids)
+- **Command Center Layer 3** — CypherAI speaks through the radar (typewriter holo-text floating over radar dish)
+- **Command Center Layer 4** — Edge HUDs (slim left/right vertical readouts: Plan/Deep Dives quota + Scouts credits)
+- **Custom in-scene navigation for Dashboard** — General removed the flat top Navbar, has "other plans" for nav placement
+- Apply atmospheric/neon styling to other pages (Landing, Pricing, etc.) once Command Center is finalized
 - Game-slot selector UI on Pricing (pick which 2 games are "in" Pro slots without going through Deep Dive)
 - Floating "Need help?" button on every authed page → opens ticket form
+- **Auth form polish (from iter-9 review)**: existing users on /auth may need to toggle "ENLIST →" before JOIN reliably triggers login — investigate auto-detection or clearer LOGIN vs ENLIST mode separation
 
 ### P2
 - Split `server.py` (~2600 lines) into routers
