@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import Navbar from "../components/Navbar";
 import TacticalGameMap from "../components/TacticalGameMap";
 import CypherIntroBriefing from "../components/CypherIntroBriefing";
 import HolographicGridFloor from "../components/HolographicGridFloor";
@@ -18,7 +17,7 @@ import { TUTORIALS } from "../data/tutorials";
 import commandCenterBg from "../assets/command-center-bg-v1.jpg";
 // LAYER 1 ART — cinematic War Room scene (AI-generated to match reference).
 // Layers 2+ will mount text, briefings, panels, beacons on top of this scene.
-import warRoomScene from "../assets/war-room-scene-v3-1.jpg";
+import warRoomScene from "../assets/war-room-scene-v4-1.jpg";
 
 /* === Per-game iconography === */
 const GAME_ICONS = {
@@ -308,8 +307,9 @@ const Dashboard = () => {
           The AI-painted backdrop IS the design. No panels, no headers, no
           briefing rectangle, no central hub, no tactical map yet — those
           arrive in Layer 2+. Data hooks above (games, onboarding) stay wired
-          so we can layer functionality on top without rebuilding logic. */}
-      <Navbar />
+          so we can layer functionality on top without rebuilding logic.
+          NOTE: Top Navbar deliberately removed per General's direction —
+          custom in-scene navigation will replace it in a future layer. */}
 
       <div
         className="absolute inset-0 z-0"

@@ -1,0 +1,37 @@
+{
+  "summary": "Frontend-only verification of Dashboard (Command Center) updates. Confirmed (1) new war-room-scene-v4-1.jpg loads as Dashboard background with HTTP 200 and knights visibly positioned behind the castle wall (upper body visible above battlements), (2) Navbar is fully removed from /dashboard (no <nav>, no Operations/Pricing/Logout links), (3) HolographicGridFloor renders with pointer-events:none, (4) Navbar still works correctly on /pricing and /war-room (regression intact), (5) end-to-end login flow works (login API -> /dashboard), (6) no console/network errors. Tested on both desktop (1280x800) and mobile (390x844).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/test_reports/dashboard_v4_desktop.png",
+    "/app/test_reports/dashboard_v4_mobile.png",
+    "/app/test_reports/war_room_navbar.png"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Dashboard.jsx imports several heavy modules (TacticalGameMap, @phosphor-icons/react variants, tutorials data) that are not used in the current Layer-1-only render. Once layers 2+ start mounting they will be needed, but for now these unused imports inflate the dashboard bundle. Consider deferring imports until Layer 2 lands.",
+    "Two unused fetches still run on Dashboard mount (api.get('/games'), api.get('/user/onboarding')) and their results (games, onboarding state) are never rendered in the current minimal scene. Harmless for now; either keep them as pre-warm cache or remove until Layer 2.",
+    "Auth screen UX quirk noticed during testing: opening /auth, then filling email+password and clicking JOIN does NOT call /api/auth/login on the very first attempt for an existing user — clicking the 'ENLIST →' toggle once first is required before JOIN triggers /api/auth/login. After that, it works. This is outside the current review scope (not a Dashboard bug) but is worth a follow-up: the default mode of the auth form may be 'register' even though the heading reads 'RECRUITMENT', causing existing users a moment of confusion. Recommend explicitly distinguishing LOGIN vs ENLIST modes (e.g., heading + button text both change), or making the form auto-fallback to /api/auth/login if /api/auth/register returns 'user exists'."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "n/a (frontend-only review)", "frontend": "100%" },
+  "test_credentials": "elliemoonrider14@gmail.com / Delt@123! — works via /api/auth/login (200).",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Dashboard is intentionally Layer-1 only: background scene (war-room-scene-v4-1.jpg) + HolographicGridFloor + one-time CypherIntroBriefing overlay. No widgets, no game tiles, no hub, no quota. This is BY DESIGN. Do NOT flag missing dashboard UI as bugs. AUTH FORM: to reliably login an existing user via Playwright, click the 'ENLIST →' toggle ONCE before filling and clicking JOIN; otherwise the form may stay in register-mode and the click is a no-op. Also set localStorage['ta-cypher-intro-seen']='1' before/after login to bypass the CypherIntroBriefing overlay on /dashboard.",
+  "verified_items": [
+    "[data-testid='war-room-scene'] background-image URL contains 'war-room-scene-v4-1' and the asset returns HTTP 200",
+    "Visual: knights stand BEHIND castle wall, only upper body (helm, chest, arms) visible above battlements — matches the General's requirement",
+    "/dashboard: <nav> count = 0, [data-testid='top-navbar'] absent, no 'Operations'/'Pricing'/'Logout' links/buttons present",
+    "[data-testid='holographic-grid-floor'] rendered with pointer-events: none, display: block — does not block any future Layer 2 clicks",
+    "/pricing still shows Navbar (navCount=1, 'Pricing' link present)",
+    "/war-room (auth-protected) still shows full Navbar with Operations / Scouts / Cypher / War Room / Pricing / Logout",
+    "Login flow: POST /api/auth/login returns 200 -> client navigates to /dashboard within <1s",
+    "No HTTP >=400 responses on /dashboard load. No console errors (only React DevTools info)."
+  ]
+}
