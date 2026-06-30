@@ -17,7 +17,7 @@ import { TUTORIALS } from "../data/tutorials";
 import commandCenterBg from "../assets/command-center-bg-v1.jpg";
 // LAYER 1 ART — cinematic War Room scene (AI-generated to match reference).
 // Layers 2+ will mount text, briefings, panels, beacons on top of this scene.
-import warRoomScene from "../assets/war-room-scene-v1.jpg";
+import warRoomScene from "../assets/war-room-scene-v3-1.jpg";
 
 /* === Per-game iconography === */
 const GAME_ICONS = {
