@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
 import TacticalGameMap from "../components/TacticalGameMap";
 import CypherIntroBriefing from "../components/CypherIntroBriefing";
+import HolographicGridFloor from "../components/HolographicGridFloor";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import {
@@ -320,6 +321,12 @@ const Dashboard = () => {
         }}
         data-testid="war-room-scene"
       />
+
+      {/* === LAYER 1.5 — Live holographic topographic grid floor ===
+          Animated perspective grid + contour lines + scanning sweep,
+          projected on the bottom portion of the scene. Pointer-events
+          none — beacons (Layer 2) will mount on top and remain clickable. */}
+      <HolographicGridFloor />
 
       {/* One-time CypherAI introduction — overlay only, plays once per device. */}
       <AnimatePresence>
