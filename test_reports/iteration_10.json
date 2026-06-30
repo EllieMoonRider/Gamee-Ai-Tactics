@@ -1,0 +1,23 @@
+{
+  "summary": "Verified Command Center landscape bug fix on /dashboard. All 32 assertions passed across 3 landscape viewports (1920x1080 = 1.78:1, 1024x500 = 2.05:1, 1280x500 = 2.56:1). The inline + computed backgroundPosition on [data-testid='war-room-scene'] is '50% 100%' (equivalent to 'center bottom') confirming the CSS one-liner fix in /app/frontend/src/pages/Dashboard.jsx took effect. HolographicGridFloor renders, is visible (opacity 1, height > 0), is anchored to the bottom of the viewport (element.bottom === viewport.height), and retains pointer-events:none on every viewport ratio tested. Regression checks all green: war-room-scene-v4-1.jpg returns HTTP 200, no Navbar on /dashboard, Navbar present on /pricing /scouts /war-room, LandscapePrompt is mounted but display:none in landscape, auth form data-testids present on /auth, and /api/auth/login still works for elliemoonrider14@gmail.com / Delt@123!.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Note: /app/memory/test_credentials.md lists only test@tactician.gg credentials. The general's account (elliemoonrider14@gmail.com / Delt@123!) used for this bug verification is not documented there. Consider adding it for future testing agents.",
+    "Minor: The CypherIntroBriefing overlay appears to remain visible on /dashboard even when localStorage['ta-cypher-intro-seen']='1' is set from a sibling route prior to navigation. Worth verifying the gating logic — though it does not affect this bug fix verification."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (frontend-only test)", "frontend": "100% (32/32)"},
+  "test_credentials": "elliemoonrider14@gmail.com / Delt@123! — verified working via /api/auth/login (login uses 'email' field, not 'identifier').",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Bug fix verified. backgroundPosition='center bottom' (computed '50% 100%') is correctly applied to [data-testid='war-room-scene']. Grid floor's getBoundingClientRect().bottom equals window.innerHeight on every landscape viewport tried (1920x1080, 1024x500, 1280x500). Login API expects {email, password} not {identifier, password}. To bypass /auth and CypherIntroBriefing in headless tests: POST /api/auth/login to get JWT, then localStorage.setItem('token', jwt) + localStorage.setItem('ta-cypher-intro-seen','1') on the production origin BEFORE navigating to /dashboard. Note: a separate splash with 'TAP TO SKIP' was observed in screenshots even with the cypher flag set — DOM-level assertions still confirmed all layers are in place underneath.",
+  "rca_of_the_issue": "Root cause (already diagnosed by main agent): the war-room scene image is 1376x768 (1.79:1) while landscape phones can be 2.1-2.5:1. With backgroundPosition: 'center center' + cover, the image was scaling up to fill width and cropping equally top+bottom, removing the foreground floor zone. Fix: changed inline style to backgroundPosition: 'center bottom' so the bottom of the image (castle wall + floor) is always preserved and cropping happens from the top (sky) on wider aspect ratios. The HolographicGridFloor's bottom-anchored 38vh overlay now consistently aligns with the preserved foreground floor zone. Confirmed visually and via computed-style assertions across 3 viewport ratios."
+}

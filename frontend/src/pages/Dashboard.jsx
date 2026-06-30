@@ -317,7 +317,11 @@ const Dashboard = () => {
         style={{
           backgroundImage: `url(${warRoomScene})`,
           backgroundSize: "cover",
-          backgroundPosition: "center center",
+          // Anchor to bottom-center so the foreground floor zone of the scene
+          // (where the holographic grid sits) is ALWAYS preserved, regardless
+          // of viewport aspect ratio. On wider landscape phones (e.g. 2.16:1)
+          // this crops some sky off the top instead of cutting off the floor.
+          backgroundPosition: "center bottom",
           backgroundRepeat: "no-repeat",
         }}
         data-testid="war-room-scene"
