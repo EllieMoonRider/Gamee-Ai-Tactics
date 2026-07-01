@@ -1,0 +1,353 @@
+/* ============================================================================
+   DragonRitual — Command Center Welcome Briefing
+   Cinematic overlay: dragon hovers above the war room, breathes green fire
+   with a red core, letters bloom in the flames and settle into the mission
+   briefing. Plays every /dashboard visit. Skippable via button or tap.
+   ============================================================================ */
+
+.dragon-ritual {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at 50% 20%,
+    rgba(0, 20, 10, 0.65) 0%,
+    rgba(0, 8, 4, 0.85) 40%,
+    rgba(0, 0, 0, 0.94) 80%,
+    #000 100%
+  );
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: dr-fade-in 0.6s ease-out;
+  cursor: pointer; /* tap anywhere = skip */
+}
+
+@keyframes dr-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.dragon-ritual--exiting {
+  animation: dr-fade-out 0.8s ease-in forwards;
+}
+
+@keyframes dr-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Subtle scanline overlay ================================================= */
+.dragon-ritual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 128, 0.045) 0px,
+    rgba(0, 255, 128, 0.045) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.8;
+}
+
+/* === Dragon sprite ======================================================== */
+.dragon-ritual__dragon {
+  position: absolute;
+  top: -4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(48vw, 520px);
+  max-width: 90vw;
+  aspect-ratio: 1 / 1;
+  opacity: 0;
+  animation:
+    dr-dragon-descend 2.4s cubic-bezier(0.19, 1, 0.22, 1) 0.4s forwards,
+    dr-dragon-hover 5.5s ease-in-out 3s infinite;
+  filter: drop-shadow(0 20px 40px rgba(0, 255, 128, 0.25));
+  /* AI-generated dragon PNG will be a solid-black-bg JPG composited via
+     mix-blend-mode:screen. Placeholder SVG shown until asset arrives. */
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+@keyframes dr-dragon-descend {
+  0%   { opacity: 0; transform: translate(-50%, -80%) scale(0.8); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes dr-dragon-hover {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50%      { transform: translate(-50%, 12px) scale(1.015); }
+}
+
+.dragon-ritual__dragon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* === Flame plume ========================================================== */
+.dragon-ritual__flame {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translateX(-50%);
+  width: min(220px, 30vw);
+  height: min(340px, 40vh);
+  opacity: 0;
+  animation: dr-flame-in 1.2s ease-out 2.6s forwards;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(0.4px);
+}
+
+@keyframes dr-flame-in {
+  from { opacity: 0; transform: translate(-50%, -20px) scale(0.6); }
+  to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+.dragon-ritual__flame-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 50% / 65% 65% 40% 40%;
+  background:
+    radial-gradient(
+      ellipse 60% 90% at 50% 60%,
+      rgba(255, 60, 0, 0.75) 0%,
+      rgba(255, 120, 0, 0.55) 12%,
+      rgba(0, 255, 100, 0.85) 32%,
+      rgba(0, 255, 128, 0.65) 55%,
+      rgba(0, 180, 90, 0.35) 75%,
+      transparent 100%
+    );
+  filter: blur(6px);
+  animation: dr-flame-flicker 0.35s ease-in-out infinite alternate;
+}
+
+.dragon-ritual__flame-inner::after {
+  content: "";
+  position: absolute;
+  inset: 20% 30% 10% 30%;
+  border-radius: 50% / 60% 60% 40% 40%;
+  background: radial-gradient(
+    ellipse 40% 80% at 50% 55%,
+    rgba(255, 40, 0, 0.9) 0%,
+    rgba(255, 90, 0, 0.6) 25%,
+    rgba(255, 180, 40, 0.35) 45%,
+    transparent 70%
+  );
+  filter: blur(4px);
+  animation: dr-flame-flicker 0.28s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes dr-flame-flicker {
+  0%   { transform: scale(1) translateY(0);      opacity: 0.85; }
+  100% { transform: scale(1.06) translateY(-4px); opacity: 1; }
+}
+
+/* Rising ember particles */
+.dragon-ritual__ember {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #00FF80;
+  box-shadow: 0 0 8px #00FF80, 0 0 14px rgba(0, 255, 128, 0.5);
+  opacity: 0;
+  animation: dr-ember-rise 3.2s linear infinite;
+}
+
+@keyframes dr-ember-rise {
+  0%   { opacity: 0; transform: translateY(0) scale(0.6); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.4); }
+}
+
+/* === Briefing text container ============================================== */
+.dragon-ritual__briefing {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  transform: translate(-50%, 0);
+  width: min(90vw, 780px);
+  padding: 0 1rem;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  animation: dr-briefing-in 0.8s ease-out 3.4s forwards;
+}
+
+@keyframes dr-briefing-in {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.dragon-ritual__line {
+  display: block;
+  font-family: "Bebas Neue", "Oswald", sans-serif;
+  color: #cfffe1;
+  text-shadow: 0 0 10px rgba(0, 255, 128, 0.7), 0 0 22px rgba(0, 255, 128, 0.35);
+  letter-spacing: 0.05em;
+  line-height: 1.35;
+  margin: 0 auto 0.6rem;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: dr-line-in 0.6s ease-out forwards;
+}
+
+.dragon-ritual__line--title {
+  font-size: clamp(1.5rem, 4.2vw, 2.4rem);
+  color: #ffb060;
+  text-shadow:
+    0 0 12px rgba(255, 90, 0, 0.7),
+    0 0 26px rgba(255, 120, 0, 0.35),
+    0 0 40px rgba(0, 255, 128, 0.15);
+  letter-spacing: 0.07em;
+  margin-bottom: 1.2rem;
+}
+
+.dragon-ritual__line--header {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: clamp(0.85rem, 2.2vw, 1.05rem);
+  color: #00FF80;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0.6rem 0 0.9rem;
+}
+
+.dragon-ritual__line--body {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: clamp(0.82rem, 1.9vw, 1rem);
+  color: #d8f2e5;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  max-width: 640px;
+  text-shadow: 0 0 6px rgba(0, 255, 128, 0.35);
+  font-weight: 400;
+}
+
+@keyframes dr-line-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Character-by-character bloom — each span fades in staggered */
+.dragon-ritual__char {
+  display: inline-block;
+  opacity: 0;
+  animation: dr-char-bloom 0.42s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+  transform: translateY(4px);
+}
+
+@keyframes dr-char-bloom {
+  0%   { opacity: 0; transform: translateY(6px); filter: blur(4px) brightness(2.2); color: #ffb060; }
+  40%  { opacity: 1; filter: blur(1px) brightness(1.5); color: #b6ffde; }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0) brightness(1); }
+}
+
+.dragon-ritual__char--space { width: 0.28em; }
+
+/* === Enter button ========================================================= */
+.dragon-ritual__enter {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  padding: 0.85rem 2.2rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  color: #001a0d;
+  background: #00FF80;
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(
+    10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px),
+    calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px
+  );
+  box-shadow:
+    0 0 20px rgba(0, 255, 128, 0.55),
+    0 0 40px rgba(0, 255, 128, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  animation: dr-enter-appear 0.6s ease-out forwards;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dragon-ritual__enter:hover,
+.dragon-ritual__enter:focus-visible {
+  transform: translateX(-50%) scale(1.04);
+  box-shadow: 0 0 28px rgba(0, 255, 128, 0.85), 0 0 60px rgba(0, 255, 128, 0.35);
+  outline: none;
+}
+
+@keyframes dr-enter-appear {
+  from { opacity: 0; transform: translate(-50%, 10px); pointer-events: none; }
+  to   { opacity: 1; transform: translate(-50%, 0);    pointer-events: auto; }
+}
+
+/* === Skip button ========================================================== */
+.dragon-ritual__skip {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  padding: 0.55rem 1.1rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: #FF6B00;
+  background: rgba(0, 12, 6, 0.7);
+  border: 1px solid rgba(0, 255, 128, 0.55);
+  cursor: pointer;
+  z-index: 5;
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px),
+    calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px
+  );
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  animation: dr-skip-appear 0.6s ease-out 0.9s both;
+}
+
+.dragon-ritual__skip:hover,
+.dragon-ritual__skip:focus-visible {
+  color: #FFB080;
+  border-color: rgba(0, 255, 128, 1);
+  box-shadow: 0 0 14px rgba(0, 255, 128, 0.35);
+  outline: none;
+}
+
+@keyframes dr-skip-appear {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 0.85; transform: translateY(0); }
+}
+
+/* === Placeholder dragon (while AI asset is pending) ====================== */
+.dragon-ritual__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  filter: drop-shadow(0 0 24px rgba(0, 255, 128, 0.6));
+  animation: dr-placeholder-flap 3.2s ease-in-out infinite;
+}
+
+@keyframes dr-placeholder-flap {
+  0%, 100% { transform: scale(1, 1); }
+  50%      { transform: scale(1.04, 0.97); }
+}
+
+/* === Mobile portrait fallback ============================================ */
+@media (orientation: portrait) and (max-width: 900px) {
+  /* When LandscapePrompt is showing, hide the ritual to keep only one overlay */
+  .dragon-ritual { display: none; }
+}
