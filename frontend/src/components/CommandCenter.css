@@ -174,17 +174,18 @@
   transform: translateX(-50%);
   width: min(46vw, 480px);
   max-height: min(38vh, 320px);
-  padding: 1.1rem 1.4rem;
+  padding: 1.1rem 1.4rem 2.6rem;   /* extra bottom room for skip button */
   pointer-events: auto;
-  /* Circular soft mask so text fits the radar shape gracefully */
-  -webkit-mask-image: radial-gradient(ellipse 100% 92% at 50% 50%, #000 55%, rgba(0,0,0,0.5) 78%, transparent 100%);
-  mask-image: radial-gradient(ellipse 100% 92% at 50% 50%, #000 55%, rgba(0,0,0,0.5) 78%, transparent 100%);
 }
 
 .radar-briefing__scroll {
   max-height: min(32vh, 260px);
   overflow: hidden;
   text-align: center;
+  /* Circular soft mask so text fades gracefully at the radar's edge.
+     Kept on the INNER scroll only, so it never masks out the skip button. */
+  -webkit-mask-image: radial-gradient(ellipse 100% 92% at 50% 50%, #000 55%, rgba(0,0,0,0.5) 78%, transparent 100%);
+  mask-image: radial-gradient(ellipse 100% 92% at 50% 50%, #000 55%, rgba(0,0,0,0.5) 78%, transparent 100%);
 }
 
 .radar-briefing__line {
@@ -244,16 +245,18 @@
 
 .radar-briefing__skip {
   position: absolute;
-  bottom: -14px;
+  bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: auto;
   padding: 0.32rem 0.9rem;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.6rem;
   letter-spacing: 0.28em;
   color: #FF6B00;
-  background: rgba(0, 12, 6, 0.85);
-  border: 1px solid rgba(0, 255, 128, 0.65);
+  background: rgba(0, 12, 6, 0.9);
+  border: 1px solid rgba(0, 255, 128, 0.7);
   cursor: pointer;
   border-radius: 2px;
   transition: all 0.18s ease;

@@ -1,0 +1,45 @@
+{
+  "summary": "Focused retest of the 2 issues from iter-11: (1) radar-briefing SKIP button clickable via normal click, and (2) SplashScreen SVG height='auto' console warning. BOTH FIXES CONFIRMED WORKING. Plus regression smoke on Command Center Layer 2. All 8 retest assertions PASS.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "retest_results": {
+    "svg_height_auto_warning": {
+      "status": "FIXED",
+      "detail": "Loaded / (splash screen) and captured all console messages during the 3.5s hold. SVG height/auto warnings count = 0 (was 2 in iter-11). Removed height='auto' attr from <svg> in SplashScreen.jsx confirmed effective."
+    },
+    "skip_button_hit_test": {
+      "status": "FIXED",
+      "detail": "document.elementFromPoint(640, 222) at SKIP button center returns { tagName: 'BUTTON', data-testid: 'radar-briefing-skip', class: 'radar-briefing__skip', isButtonOrDescendant: true }. Previously returned the war-room-scene DIV. Rect: x=598.04 y=208.75 w=83.92 h=26.61."
+    },
+    "skip_button_normal_click_unmounts": {
+      "status": "FIXED",
+      "detail": "page.click() (NON-force) on [data-testid='radar-briefing-skip'] → briefing removed from DOM within ~100ms (well under the 500ms budget). Verified via locator.count() == 0."
+    },
+    "regression_widgets_and_menu": {
+      "status": "PASS",
+      "detail": "tutorial widget present (1), tactical-scout widget present (1), hamburger button present (1). Hamburger opens panel, ESC closes panel. No console errors on /dashboard flow (0 errors, 0 pageerrors)."
+    },
+    "regression_operations_page": {
+      "status": "PASS",
+      "detail": "/operations loads correctly with existing Navbar (2 nav/header elements found), Alliance HQ content visible."
+    }
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "CSS fix in CommandCenter.css is clean: mask-image moved to inner .radar-briefing__scroll wrapper, container padding-bottom: 2.6rem creates skip room, .radar-briefing__skip repositioned to bottom: 8px with explicit z-index: 5 and pointer-events: auto. Good defensive layering.",
+    "SplashScreen.jsx: relies on width='100%' + preserveAspectRatio + viewBox + maxHeight style for aspect-correct sizing — works and no more SVG attribute warnings."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (frontend-only retest)", "frontend": "100% (all retest assertions pass)"},
+  "test_credentials": "elliemoonrider14@gmail.com / Delt@123! (verified, POST /api/auth/login returns 200 with JWT token).",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Iter-11's single HIGH bug and MINOR cosmetic warning are both fully resolved. Command Center Layer 2 is at 100% functional. Viewport used: 1280x720. Splash still holds ~3s before dashboard renders; radar briefing appears immediately on /dashboard after splash, SKIP button is now fully interactive at bottom: 8px inside the (now unmasked) container.",
+  "rca_of_the_issue": "Original RCA (iter-11): CSS mask-image on .radar-briefing made outer regions non-hittable in Blink; SKIP button at bottom:-14px was in the fully-transparent mask zone. Fix applied by main agent (verified): (a) moved -webkit-mask-image/mask-image OFF .radar-briefing and ONTO inner .radar-briefing__scroll wrapper, (b) added padding-bottom: 2.6rem to container to make room, (c) moved .radar-briefing__skip from bottom:-14px to bottom:8px with explicit z-index:5 and pointer-events:auto. Result: elementFromPoint now returns the BUTTON element itself and a normal (non-force) click cleanly unmounts the briefing within ~100ms."
+}

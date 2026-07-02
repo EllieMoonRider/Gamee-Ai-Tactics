@@ -58,7 +58,6 @@ const SplashScreen = ({ onDone }) => {
         viewBox="0 0 400 460"
         preserveAspectRatio="xMidYMid meet"
         width="100%"
-        height="auto"
         style={{ display: "block", maxHeight: "85vh" }}
       >
         <defs>
