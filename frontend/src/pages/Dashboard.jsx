@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import TacticalGameMap from "../components/TacticalGameMap";
 import CypherIntroBriefing from "../components/CypherIntroBriefing";
-import DragonRitual from "../components/DragonRitual";
 import HolographicGridFloor from "../components/HolographicGridFloor";
 import LandscapePrompt from "../components/LandscapePrompt";
 import { api } from "../lib/api";
@@ -272,9 +271,10 @@ const Dashboard = () => {
   const [games, setGames] = useState([]);
   const [onboarding, setOnboarding] = useState(null);
   const [tutorialOpen, setTutorialOpen] = useState(false);
-  // Dragon Ritual welcome briefing — shows on EVERY /dashboard visit,
-  // per General's direction. Skippable via button or tap. No localStorage gate.
-  const [showBriefing, setShowBriefing] = useState(true);
+  // CypherAI first-sign-in briefing. Plays once per device via localStorage.
+  const [showBriefing, setShowBriefing] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("ta-cypher-intro-seen") !== "1"
+  );
 
   // Attempt to lock landscape orientation (PWA / Android Chrome supports this; iOS Safari ignores)
   useEffect(() => {
@@ -332,12 +332,9 @@ const Dashboard = () => {
           none — beacons (Layer 2) will mount on top and remain clickable. */}
       <HolographicGridFloor />
 
-      {/* === LAYER 2 (welcome overlay) — Dragon Ritual Briefing ===
-          Cinematic dragon descends, breathes green-fire with red core, the
-          General's welcome briefing blooms letter-by-letter in the flames.
-          Plays on EVERY /dashboard visit. Skippable via button or tap. */}
+      {/* One-time CypherAI introduction — overlay only, plays once per device. */}
       <AnimatePresence>
-        {showBriefing && <DragonRitual onDismiss={() => setShowBriefing(false)} />}
+        {showBriefing && <CypherIntroBriefing onDismiss={() => setShowBriefing(false)} />}
       </AnimatePresence>
 
       {/* Mobile-portrait gate — auto-shows on portrait phones, auto-hides
