@@ -1,50 +1,29 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import iconImg from "../assets/tactical-ally-icon.png";
-import splashAudio from "../assets/splash-radar.wav";
 
 /**
  * SplashScreen — 3-second cinematic intro using the actual app icon (dragon-centered)
  * with "TACTICAL ALLY" curving around the top half and "CYPHERAI STRATEGIES" curving
  * around the bottom half of the icon.
  *
- * Auto-fades after HOLD_MS. Tap to skip.
+ * Auto-fades after HOLD_MS. Tap to skip. Silent — no audio.
  */
 const SplashScreen = ({ onDone }) => {
   const [phase, setPhase] = useState("intro"); // intro | fading
-  const [muted, setMuted] = useState(() => localStorage.getItem("ta-splash-muted") === "1");
-  const audioRef = useRef(null);
   const HOLD_MS = 3000;
   const FADE_MS = 700;
 
   useEffect(() => {
-    if (!muted) {
-      const a = new Audio(splashAudio);
-      a.volume = 0.55;
-      audioRef.current = a;
-      // Attempt to play. Browsers may block without prior user gesture (e.g. browser tab visit).
-      // Inside the PWA (launched from home screen) the tap counts as gesture and audio will play.
-      a.play().catch(() => { /* autoplay blocked — silently ignore */ });
-    }
     const t1 = setTimeout(() => setPhase("fading"), HOLD_MS);
     const t2 = setTimeout(() => onDone?.(), HOLD_MS + FADE_MS);
     return () => {
       clearTimeout(t1); clearTimeout(t2);
-      if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0; }
     };
-  }, [onDone, muted]);
+  }, [onDone]);
 
   const skip = () => {
-    if (audioRef.current) { audioRef.current.pause(); }
     setPhase("fading");
     setTimeout(() => onDone?.(), 300);
-  };
-
-  const toggleMute = (e) => {
-    e.stopPropagation();
-    const next = !muted;
-    setMuted(next);
-    localStorage.setItem("ta-splash-muted", next ? "1" : "0");
-    if (next && audioRef.current) audioRef.current.pause();
   };
 
   return (

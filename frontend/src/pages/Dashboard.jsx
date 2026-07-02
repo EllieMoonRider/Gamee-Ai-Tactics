@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import TacticalGameMap from "../components/TacticalGameMap";
-import CypherIntroBriefing from "../components/CypherIntroBriefing";
 import HolographicGridFloor from "../components/HolographicGridFloor";
 import LandscapePrompt from "../components/LandscapePrompt";
+import CommandCenterWidget from "../components/CommandCenterWidget";
+import CommandCenterMenu from "../components/CommandCenterMenu";
+import RadarBriefing from "../components/RadarBriefing";
+import "../components/CommandCenter.css";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import {
@@ -271,10 +274,9 @@ const Dashboard = () => {
   const [games, setGames] = useState([]);
   const [onboarding, setOnboarding] = useState(null);
   const [tutorialOpen, setTutorialOpen] = useState(false);
-  // CypherAI first-sign-in briefing. Plays once per device via localStorage.
-  const [showBriefing, setShowBriefing] = useState(
-    () => typeof window !== "undefined" && localStorage.getItem("ta-cypher-intro-seen") !== "1"
-  );
+  // Welcome briefing — plays every /dashboard visit, per General's spec.
+  // Skippable via SKIP button. Auto-dismisses after ample reading time.
+  const [showBriefing, setShowBriefing] = useState(true);
 
   // Attempt to lock landscape orientation (PWA / Android Chrome supports this; iOS Safari ignores)
   useEffect(() => {
@@ -332,9 +334,31 @@ const Dashboard = () => {
           none — beacons (Layer 2) will mount on top and remain clickable. */}
       <HolographicGridFloor />
 
-      {/* One-time CypherAI introduction — overlay only, plays once per device. */}
+      {/* === LAYER 2 (in-scene UI) — Only what the General approved ===
+          Top-left rail: Tutorial + Tactical Scout widgets.
+          Top-right: Hamburger menu (Who is Cypher / Q&A / Support / Logout).
+          Inside the radar dome: welcome briefing types out.
+          Clean · uncluttered · user-friendly. */}
+      <div className="cc-widget-rail">
+        <CommandCenterWidget
+          to="/operations"
+          label="01 · TUTORIAL"
+          title="How Tactical Ally Works"
+          testid="cc-widget-tutorial"
+        />
+        <CommandCenterWidget
+          to="/scouts"
+          label="02 · TACTICAL SCOUT"
+          title="Earn Credits · Complete Tasks"
+          testid="cc-widget-tactical-scout"
+        />
+      </div>
+
+      <CommandCenterMenu />
+
+      {/* Welcome briefing inside the radar — every login, skippable. */}
       <AnimatePresence>
-        {showBriefing && <CypherIntroBriefing onDismiss={() => setShowBriefing(false)} />}
+        {showBriefing && <RadarBriefing onDismiss={() => setShowBriefing(false)} />}
       </AnimatePresence>
 
       {/* Mobile-portrait gate — auto-shows on portrait phones, auto-hides

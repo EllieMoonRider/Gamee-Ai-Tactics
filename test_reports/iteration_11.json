@@ -1,0 +1,40 @@
+{
+  "summary": "Full frontend UI test of Command Center Layer 2. 24/25 assertions PASS. All primary requirements verified: (1) splash audio COMPLETELY removed (0 <audio> tags, 0 audio-related console errors); (2) both tutorial + tactical-scout widgets render top-left with correct labels/titles; (3) hamburger button is 44x44 top-right with 3 neon bars; (4) hamburger opens panel with 4 items in correct order (Who is Cypher, Q&A, Support, Logout); (5) ESC and outside-click both close the menu; (6) radar briefing renders EVERY visit (no localStorage gate), types out character-by-character, auto-dismisses after ~22s; (7) all widget navigations work: cc-widget-tutorial→/operations, cc-widget-tactical-scout→/scouts; (8) all menu navigations work: cypher→/cypher, qa→/help, support→/help#support, logout clears token+redirects to /auth; (9) no console errors related to audio/splash. ONE ISSUE FOUND: the radar-briefing SKIP button is not clickable due to the -webkit-mask-image on the parent .radar-briefing element masking out the button's hit region (button is positioned bottom:-14px, outside the mask's opaque zone). Auto-dismiss still works so the user is not permanently stuck, but the SKIP UX is broken.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "RadarBriefing",
+        "issue": "SKIP button (data-testid='radar-briefing-skip') is visually rendered but NOT clickable. document.elementFromPoint() at the center of the button (598, 219) returns the war-room-scene DIV, not the button. Root cause: the parent .radar-briefing has `-webkit-mask-image / mask-image: radial-gradient(...)` which makes the outer ring transparent AND non-hittable in Chrome; the skip button is positioned `bottom: -14px` inside the parent, placing it in the mask's transparent region. So clicks pass through to the background war-room-scene DIV. Verified: after force-clicking skip, briefing remained visible after 100/300/600/1500/3000ms. Auto-dismiss (5s after typing completes) still functions correctly, so users can wait it out.",
+        "selector": "[data-testid='radar-briefing-skip']",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Splash screen",
+        "issues": ["2 console warnings 'Error: <svg> attribute height: Expected length, \"auto\".' — the SVG element in SplashScreen.jsx sets height=\"auto\" which is invalid for SVG (only valid on <img>). Cosmetic only, does not break rendering."]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "FIX radar-briefing SKIP button hit region. Options: (a) move the skip <button> OUTSIDE the .radar-briefing container so it isn't affected by the parent's mask-image; (b) wrap only the text scroll in an inner .radar-briefing__scroll element and apply the mask-image there instead of the parent; (c) reposition skip button to bottom: 8px (inside the mask's opaque 55% zone) instead of bottom: -14px. Option (a) or (b) is cleanest.",
+    "MINOR: In SplashScreen.jsx line 62, change `height=\"auto\"` on the <svg> to remove the attribute (SVG uses width alone for aspect-preserving sizing) to silence the 2 console warnings."
+  ],
+  "critical_code_review_comments": [
+    "Dashboard.jsx line 279: `showBriefing` is initialized to `true` unconditionally — matches the General's 'plays every login' rule but means the briefing also re-plays on every soft navigation back to /dashboard (e.g., clicking the logo). Consider using a sessionStorage flag if the intent is only once per session.",
+    "RadarBriefing.jsx typing effect deps `[lineIdx, charIdx]` re-runs on every keystroke — acceptable at this scale but could be optimized with a ref-based loop. No bug.",
+    "CommandCenterMenu.jsx: `Support` link uses `to='/help#support'` — react-router-dom v6 handles hash fragments but does not auto-scroll to the anchor. If the /help page relies on the hash to jump to a section, that behavior is not automatic.",
+    "SplashScreen.jsx SVG `height=\"auto\"` is invalid SVG attr syntax — produces 2 console warnings on every splash render. Trivial fix."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (frontend-only test)", "frontend": "96% (24/25 assertions)"},
+  "test_credentials": "elliemoonrider14@gmail.com / Delt@123! — verified working. Login response returns 'token' (JWT). Set localStorage['token']=<jwt> to bypass /auth.",
+  "seed_data_creation": "None",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "All 15 test scenarios from the review request were executed. Only failure is the SKIP button click on the radar briefing due to CSS mask-image blocking hit-testing (see rca). All other Command Center Layer 2 features work correctly. Test viewport used: 1280x720 landscape. Login flow: POST /api/auth/login with {email, password} → returns {token} → localStorage.setItem('token', <jwt>) → navigate to /dashboard. Briefing typing runtime ~13s, auto-dismiss at ~18-19s. Splash still shows for 3s before dashboard renders.",
+  "rca_of_the_issue": "SKIP button not clickable — RCA: In /app/frontend/src/components/CommandCenter.css line 180-181, the .radar-briefing parent has `-webkit-mask-image: radial-gradient(ellipse 100% 92% at 50% 50%, #000 55%, rgba(0,0,0,0.5) 78%, transparent 100%)`. CSS mask affects both visual rendering AND pointer hit-testing in Blink/WebKit — areas where the mask is transparent become non-interactive. The skip button (.radar-briefing__skip) in /app/frontend/src/components/CommandCenter.css line 245-260 is positioned `bottom: -14px`, placing it OUTSIDE the mask's opaque 55% center region and INSIDE the fully-transparent outer edge. Therefore, clicks/taps at the skip button's coordinates pass through to the war-room-scene DIV behind. Verified via document.elementFromPoint(x,y) which returned 'DIV/war-room-scene' instead of the button. Reproduction: navigate to /dashboard with valid token → wait for briefing to appear → attempt to click [data-testid='radar-briefing-skip'] → briefing does not unmount. Fix: either lift the skip button OUT of the .radar-briefing wrapper (make it a sibling) so it doesn't inherit the mask, or move the mask-image onto an inner .radar-briefing__scroll wrapper and leave .radar-briefing itself unmasked."
+}
