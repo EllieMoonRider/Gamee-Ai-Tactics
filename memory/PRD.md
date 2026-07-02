@@ -76,17 +76,43 @@ User direction iterations:
 | **Per alliance / month** | **~$224** |
 | **Per alliance / year** | **~$2,688** |
 
+## The Tactical Ally Code (locked Feb 2026 — strict adherence)
+
+**Governing Rules:**
+1. **Clean, uncluttered look** — every element earns its place. If in doubt, remove it.
+2. **User-friendly** — direct, obvious, respectful of the user's time.
+
+**Product Voice / Cypher's Soul:**
+Cypher is Ellie (the General/Founder) as an ally. She:
+- Talks to players like a peer, not a mascot
+- Names problems directly; doesn't hedge
+- Owns limits ("I don't have that intel — show me and I'll work with it")
+- Celebrates wins with substance, not confetti
+- Uses light humor only when it lands; silent when the player is stressed
+- Says please, thank you, good work — every time it's earned
+- Reflects the player's effort back to them
+- Never fake-hyped. Never talks down. Never guesses.
+- The mission is the player's mission. Cypher's job is to protect it.
+
+**Scope pivot (Feb 2026):** LAUNCH with 3 Puzzles games only — **Puzzles & Survival · Puzzles & Conquest · Puzzles & Chaos**. Other 8 games become Vol. 2 later. Any UI element implying 11 games is legacy and should be culled.
+
+---
+
+## Command Center — Current Layout (Feb 2026)
+- Background: `war-room-scene-v4-1.jpg` (knights behind castle, no dragon, no tanks)
+- HolographicGridFloor overlay
+- LandscapePrompt overlay (mobile portrait gate)
+- Top-left widget rail: **Tutorial** (→ /operations) + **Tactical Scout** (→ /scouts)
+- Top-right: **Hamburger menu** with: Who is Cypher (/cypher), Q&A (/help), Support (/help#support), Logout
+- Radar dome overlay: **RadarBriefing** — typewriter briefing (Orbitron font) with SKIP button + auto-dismiss after ample reading time; plays EVERY /dashboard visit
+- Splash screen audio DELETED (was too Atari-like)
+
 ## Prioritized Backlog
 
-### P1 — next reasonable iteration
-- **Command Center Layer 2: 11 Game Beacons** — design + glow color + shape pending General's pick (signature colors vs uniform green vs hybrid; discs vs hexes vs pyramids)
-- **Command Center Layer 3** — CypherAI speaks through the radar (typewriter holo-text floating over radar dish)
-- **Command Center Layer 4** — Edge HUDs (slim left/right vertical readouts: Plan/Deep Dives quota + Scouts credits)
-- **Custom in-scene navigation for Dashboard** — General removed the flat top Navbar, has "other plans" for nav placement
-- Apply atmospheric/neon styling to other pages (Landing, Pricing, etc.) once Command Center is finalized
-- Game-slot selector UI on Pricing (pick which 2 games are "in" Pro slots without going through Deep Dive)
-- Floating "Need help?" button on every authed page → opens ticket form
-- **Auth form polish (from iter-9 review)**: existing users on /auth may need to toggle "ENLIST →" before JOIN reliably triggers login — investigate auto-detection or clearer LOGIN vs ENLIST mode separation
+### P1 — next iteration
+- **3 Game buttons on the floor** — Puzzles & Survival · Puzzles & Conquest · Puzzles & Chaos → each navigates to that game's page. Simple, clean, tap-friendly.
+- **Pricing + Referral** placement on the Command Center (position TBD)
+- **Tactical Scout dashboard rebuild** — /scouts currently exists but General wants it re-explained as a "complete tasks / upload verifiable game updates to earn credits" program with a proper task list UI
 
 ### P2
 - Split `server.py` (~2600 lines) into routers
