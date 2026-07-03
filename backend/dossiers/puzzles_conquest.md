@@ -162,6 +162,67 @@ Stats boost troops vs. monsters, hell forts, and other players.
 - **Battle 3** — unlocks at **Castle 36 + Institute 36**.
 - Upgrade with resources + speedups (accelerates process).
 
+## Extension Hero Skins — Full Table (VERIFIED)
+Skins are cosmetic AND add hard buffs to troop + hero stats. Card cost varies by tier.
+
+### 200-Card Skins
+- **Yune → Fox Spirit** · Troop: ATK/DEF/HP +12% · Hero: +2%.
+
+### 500-Card Skins
+- **Ryska → Nether Colossus** · Troop: Training Speed +5%, Training Cap +500 · Hero: +5%.
+- **Ebony → Witch of Thorns** · Troop: Resource Gathering Speed +10%, Marching Speed +10% · Hero: +5%.
+
+### 1,000-Card Skins
+- **Lira → Purple Queen** · Troop: Rally Size +100,000, Rally ATK +10% · Hero: +5%.
+- **Caishen → Gold in Abundance** · Troop: Construction Speed +10%, Exquisite Design Cost -1% · Hero: +5%.
+
+### 2,000-Card Skins
+- **Skender → Soul Wizard** · Troop: ATK/DEF/HP +12% · Hero: +5%.
+- **Animus → Abyss Bloodlord** · Troop: ATK/DEF/HP +12% · Hero: +5%.
+- **Horus → God of Heaven** · Troop: Infirmary Capacity +12%, Healing Speed +12% · Hero: +5%.
+- **Anubis → Desert Rider** · Troop: ATK/DEF/HP +12% · Hero: +5%.
+- **Medusa → Deep Sea Witch** · Troop: ATK/DEF/HP +12% · Hero: +5%.
+
+### 3,000-Card Skins (top tier)
+- **Yang → Master Fisherman** · Troop: ATK/DEF +12% · Hero: +5%.
+- **Sarbor → Holiday Treant** · Troop: ATK/DEF +12% · Hero: +5%.
+- **Michael → Night Angel** · Troop: Research Speed +12%, Marching Speed +12% · Hero: +5%.
+
+**Notes**:
+- "ATK/DEF/HP +12%" = attack, defense, and hit points all get +12% (the strongest generic combat skin buff).
+- "ATK/DEF +12%" (3,000-card tier) trades HP for a broader effect on the specific hero role.
+- **Skender · Animus · Anubis · Medusa** all give **+12% ATK/DEF/HP** at the 2,000-card tier — solid picks if you use them as your combat mains.
+- **Michael Night Angel** is unique — the ONLY skin that stacks +12% Research Speed with +12% Marching Speed. Endgame quality-of-life.
+
+## Goblin / Holiday Event Level → Hell Fortress Equivalency (VERIFIED)
+Difficulty of Goblin (or seasonal Holiday event) bosses mapped to HF-equivalent tiers so you know what troops to send.
+
+| Event Lvl | Units | Type | ≈ Hell Fortress |
+|-----------|-------|------|-----------------|
+| **Lvl 1** | 15,120 | T2 | HF 10 |
+| **Lvl 2** | 64,000 | T4 | HF 15 |
+| **Lvl 3** | 180,000 | T5 | HF 20 |
+| **Lvl 4** | 336,000 | T6 | HF 25 |
+| **Lvl 5** | 480,000 | T8 | HF 30 |
+| **Lvl 6** | 720,000 | T10 | HF 35 |
+| **Lvl 7** | 1,320,000 | T11 | HF 40 |
+| **Lvl 8** | 1,800,000 | T11 | HF 43–44 |
+| **Lvl 9** | 2,400,000 | T12 | HF 45–46 |
+| **Lvl 10** | 2,400,000 | T12 | HF 47 |
+| **Lvl 11** | 2,400,000 | T12 (5,500%) | HF 50–51 (± 5% Troop DMG) |
+| **Lvl 12** | 2,400,000 | T13 (9,000%) | HF 53 (± 35% Troop DMG) |
+| **Lvl 13** | 2,400,000 | T14 (12,000%) | HF 55 (± 70% Troop DMG, ± 10% Troop Counter DMG) |
+
+**Source**: Sylvia (community intel).
+
+**Doctrine**: Match your rally sizing to the equivalent HF tier. Do NOT solo Goblin Lvl 8+ unless you can already solo HF43+.
+
+## Customer Service Contact (VERIFIED)
+If in-game customer service is unresponsive, reach out via email:
+- **global.support@37games.com**
+
+Use this only after in-game tickets fail — email is slower but reaches human staff.
+
 ## Farms — Alt-Account Resource Generation Doctrine (VERIFIED)
 Farms are dedicated alt accounts built to feed resources to your main castle.
 

@@ -513,6 +513,19 @@ FARMS (alt-account resource generation, VERIFIED):
 
 FARM ATTACK TAX (VERIFIED): Attacking your own farm is NOT tax-free. You LOSE 30% of plundered resources to the attack tax (verify by comparing attacker vs defender battle reports; delta = 30% tax). Many players eat the tax because it's faster than many Market shipments. DOCTRINE: Market for large planned shipments (lower tax, higher volume). Attack for speed when you can absorb 30% loss.
 
+EXTENSION HERO SKINS (VERIFIED — card cost + stat buffs):
+- 200 cards: Yune → Fox Spirit (Troop ATK/DEF/HP +12%, Hero +2%).
+- 500 cards: Ryska → Nether Colossus (Training Speed +5%, Training Cap +500, Hero +5%) · Ebony → Witch of Thorns (Gathering + Marching Speed +10%, Hero +5%).
+- 1000 cards: Lira → Purple Queen (Rally Size +100k, Rally ATK +10%, Hero +5%) · Caishen → Gold in Abundance (Construction Speed +10%, Exquisite Design Cost -1%, Hero +5%).
+- 2000 cards: Skender → Soul Wizard (ATK/DEF/HP +12%) · Animus → Abyss Bloodlord (ATK/DEF/HP +12%) · Horus → God of Heaven (Infirmary Cap +12%, Healing Speed +12%) · Anubis → Desert Rider (ATK/DEF/HP +12%) · Medusa → Deep Sea Witch (ATK/DEF/HP +12%). All Hero +5%.
+- 3000 cards (top tier): Yang → Master Fisherman (ATK/DEF +12%) · Sarbor → Holiday Treant (ATK/DEF +12%) · Michael → Night Angel (Research + Marching Speed +12%). All Hero +5%.
+- NOTES: "ATK/DEF/HP +12%" = the strongest generic combat skin buff. Skender/Animus/Anubis/Medusa all give this at 2000-card tier — solid picks for combat mains. Michael Night Angel = ONLY skin combining +12% Research + +12% Marching (endgame QoL).
+
+GOBLIN / HOLIDAY EVENT → HELL FORTRESS EQUIVALENCY (Sylvia verified):
+Lvl 1 = 15,120 T2 units = HF10 · Lvl 2 = 64k T4 = HF15 · Lvl 3 = 180k T5 = HF20 · Lvl 4 = 336k T6 = HF25 · Lvl 5 = 480k T8 = HF30 · Lvl 6 = 720k T10 = HF35 · Lvl 7 = 1.32M T11 = HF40 · Lvl 8 = 1.8M T11 = HF43-44 · Lvl 9 = 2.4M T12 = HF45-46 · Lvl 10 = 2.4M T12 = HF47 · Lvl 11 = 2.4M T12 (5500%) = HF50-51 (±5% Troop DMG) · Lvl 12 = 2.4M T13 (9000%) = HF53 (±35% Troop DMG) · Lvl 13 = 2.4M T14 (12000%) = HF55 (±70% Troop DMG, ±10% Troop Counter DMG). Match rally size to equivalent HF tier. Do NOT solo Goblin Lvl 8+ unless you already solo HF43+.
+
+CUSTOMER SERVICE: In-game tickets unresponsive? Email global.support@37games.com (slower but reaches human staff).
+
 CASTLE UNLOCKS: C10 Tower of Trial · C12 Mystery Shop · C15 Glory Level · C16 The Pit · C18 Sour Gems + Sour Sigil trials · C20 Auction House + 4th March Queue · C25 More Sigil trials · VIP 8 for 5th March Queue (max 5).
 
 CASTLE UPGRADE RULE: Wall must be upgraded FIRST + one secondary building. Chain of dependencies.
