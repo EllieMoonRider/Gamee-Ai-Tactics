@@ -141,19 +141,23 @@ export default function IntelDrop() {
             OFFICIAL BRIEFING · [OTS] &amp; ALLIES
           </div>
           <h1 className="intel-welcome__title">
-            Welcome, OTS &amp; Allies
+            Welcome,&nbsp;OTS&nbsp;&amp;&nbsp;Allies
           </h1>
           <p className="intel-welcome__body">
-            <strong>EllieMoonRider</strong> here — thank you for helping build <strong>CypherAI</strong> into a
-            Strategic Planning Guru. Every scrap of verified intel you drop here makes Cypher sharper,
-            faster, and more accurate for every player who follows.
+            <strong>EllieMoonRider</strong> here — thank you for helping build <strong>CypherAI</strong>
+            into a Strategic Planning Guru. Every scrap of verified intel you drop here makes
+            Cypher sharper, faster, and more accurate for every player who follows.
           </p>
           <p className="intel-welcome__body">
             This is where your knowledge becomes <strong>doctrine</strong>. Filed intel gets attributed
             to you (if you want), and rolls straight into Cypher&apos;s live playbook once verified.
             No account needed — just drop the intel and go.
           </p>
-          <p className="intel-welcome__signoff">~ EllieMoonRider, R5 of OTS ◇ Creator of Tactical Ally ~</p>
+          <p className="intel-welcome__signoff">
+            ~ EllieMoonRider,&nbsp;R5&nbsp;of&nbsp;OTS
+            <span className="intel-welcome__signoff-sep"> ◇ </span>
+            Creator&nbsp;of&nbsp;Tactical&nbsp;Ally ~
+          </p>
         </div>
 
         {done ? (
@@ -193,14 +197,14 @@ export default function IntelDrop() {
               <div className="intel-tutorial__label">// HOW TO DROP INTEL</div>
               <ol className="intel-tutorial__list">
                 <li>
-                  <strong>Pick the theater</strong> — P&amp;C, P&amp;S, or P&amp;Chaos.
+                  <strong>Pick&nbsp;the&nbsp;theater</strong> — P&amp;C,&nbsp;P&amp;S,&nbsp;or&nbsp;P&amp;Chaos.
                 </li>
                 <li>
-                  <strong>Drop your intel</strong> — type it out OR attach a screenshot.
-                  Either works. Both is even better.
+                  <strong>Drop&nbsp;your&nbsp;intel</strong> — type it out OR attach a screenshot.
+                  Either&nbsp;works. Both&nbsp;is&nbsp;even&nbsp;better.
                 </li>
                 <li>
-                  <strong>Add your name</strong> for credit (optional), then tap TRANSMIT.
+                  <strong>Add&nbsp;your&nbsp;name</strong> for&nbsp;credit&nbsp;(optional), then tap TRANSMIT.
                 </li>
               </ol>
             </div>

@@ -119,14 +119,34 @@
 .intel-welcome__title {
   font-family: "Orbitron", "Bebas Neue", sans-serif;
   font-weight: 900;
-  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+  font-size: clamp(1.6rem, 4.5vw, 2.5rem);
   letter-spacing: 0.02em;
-  line-height: 1.1;
+  line-height: 1.15;
   color: #ffb060;
   text-shadow: 0 0 12px rgba(255, 107, 0, 0.55), 0 0 24px rgba(255, 107, 0, 0.25);
   margin: 0 auto 1rem;
   text-align: center;
-  max-width: 90%;
+  max-width: 95%;
+  text-wrap: balance;
+  word-spacing: 0.02em;
+}
+.intel-welcome__signoff {
+  margin-top: 0.75rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: #FFBA08;
+  text-shadow: 0 0 8px rgba(255, 186, 8, 0.55);
+  text-align: center;
+  font-style: italic;
+  text-wrap: balance;
+  max-width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.intel-welcome__signoff-sep {
+  color: rgba(255, 186, 8, 0.85);
+  white-space: nowrap;
 }
 .intel-welcome__body {
   font-size: 0.95rem;
@@ -138,16 +158,6 @@
   text-wrap: balance;
 }
 .intel-welcome__body strong { color: #FFBA08; }
-.intel-welcome__signoff {
-  margin-top: 0.75rem;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: #FFBA08;
-  text-shadow: 0 0 8px rgba(255, 186, 8, 0.55);
-  text-align: center;
-  font-style: italic;
-}
 
 /* === Tutorial (single condensed box) ====================================== */
 .intel-tutorial {
@@ -184,6 +194,8 @@
 }
 .intel-tutorial__list li {
   padding-left: 0.35rem;
+  text-wrap: balance;
+  hyphens: none;
 }
 .intel-tutorial__list li::marker {
   color: #FFBA08;
