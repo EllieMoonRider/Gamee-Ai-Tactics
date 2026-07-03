@@ -148,6 +148,10 @@
   color: rgba(255, 186, 8, 0.85);
   white-space: nowrap;
 }
+.intel-nowrap {
+  white-space: nowrap;
+  display: inline-block;
+}
 .intel-welcome__body {
   font-size: 0.95rem;
   color: #cfffe1;

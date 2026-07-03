@@ -144,9 +144,7 @@ export default function IntelDrop() {
             Welcome,&nbsp;OTS&nbsp;&amp;&nbsp;Allies
           </h1>
           <p className="intel-welcome__body">
-            <strong>EllieMoonRider</strong> here — thank you for helping build <strong>CypherAI</strong>
-            into a Strategic Planning Guru. Every scrap of verified intel you drop here makes
-            Cypher sharper, faster, and more accurate for every player who follows.
+            <strong>EllieMoonRider</strong> here — thank you for helping build <strong>CypherAI</strong> into a Strategic Planning Guru. Every scrap of verified intel you drop here makes Cypher sharper, faster, and more accurate for every player who follows.
           </p>
           <p className="intel-welcome__body">
             This is where your knowledge becomes <strong>doctrine</strong>. Filed intel gets attributed
@@ -154,9 +152,9 @@ export default function IntelDrop() {
             No account needed — just drop the intel and go.
           </p>
           <p className="intel-welcome__signoff">
-            ~ EllieMoonRider,&nbsp;R5&nbsp;of&nbsp;OTS
-            <span className="intel-welcome__signoff-sep"> ◇ </span>
-            Creator&nbsp;of&nbsp;Tactical&nbsp;Ally ~
+            ~ <span className="intel-nowrap">EllieMoonRider,&nbsp;R5&nbsp;of&nbsp;OTS</span>
+            {" ◇ "}
+            <span className="intel-nowrap">Creator&nbsp;of&nbsp;Tactical&nbsp;Ally</span> ~
           </p>
         </div>
 
