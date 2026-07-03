@@ -70,8 +70,10 @@ export default function IntelDrop() {
 
   const submit = async (e) => {
     e.preventDefault();
+    // Guard requirements with helpful toasts (button stays lit — no dead-button UX)
     if (text.trim().length < 20) {
-      toast.error("Intel must be at least 20 characters");
+      toast.error("Please add your intel — at least 20 characters in the big text box.");
+      document.querySelector('[data-testid="intel-text"]')?.focus();
       return;
     }
     setBusy(true);
@@ -265,8 +267,8 @@ export default function IntelDrop() {
                   data-testid="intel-text"
                 />
                 <div className="intel-count">
-                  <span className={text.length < 20 ? "intel-count--low" : ""}>
-                    {text.length} / 20,000 chars {text.length < 20 && `· ${20 - text.length} more to submit`}
+                  <span className={text.length > 0 && text.length < 20 ? "intel-count--low" : ""}>
+                    {text.length} / 20,000 chars {text.length > 0 && text.length < 20 && `· ${20 - text.length} more recommended`}
                   </span>
                 </div>
               </div>
