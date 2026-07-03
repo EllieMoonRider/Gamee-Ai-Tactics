@@ -120,28 +120,28 @@ export default function IntelDrop() {
           <span className="intel-header__stamp">// CLASSIFICATION · ALLIANCE INTEL ONLY</span>
         </div>
 
-        {/* Welcome banner (General Ellie's message) */}
+        {/* Welcome banner (Ellie's message) */}
         <div className="intel-welcome" data-testid="intel-welcome">
           <span className="intel-corner tl" /><span className="intel-corner tr" />
           <span className="intel-corner bl" /><span className="intel-corner br" />
           <div className="intel-welcome__eyebrow">
             <ShieldCheck size={14} weight="fill" />
-            OFFICIAL BRIEFING · [OTS] OUTLANDERS COMMAND
+            OFFICIAL BRIEFING · [OTS] &amp; ALLIES
           </div>
           <h1 className="intel-welcome__title">
-            Welcome, Outlanders Members &amp; Allies
+            Welcome, OTS &amp; Allies
           </h1>
           <p className="intel-welcome__body">
-            <strong>Ellie</strong> here — thank you for helping build <strong>CypherAI</strong> into a
+            <strong>EllieMoonRider</strong> here — thank you for helping build <strong>CypherAI</strong> into a
             Strategic Planning Guru. Every scrap of verified intel you drop here makes Cypher sharper,
-            faster, and more accurate for every commander who follows.
+            faster, and more accurate for every player who follows.
           </p>
           <p className="intel-welcome__body">
             This is where your knowledge becomes <strong>doctrine</strong>. Filed intel gets attributed
-            to you (if you want), and rolls straight into Cypher&apos;s live playbook once Lt. Atlas
-            verifies it. No account needed — just drop the intel and go.
+            to you (if you want), and rolls straight into Cypher&apos;s live playbook once verified.
+            No account needed — just drop the intel and go.
           </p>
-          <p className="intel-welcome__signoff">— General Ellie, Founder · [OTS] Outlanders</p>
+          <p className="intel-welcome__signoff">~ EllieMoonRider, R5 of OTS ◇ Creator of Tactical Ally ~</p>
         </div>
 
         {done ? (
@@ -156,7 +156,7 @@ export default function IntelDrop() {
             </div>
             <p className="intel-success__msg">{done.message}</p>
             <p className="intel-success__msg intel-success__msg--muted">
-              Screenshot this reference number if you want to follow up. Lt. Atlas reviews the queue
+              Screenshot this reference number if you want to follow up. We review the queue
               daily.
             </p>
             <div className="intel-success__actions">
@@ -286,7 +286,7 @@ export default function IntelDrop() {
                   className="intel-input"
                   data-testid="intel-source"
                 />
-                <div className="intel-hint">Helps Lt. Atlas verify your intel faster.</div>
+                <div className="intel-hint">Helps us verify your intel faster.</div>
               </div>
 
               {/* Screenshots */}

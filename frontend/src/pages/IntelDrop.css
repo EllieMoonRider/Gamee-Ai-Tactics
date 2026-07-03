@@ -102,10 +102,12 @@
   border: 1px solid #FF6B00;
   clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
   box-shadow: 0 0 0 1px rgba(255, 107, 0, 0.14) inset, 0 4px 22px rgba(0, 0, 0, 0.65), 0 0 26px rgba(255, 107, 0, 0.4);
+  text-align: center;
 }
 .intel-welcome__eyebrow {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 10px;
@@ -122,23 +124,27 @@
   line-height: 1.1;
   color: #ffb060;
   text-shadow: 0 0 12px rgba(255, 107, 0, 0.55), 0 0 24px rgba(255, 107, 0, 0.25);
-  margin: 0 0 1rem;
+  margin: 0 auto 1rem;
+  text-align: center;
+  max-width: 90%;
 }
 .intel-welcome__body {
   font-size: 0.95rem;
   color: #cfffe1;
   line-height: 1.65;
-  margin: 0 0 0.85rem;
+  margin: 0 auto 0.85rem;
+  max-width: 640px;
+  text-align: center;
 }
 .intel-welcome__body strong { color: #FFBA08; }
 .intel-welcome__signoff {
   margin-top: 0.75rem;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 11px;
-  letter-spacing: 0.22em;
-  color: rgba(0, 255, 128, 0.8);
-  text-shadow: 0 0 6px rgba(0, 255, 128, 0.4);
-  text-align: right;
+  letter-spacing: 0.18em;
+  color: #FFBA08;
+  text-shadow: 0 0 8px rgba(255, 186, 8, 0.55);
+  text-align: center;
   font-style: italic;
 }
 
@@ -293,8 +299,21 @@
   line-height: 1.65;
 }
 
-/* File upload */
-.intel-file-hidden { display: none; }
+/* File upload — file input is visually-hidden (NOT display:none which blocks
+   programmatic .click() on some mobile browsers). Kept in DOM flow but 1px, transparent. */
+.intel-file-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
 .intel-upload-btn {
   display: inline-flex;
   align-items: center;
