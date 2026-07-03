@@ -56,6 +56,14 @@ export default function IntelDrop() {
       }
       accepted.push({ file: f, preview: URL.createObjectURL(f) });
     }
+    if (accepted.length > 0) {
+      const totalAfter = images.length + accepted.length;
+      toast.success(
+        accepted.length === 1
+          ? `Screenshot attached — ${totalAfter} of ${MAX_IMAGES} total`
+          : `${accepted.length} screenshots attached — ${totalAfter} of ${MAX_IMAGES} total`
+      );
+    }
     setImages(prev => [...prev, ...accepted]);
   };
 
@@ -316,22 +324,27 @@ export default function IntelDrop() {
                   {images.length >= MAX_IMAGES ? "MAX REACHED" : "TAP TO ATTACH SCREENSHOTS"}
                 </label>
                 {images.length > 0 && (
-                  <div className="intel-previews">
-                    {images.map((im, i) => (
-                      <div key={i} className="intel-preview">
-                        <img src={im.preview} alt="" />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(i)}
-                          className="intel-preview__remove"
-                          aria-label="Remove"
-                          data-testid={`intel-preview-remove-${i}`}
-                        >
-                          <X size={12} weight="bold" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                  <>
+                    <div className="intel-attached-header" data-testid="intel-attached-count">
+                      ✓ {images.length} SCREENSHOT{images.length > 1 ? "S" : ""} ATTACHED
+                    </div>
+                    <div className="intel-previews">
+                      {images.map((im, i) => (
+                        <div key={i} className="intel-preview">
+                          <img src={im.preview} alt="" />
+                          <button
+                            type="button"
+                            onClick={() => removeImage(i)}
+                            className="intel-preview__remove"
+                            aria-label="Remove"
+                            data-testid={`intel-preview-remove-${i}`}
+                          >
+                            <X size={12} weight="bold" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
                 <div className="intel-hint">PNG · JPEG · WebP · GIF · max 5MB each</div>
               </div>
@@ -372,11 +385,28 @@ export default function IntelDrop() {
                 </div>
               </div>
 
-              {/* Submit */}
+              {/* Submit — always visually enabled, requirements validated on click for
+                  clear feedback instead of a dead-looking disabled button */}
               <div className="intel-submit-row">
+                {/* Readiness indicator — clear visual confirmation that content is queued */}
+                <div
+                  className={`intel-readiness ${(text.trim().length >= 5 || images.length > 0) ? "intel-readiness--ready" : "intel-readiness--empty"}`}
+                  data-testid="intel-readiness"
+                >
+                  {(text.trim().length >= 5 || images.length > 0) ? (
+                    <>
+                      ✓ READY TO TRANSMIT ·{" "}
+                      {text.trim().length >= 5 && <span>{text.length} chars</span>}
+                      {text.trim().length >= 5 && images.length > 0 && " · "}
+                      {images.length > 0 && <span>{images.length} screenshot{images.length > 1 ? "s" : ""}</span>}
+                    </>
+                  ) : (
+                    <>◇ Type intel or attach a screenshot to enable transmission ◇</>
+                  )}
+                </div>
                 <button
                   type="submit"
-                  disabled={busy || text.trim().length < 20}
+                  disabled={busy}
                   className="intel-btn intel-btn--primary intel-btn--big"
                   data-testid="intel-submit-btn"
                 >
