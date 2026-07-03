@@ -526,6 +526,14 @@ Lvl 1 = 15,120 T2 units = HF10 · Lvl 2 = 64k T4 = HF15 · Lvl 3 = 180k T5 = HF2
 
 CUSTOMER SERVICE: In-game tickets unresponsive? Email global.support@37games.com (slower but reaches human staff).
 
+FORMATION PREVIEW (Hall of War, VERIFIED):
+- UNLOCK: Castle 20 → Formation Preview appears in Hall of War.
+- FUNCTION: Select your formation + opponent's formation → preview troop positions during upcoming battle.
+- SELECTOR APPEARS ON: Marching screen · Wall defense screen · Pre-formation group screen.
+- DEFAULT: Infantry formation (used automatically until changed). Icon of used formation appears in battle report.
+- UNLOCK OTHER FORMATIONS: Institute Lv.28 required. Research in Technology → Marching Formation → Rangers Formation AND Cavalry Formation (both researched separately).
+- DOCTRINE: Post-Institute-28, research both formation types even if specialized in one. Deploy the formation matching your march composition. Verify formation icon on battle report post-fight to confirm setup was correct.
+
 CASTLE UNLOCKS: C10 Tower of Trial · C12 Mystery Shop · C15 Glory Level · C16 The Pit · C18 Sour Gems + Sour Sigil trials · C20 Auction House + 4th March Queue · C25 More Sigil trials · VIP 8 for 5th March Queue (max 5).
 
 CASTLE UPGRADE RULE: Wall must be upgraded FIRST + one secondary building. Chain of dependencies.

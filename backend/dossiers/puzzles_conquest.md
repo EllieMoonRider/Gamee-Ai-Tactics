@@ -162,6 +162,124 @@ Stats boost troops vs. monsters, hell forts, and other players.
 - **Battle 3** — unlocks at **Castle 36 + Institute 36**.
 - Upgrade with resources + speedups (accelerates process).
 
+## Formation Preview — Hall of War (VERIFIED)
+Unlock: **Castle 20**. The **Formation Preview** feature appears in the **Hall of War**.
+
+**What it does**: Select your formation AND the opponent's formation → preview the exact troop positions during the coming battle. Lets you pre-visualize matchups before committing.
+
+**Where the formation selector appears**:
+- Player's troop **marching screen** (outgoing march)
+- **Wall defense screen** (defenders)
+- **Pre-formation group screen** (before rally launches)
+
+**Default formation**: **Infantry** (used automatically until you change it).
+
+**Battle Report identification**: The **icon of the formation used** appears on the battle report — audit which formation was used post-fight.
+
+### Unlocking Other Formations
+Ranger and Cavalry formations require **Institute Lv.28** and are researched in **Technology → Marching Formation**:
+- **Rangers Formation** — unlocks Ranger positioning bonuses.
+- **Cavalry Formation** — unlocks Cavalry positioning bonuses.
+
+**Doctrine**: Once Institute 28 lands, research both formation types even if you're specialized in one. Post-Institute-28 you can:
+- Deploy Ranger formation with a Ranger-heavy march for max Ranger positioning.
+- Deploy Cavalry formation for speed + positioning stacked.
+- Deploy Infantry formation (default) for tank front-line configurations.
+
+**Verify formation used** via battle report icon after every major fight — if your formation didn't switch as intended, that's a critical bug in your setup to fix before the next engagement.
+
+## Specialization Doctrine — Focus One Troop Type (VERIFIED, Raider Community)
+
+**Core principle**: Specializing (focusing all buffs, gear, and hero investment on **ONE troop type**) is one of the biggest battle-strength multipliers in the game.
+
+### Math Behind Specialization
+- Mixed-army approach: 3 troop types, each at ~**400% ATK** = balanced but capped.
+- Specialized approach: 1 troop type at **700% ATK**, others sit at ~300% = **massively higher per-march damage**.
+- No brainer: you send **1 full march of your chosen troop type + heroes matching that type** = 700% wins.
+
+### Which Troop to Specialize In?
+
+**Options**: Cavalry · Ranged · Infantry.
+**NOT** Siege — no gear or heroes exist to specialize Siege stats.
+
+**Hidden-stat truth (verified via game coding, replicates in 2 other same-dev mobile war games)**:
+- **Traps DO NOT work** (game-taught weakness triangles are essentially cosmetic).
+- **Infantry** — slightly better DEF, lower ATK.
+- **Ranged** — better ATK, lower DEF/HP.
+- **Cavalry** — most balanced ATK/DEF/HP PLUS **march speed boost** (unique).
+
+### Recommendation (VERIFIED — most favored by community)
+
+**Cavalry** — Best for Raiders:
+- Faster to attack + return + raid resources.
+- During KvK: raid a resource hoarder → enemy ports in with mixed/infantry → your Cavalry raids and returns to defend **before** enemy reaches your castle.
+- Recon and raid **further** from random teleports.
+- Well-balanced stats + march speed = flexibility.
+
+**Ranged** — High Attack, Rally Support:
+- High-attack meta pick.
+- Also useful supporting a Cav-majority alliance: pairing Ranged with T-tier-differentiated Cav rallies reduces troop loss (siblings of Cav in rally efficiency).
+
+**Infantry** — NOT recommended for most:
+- Requires **heavy money spending** to strengthen effectively.
+- For high spenders only → becomes a mighty adversary at scale.
+- ⚠️ Do NOT specialize Infantry just because you got a **Sarbor** early. Heroes all come in time. **150 Diamonds resets a hero** — cheap redirect if you invested wrong.
+
+### Training Rule for Specialized Play
+- **ONLY use speedups on your chosen troop type.** Other troops stay in slow-train indefinitely.
+- **Never stop training the other types** — you'll still use fewer slow-trained troops for rallies, garrison, and specific event tricks.
+
+## Specialization — How to Boost the Chosen Type
+
+### Gear + Equipment
+**Only promote/enhance gear for your chosen troop type far beyond the others.**
+
+For **Cavalry** (example):
+- **Sword + Shield** → Cavalry ATK
+- **Helmet + Ring** → Cavalry DEF/HP
+
+**Rule**: Keep other-troop-type gear 1–2 stars and 2–3 enhances **behind** your specialized set. They still get some love because you'll deploy those slow-train troops in mixed contexts.
+
+Also applies to **Gems · Saurgems · Curios · Warsigils** — always favor the specialized troop line.
+
+### Hero Types (Battle Heroes)
+Two categories:
+
+**Full-boost MONO heroes (4★ + 5★)**: Give **3 battle stats** — HP + DEF + ATK to ONE troop type.
+
+**Partial-boost BI heroes (3★ + 4★)**: Give **DEF + ATK** to one troop type PLUS **1 economy boost**.
+
+**For Cavalry**:
+- **Full-boost (mono)**: 5★ Lux · 5★ Guan Yu · 4★ Malice · 3★ Talon
+- **Partial-boost (bi)**: 4★ Apollo · 3★ Dracula · 2★ Naax
+
+### Ideal Cavalry Team (Progression)
+
+**Early-mid game team**: **Lux · Guan Yu · Malice · Apollo · Talon**
+
+**Why keep 3★ Talon at +5?** — **Tactical Skill at hero +5 = 500% ATK boost** to your troop ATK%. This is a **multiplier** on top of your existing troop ATK.
+
+**All-Troop heroes** (Skender · Yang · Medusa etc.) have LOWER base ATK/DEF/HP than mono heroes but share the same Tactical Skill scaling.
+- **Result**: **Yang +4 (300% tactical) will NOT outdamage Talon +5 (500% tactical)** — until Yang also reaches +5, UNLESS your troop ATK% is already above roughly **200%+**.
+- Once past that threshold OR once Yang/Skender/etc reach +5, they become the correct pick because they buff ALL troops in your march.
+
+**Late-game team**: **Lux · Guan Yu · Malice · Skender · Yang**
+- Malice eventually replaced by newer 5★ Cav hero **Cleopatra** OR a much higher-enhance 5★ all-troop hero worthy enough to lose the Tactical Cav bonus.
+
+### Hero Leveling Efficiency Rule
+Unless using 3★/4★ heroes in **Arena or Puzzles**, only level them up to the level required to unlock the **Troop ATK skill**:
+- 3★ → **Lv.71**
+- 4★ + 5★ → **Lv.131**
+
+**Everything past that on non-5★ = wasted Soulstones.** Reset them, refund Soulstones, redirect to your 5★s.
+
+**5★ heroes** you use in **Puzzles + Arena Championships** → keep leveling up to **Lv.350** for puzzle purposes.
+
+### Curio Equipping Rule
+Ideal target: **All your 5★ heroes to Lv.211+** to equip **Curios** for the highest-tier boosts.
+
+**Doctrine summary**: Pick one troop (Cav for most, Ranged if high attack focus, Infantry only for heavy spenders). Only speedup-train that type. Promote gear/gems/saurgems/curios/warsigils primarily for the chosen type. Use mono 4★/5★ + partial-boost 3★+5 heroes early (Talon's Tactical +5 = 500% ATK multiplier), transition to Skender/Yang/all-troop meta at higher troop ATK% or when they reach +5. Reset non-5★s past skill-unlock threshold. Get 5★s to Lv.211+ for curios.
+
 ## Extension Hero Skins — Full Table (VERIFIED)
 Skins are cosmetic AND add hard buffs to troop + hero stats. Card cost varies by tier.
 
