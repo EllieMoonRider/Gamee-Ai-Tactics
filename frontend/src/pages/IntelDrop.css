@@ -330,9 +330,17 @@
   transition: all 0.18s ease;
   align-self: flex-start;
   clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 255, 128, 0.2);
 }
-.intel-upload-btn:hover:not(:disabled) { background: rgba(0, 40, 22, 0.9); box-shadow: 0 0 16px rgba(0, 255, 128, 0.4); }
-.intel-upload-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.intel-upload-btn:hover:not(.intel-upload-btn--disabled) {
+  background: rgba(0, 40, 22, 0.9);
+  box-shadow: 0 0 16px rgba(0, 255, 128, 0.4);
+}
+.intel-upload-btn--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 .intel-previews {
   display: grid;

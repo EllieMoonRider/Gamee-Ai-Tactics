@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
@@ -38,7 +38,6 @@ export default function IntelDrop() {
   const [images, setImages] = useState([]); // { file, preview }
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(null); // { reference, ... }
-  const fileRef = useRef(null);
 
   const addFiles = (files) => {
     const arr = Array.from(files || []);
@@ -289,30 +288,28 @@ export default function IntelDrop() {
                 <div className="intel-hint">Helps us verify your intel faster.</div>
               </div>
 
-              {/* Screenshots */}
+              {/* Screenshots — using <label> wrapper (bulletproof cross-browser file-input pattern).
+                  Clicking the label triggers the input natively, no JS refs required. */}
               <div className="intel-field">
                 <label className="intel-label">
                   <ImageIcon size={14} weight="duotone" /> SCREENSHOTS (optional · up to {MAX_IMAGES})
                 </label>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={e => { addFiles(e.target.files); e.target.value = ""; }}
-                  className="intel-file-hidden"
-                  data-testid="intel-file-input"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  className="intel-upload-btn"
+                <label
+                  className={`intel-upload-btn ${images.length >= MAX_IMAGES ? "intel-upload-btn--disabled" : ""}`}
                   data-testid="intel-upload-btn"
-                  disabled={images.length >= MAX_IMAGES}
                 >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={e => { addFiles(e.target.files); e.target.value = ""; }}
+                    className="intel-file-hidden"
+                    disabled={images.length >= MAX_IMAGES}
+                    data-testid="intel-file-input"
+                  />
                   <UploadSimple size={16} weight="bold" />
                   {images.length >= MAX_IMAGES ? "MAX REACHED" : "ATTACH SCREENSHOTS"}
-                </button>
+                </label>
                 {images.length > 0 && (
                   <div className="intel-previews">
                     {images.map((im, i) => (
