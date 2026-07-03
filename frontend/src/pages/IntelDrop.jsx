@@ -70,9 +70,12 @@ export default function IntelDrop() {
 
   const submit = async (e) => {
     e.preventDefault();
-    // Guard requirements with helpful toasts (button stays lit — no dead-button UX)
-    if (text.trim().length < 20) {
-      toast.error("Please add your intel — at least 20 characters in the big text box.");
+    const hasText = text.trim().length >= 5;
+    const hasImage = images.length > 0;
+    // Accept either meaningful text (5+ chars) OR at least one screenshot.
+    // Admin reviews everything before it reaches Cypher, so barriers can be light.
+    if (!hasText && !hasImage) {
+      toast.error("Please type your intel OR attach a screenshot before transmitting.");
       document.querySelector('[data-testid="intel-text"]')?.focus();
       return;
     }
@@ -258,7 +261,7 @@ export default function IntelDrop() {
                   id="intel-text"
                   value={text}
                   onChange={e => setText(e.target.value)}
-                  placeholder={`Type or paste your intel for ${gameMeta?.name}. Include as much detail as you can — mechanics, math, timings, hero names, event schedules, exploits, source quotes. Longer is better. Cypher will absorb it.`}
+                  placeholder={`Type your intel for ${gameMeta?.name} — or drop a quick caption if you're attaching a screenshot. Mechanics, hero names, event schedules, exploits, source quotes — all welcome. Every scrap helps Cypher.`}
                   className="intel-textarea"
                   rows={12}
                   minLength={20}
@@ -267,8 +270,8 @@ export default function IntelDrop() {
                   data-testid="intel-text"
                 />
                 <div className="intel-count">
-                  <span className={text.length > 0 && text.length < 20 ? "intel-count--low" : ""}>
-                    {text.length} / 20,000 chars {text.length > 0 && text.length < 20 && `· ${20 - text.length} more recommended`}
+                  <span>
+                    {text.length} / 20,000 chars
                   </span>
                 </div>
               </div>

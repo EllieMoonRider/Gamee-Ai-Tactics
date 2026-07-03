@@ -2893,7 +2893,7 @@ INTEL_GAMES = {"puzzles-conquest", "puzzles-survival", "puzzles-chaos"}
 INTEL_CATEGORIES = {"event", "hero", "mechanic", "tip", "correction", "other"}
 INTEL_STATUSES = {"pending", "approved", "rejected", "filed"}
 INTEL_MAX_IMAGES = 5
-INTEL_TEXT_MIN = 20
+INTEL_TEXT_MIN = 5
 INTEL_TEXT_MAX = 20000
 
 
