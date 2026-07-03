@@ -19,6 +19,8 @@ import Referral from "./pages/Referral";
 import Seats from "./pages/Seats";
 import Calendar from "./pages/Calendar";
 import Scouts from "./pages/Scouts";
+import IntelDrop from "./pages/IntelDrop";
+import AdminIntel from "./pages/AdminIntel";
 import Help from "./pages/Help";
 import AdminSupport from "./pages/AdminSupport";
 import AboutCypher from "./pages/AboutCypher";
@@ -63,6 +65,7 @@ function App() {
           <Route path="/billing/cancel" element={<BillingCancel />} />
           <Route path="/help" element={<Help />} />
           <Route path="/cypher" element={<AboutCypher />} />
+          <Route path="/intel-drop" element={<IntelDrop />} />
           <Route path="/share/d/:token" element={<PublicDeepDive />} />
           <Route path="/share/b/:token" element={<PublicBuild />} />
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
@@ -77,6 +80,7 @@ function App() {
           <Route path="/calendar" element={<Protected><Calendar /></Protected>} />
           <Route path="/scouts" element={<Protected><Scouts /></Protected>} />
           <Route path="/admin/support" element={<Protected><AdminSupport /></Protected>} />
+          <Route path="/admin/intel" element={<Protected><AdminIntel /></Protected>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

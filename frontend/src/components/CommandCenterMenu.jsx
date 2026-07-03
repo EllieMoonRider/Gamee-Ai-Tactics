@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
+import { api } from "../lib/api";
 
 /**
  * CommandCenterMenu
@@ -13,9 +14,18 @@ import { useAuth } from "../lib/auth";
  */
 export default function CommandCenterMenu() {
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const menuRef = useRef(null);
   const auth = useAuth();
   const nav = useNavigate();
+
+  // Check admin status once user is loaded (drives visibility of Intel Review link)
+  useEffect(() => {
+    if (!auth?.user) return;
+    api.get("/support/admin/check")
+      .then(r => setIsAdmin(!!r.data?.is_admin))
+      .catch(() => setIsAdmin(false));
+  }, [auth?.user]);
 
   // Close on outside click / ESC
   useEffect(() => {
@@ -83,6 +93,26 @@ export default function CommandCenterMenu() {
           >
             Support
           </Link>
+          <Link
+            to="/intel-drop"
+            className="cc-menu-item"
+            role="menuitem"
+            data-testid="cc-menu-intel-drop"
+            onClick={() => setOpen(false)}
+          >
+            Drop Intel
+          </Link>
+          {isAdmin && (
+            <Link
+              to="/admin/intel"
+              className="cc-menu-item cc-menu-item--admin"
+              role="menuitem"
+              data-testid="cc-menu-intel-review"
+              onClick={() => setOpen(false)}
+            >
+              Intel Review Queue
+            </Link>
+          )}
           <button
             type="button"
             className="cc-menu-item cc-menu-item--danger"

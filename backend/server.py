@@ -35,6 +35,7 @@ mongo_url = os.environ["MONGO_URL"]
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ["DB_NAME"]]
 gridfs_bucket = AsyncIOMotorGridFSBucket(db, bucket_name="deep_dive_shots")
+intel_gridfs = AsyncIOMotorGridFSBucket(db, bucket_name="intel_uploads")
 
 # ---------- App ----------
 app = FastAPI(title="37Games AI Strategy")
@@ -2881,6 +2882,184 @@ async def admin_update_status(tid: str, body: TicketStatusUpdate, user=Depends(g
 async def admin_check(user=Depends(get_current_user)):
     """Lightweight check for the frontend to gate the /admin/support route."""
     return {"is_admin": _is_support_admin(user)}
+
+
+# ---------- Intel Drop (Alliance-sourced game intel) ----------
+# Public submission portal for [OTS] Outlanders + allies to contribute verified
+# game intel. Submissions land in a pending queue; only admins (General + Lt. Atlas)
+# review, approve, and file them into CypherAI's dossiers.
+
+INTEL_GAMES = {"puzzles-conquest", "puzzles-survival", "puzzles-chaos"}
+INTEL_CATEGORIES = {"event", "hero", "mechanic", "tip", "correction", "other"}
+INTEL_STATUSES = {"pending", "approved", "rejected", "filed"}
+INTEL_MAX_IMAGES = 5
+INTEL_TEXT_MIN = 20
+INTEL_TEXT_MAX = 20000
+
+
+@api.post("/intel/submit")
+async def intel_submit(
+    game_slug: str = Form(...),
+    category: str = Form(...),
+    intel_text: str = Form(...),
+    contributor_name: Optional[str] = Form(None),
+    contributor_handle: Optional[str] = Form(None),
+    source_url: Optional[str] = Form(None),
+    images: list[UploadFile] = File(default=[]),
+):
+    """
+    Public intel submission — NO AUTH required.
+    Alliance members and allies submit game intel here for admin review.
+    """
+    if game_slug not in INTEL_GAMES:
+        raise HTTPException(400, "Invalid game selection")
+    if category not in INTEL_CATEGORIES:
+        raise HTTPException(400, "Invalid category")
+    txt = (intel_text or "").strip()
+    if len(txt) < INTEL_TEXT_MIN:
+        raise HTTPException(400, f"Intel too short — minimum {INTEL_TEXT_MIN} characters")
+    if len(txt) > INTEL_TEXT_MAX:
+        raise HTTPException(400, f"Intel too long — maximum {INTEL_TEXT_MAX} characters")
+
+    # Validate + store optional screenshots in dedicated intel GridFS bucket
+    image_refs = []
+    if images:
+        real = [f for f in images if f and getattr(f, "filename", None)]
+        if len(real) > INTEL_MAX_IMAGES:
+            raise HTTPException(400, f"Max {INTEL_MAX_IMAGES} screenshots per submission")
+        for f in real:
+            mime = (f.content_type or "").lower()
+            if mime not in ALLOWED_MIMES:
+                raise HTTPException(400, f"Unsupported file '{mime}' for {f.filename}. Allowed: PNG, JPEG, WebP, GIF.")
+            data = await f.read()
+            if len(data) > MAX_BYTES:
+                raise HTTPException(400, f"{f.filename} exceeds {MAX_BYTES // (1024*1024)}MB limit")
+            if len(data) < 100:
+                raise HTTPException(400, f"{f.filename} is empty or corrupted")
+            file_id = await intel_gridfs.upload_from_stream(
+                f.filename or "intel-shot",
+                data,
+                metadata={"mime": mime, "size": len(data), "kind": "intel"},
+            )
+            image_refs.append({"file_id": str(file_id), "mime": mime, "name": f.filename or "intel-shot", "size": len(data)})
+
+    submission = {
+        "id": str(uuid.uuid4()),
+        "reference": f"INTEL-{uuid.uuid4().hex[:8].upper()}",
+        "game_slug": game_slug,
+        "category": category,
+        "intel_text": txt,
+        "contributor_name": (contributor_name or "").strip() or None,
+        "contributor_handle": (contributor_handle or "").strip() or None,
+        "source_url": (source_url or "").strip() or None,
+        "image_refs": image_refs,
+        "status": "pending",
+        "submitted_at": now_iso(),
+        "reviewed_at": None,
+        "reviewer_email": None,
+        "review_notes": None,
+    }
+    await db.intel_submissions.insert_one(submission)
+    return {
+        "ok": True,
+        "reference": submission["reference"],
+        "message": "Intel received and queued for review. Lt. Atlas will file verified intel to CypherAI within 24 hours.",
+    }
+
+
+def _serialize_intel(doc: dict) -> dict:
+    return {
+        "id": doc["id"],
+        "reference": doc.get("reference"),
+        "game_slug": doc["game_slug"],
+        "category": doc["category"],
+        "intel_text": doc["intel_text"],
+        "contributor_name": doc.get("contributor_name"),
+        "contributor_handle": doc.get("contributor_handle"),
+        "source_url": doc.get("source_url"),
+        "image_refs": doc.get("image_refs", []),
+        "status": doc.get("status", "pending"),
+        "submitted_at": doc.get("submitted_at"),
+        "reviewed_at": doc.get("reviewed_at"),
+        "reviewer_email": doc.get("reviewer_email"),
+        "review_notes": doc.get("review_notes"),
+    }
+
+
+@api.get("/intel/submissions")
+async def intel_list(
+    status_filter: Optional[str] = None,
+    game_slug: Optional[str] = None,
+    user=Depends(get_current_user),
+):
+    """Admin-only. List intel submissions filtered by status/game."""
+    if not _is_support_admin(user):
+        raise HTTPException(403, "Admin only")
+    q = {}
+    if status_filter and status_filter != "all":
+        if status_filter not in INTEL_STATUSES:
+            raise HTTPException(400, "Invalid status filter")
+        q["status"] = status_filter
+    if game_slug and game_slug != "all":
+        if game_slug not in INTEL_GAMES:
+            raise HTTPException(400, "Invalid game filter")
+        q["game_slug"] = game_slug
+    cur = db.intel_submissions.find(q).sort("submitted_at", -1).limit(200)
+    docs = [_serialize_intel(d) async for d in cur]
+    counts = {
+        "pending": await db.intel_submissions.count_documents({"status": "pending"}),
+        "approved": await db.intel_submissions.count_documents({"status": "approved"}),
+        "rejected": await db.intel_submissions.count_documents({"status": "rejected"}),
+        "filed": await db.intel_submissions.count_documents({"status": "filed"}),
+        "total": await db.intel_submissions.count_documents({}),
+    }
+    return {"submissions": docs, "counts": counts}
+
+
+@api.get("/intel/submissions/{sid}/image/{file_id}")
+async def intel_image(sid: str, file_id: str, user=Depends(get_current_user)):
+    """Admin-only. Stream a submitted intel image back to the review dashboard."""
+    if not _is_support_admin(user):
+        raise HTTPException(403, "Admin only")
+    doc = await db.intel_submissions.find_one({"id": sid})
+    if not doc:
+        raise HTTPException(404, "Submission not found")
+    if not any(r.get("file_id") == file_id for r in doc.get("image_refs", [])):
+        raise HTTPException(404, "Image not linked to this submission")
+    try:
+        stream = await intel_gridfs.open_download_stream(ObjectId(file_id))
+        data = await stream.read()
+        mime = next((r["mime"] for r in doc["image_refs"] if r["file_id"] == file_id), "image/png")
+        return Response(content=data, media_type=mime)
+    except Exception:
+        raise HTTPException(404, "Image not found in storage")
+
+
+class IntelReview(BaseModel):
+    status: str  # approved | rejected | filed | pending
+    review_notes: Optional[str] = None
+
+
+@api.patch("/intel/submissions/{sid}")
+async def intel_update(sid: str, body: IntelReview, user=Depends(get_current_user)):
+    """Admin-only. Approve/reject/mark-filed an intel submission."""
+    if not _is_support_admin(user):
+        raise HTTPException(403, "Admin only")
+    if body.status not in INTEL_STATUSES:
+        raise HTTPException(400, "Invalid status")
+    res = await db.intel_submissions.find_one_and_update(
+        {"id": sid},
+        {"$set": {
+            "status": body.status,
+            "reviewed_at": now_iso(),
+            "reviewer_email": user.get("email"),
+            "review_notes": (body.review_notes or "").strip() or None,
+        }},
+        return_document=True,
+    )
+    if not res:
+        raise HTTPException(404, "Submission not found")
+    return _serialize_intel(res)
 
 
 # ---------- User Onboarding (first-time vs returning briefing data) ----------

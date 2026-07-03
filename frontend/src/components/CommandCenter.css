@@ -163,6 +163,26 @@
   color: #FF6B00;
 }
 
+.cc-menu-item--admin {
+  color: #FFBA08;
+  border-top: 1px dashed rgba(255, 186, 8, 0.35);
+  margin-top: 0.25rem;
+  padding-top: 0.65rem;
+  position: relative;
+}
+.cc-menu-item--admin::before {
+  content: "◆ ";
+  color: #FFBA08;
+  margin-right: 0.25rem;
+  text-shadow: 0 0 6px rgba(255, 186, 8, 0.6);
+}
+.cc-menu-item--admin:hover,
+.cc-menu-item--admin:focus-visible {
+  background: rgba(255, 186, 8, 0.1);
+  color: #FFBA08;
+  text-shadow: 0 0 6px rgba(255, 186, 8, 0.5);
+}
+
 /* === RadarBriefing (typed briefing inside the radar dome) ================= */
 .radar-briefing {
   position: absolute;

@@ -1,0 +1,337 @@
+/* Admin Intel Review Dashboard — extends IntelDrop.css */
+
+.admin-intel__shell {
+  max-width: 1100px;
+}
+
+.admin-intel__title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.8vw, 2.2rem);
+  color: #ffb060;
+  text-shadow: 0 0 12px rgba(255, 107, 0, 0.5);
+  margin: 0 0 0.5rem;
+}
+.admin-intel__title svg { color: #FF6B00; }
+
+.admin-intel__desc {
+  color: #a8c8b8;
+  line-height: 1.55;
+  max-width: 700px;
+  margin: 0 0 1.6rem;
+  font-size: 0.9rem;
+}
+
+.intel-loading, .intel-forbidden {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  color: rgba(0, 255, 128, 0.75);
+  text-align: center;
+  margin-top: 4rem;
+}
+.intel-forbidden { color: #FF3366; text-shadow: 0 0 8px rgba(255, 51, 102, 0.5); }
+
+/* === Stat cards row ================================================== */
+.admin-intel__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 1.6rem;
+}
+.admin-intel__stat {
+  position: relative;
+  padding: 0.9rem 1rem;
+  background: rgba(0, 12, 6, 0.7);
+  border: 1px solid;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+  text-align: center;
+}
+.admin-intel__stat-value {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: 1.75rem;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+  text-shadow: 0 0 8px currentColor;
+}
+.admin-intel__stat-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.26em;
+  opacity: 0.9;
+}
+
+/* === Filters ======================================================== */
+.admin-intel__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin-bottom: 1.4rem;
+  padding: 0.85rem 1rem;
+  background: rgba(0, 12, 6, 0.5);
+  border: 1px dashed rgba(0, 255, 128, 0.3);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+.admin-intel__filter-group { display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; }
+.admin-intel__filter-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  color: rgba(0, 255, 128, 0.75);
+}
+.admin-intel__filter-pills { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.admin-intel__pill {
+  padding: 0.35rem 0.75rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(0, 255, 128, 0.7);
+  background: rgba(0, 22, 12, 0.65);
+  border: 1px solid rgba(0, 255, 128, 0.3);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 2px;
+}
+.admin-intel__pill:hover { color: #00FF80; border-color: #00FF80; }
+.admin-intel__pill--active {
+  color: #050505;
+  background: #FFBA08;
+  border-color: #FFBA08;
+  text-shadow: none;
+  box-shadow: 0 0 8px rgba(255, 186, 8, 0.5);
+}
+
+/* === Cards ========================================================= */
+.admin-intel__list { display: flex; flex-direction: column; gap: 0.9rem; }
+
+.admin-intel__empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #7ea993;
+  border: 1px dashed rgba(0, 255, 128, 0.25);
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px);
+}
+.admin-intel__empty svg { color: rgba(0, 255, 128, 0.4); margin-bottom: 0.75rem; }
+.admin-intel__empty p { margin: 0; font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.2em; }
+
+.admin-intel__card {
+  position: relative;
+  padding: 0.95rem 1.15rem 1rem;
+  background: linear-gradient(180deg, rgba(0, 22, 12, 0.88) 0%, rgba(0, 8, 4, 0.94) 100%);
+  border: 1px solid rgba(0, 255, 128, 0.4);
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.admin-intel__card--open {
+  border-color: #FFBA08;
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.6), 0 0 22px rgba(255, 186, 8, 0.35);
+}
+.admin-intel__card--open .intel-corner { border-color: #FFBA08; }
+
+.admin-intel__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.admin-intel__card-meta {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.admin-intel__ref {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  color: #FFBA08;
+  text-shadow: 0 0 4px rgba(255, 186, 8, 0.4);
+}
+.admin-intel__status {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  padding: 2px 7px;
+  border: 1px solid;
+  border-radius: 2px;
+  text-shadow: 0 0 5px currentColor;
+}
+.admin-intel__game, .admin-intel__category {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(0, 255, 128, 0.8);
+  padding: 1px 6px;
+  background: rgba(0, 40, 22, 0.5);
+  border-radius: 2px;
+}
+.admin-intel__category { color: #cfffe1; background: rgba(255, 107, 0, 0.15); }
+
+.admin-intel__toggle {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  color: rgba(0, 255, 128, 0.8);
+  background: transparent;
+  border: 1px solid rgba(0, 255, 128, 0.35);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+.admin-intel__toggle:hover { color: #00FF80; border-color: #00FF80; }
+
+.admin-intel__card-sub {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #7ea993;
+}
+.admin-intel__card-sub span { display: inline-flex; align-items: center; gap: 0.35rem; }
+
+/* === Body (expanded) ================================================ */
+.admin-intel__body {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(255, 186, 8, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-intel__intel-text {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.85rem;
+  color: #e5faed;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  padding: 0.85rem 1rem;
+  background: rgba(0, 8, 4, 0.75);
+  border-left: 3px solid #FFBA08;
+  border-radius: 2px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.admin-intel__source {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+}
+.admin-intel__body-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: rgba(0, 255, 128, 0.8);
+}
+.admin-intel__source-link {
+  color: #00BFFF;
+  text-decoration: underline;
+  word-break: break-all;
+  font-size: 0.78rem;
+}
+.admin-intel__source-link:hover { color: #00FF80; }
+
+.admin-intel__images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.55rem;
+}
+.admin-intel__thumb {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(0, 255, 128, 0.4);
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.admin-intel__thumb:hover { transform: scale(1.05); border-color: #00FF80; }
+.admin-intel__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.admin-intel__note { min-height: 60px; font-size: 0.8rem; }
+
+.admin-intel__actions {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+.admin-intel__btn { padding: 0.55rem 1rem; font-size: 10px; letter-spacing: 0.22em; }
+.admin-intel__btn--approve {
+  color: #050505;
+  background: #00FF80;
+  border-color: #00FF80;
+  box-shadow: 0 0 12px rgba(0, 255, 128, 0.5);
+}
+.admin-intel__btn--approve:hover:not(:disabled) { background: #7fffbb; box-shadow: 0 0 20px rgba(0, 255, 128, 0.85); }
+.admin-intel__btn--reject {
+  color: #ffdbe4;
+  background: rgba(255, 51, 102, 0.15);
+  border-color: #FF3366;
+}
+.admin-intel__btn--reject:hover:not(:disabled) { background: #FF3366; color: #050505; box-shadow: 0 0 16px rgba(255, 51, 102, 0.7); }
+.admin-intel__btn--filed {
+  color: #050505;
+  background: #00BFFF;
+  border-color: #00BFFF;
+  box-shadow: 0 0 12px rgba(0, 191, 255, 0.55);
+}
+.admin-intel__btn--filed:hover:not(:disabled) { background: #7ee0ff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.85); }
+
+.admin-intel__review-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: #7ea993;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.admin-intel__review-meta strong { color: #cfffe1; }
+.admin-intel__review-notes {
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(255, 186, 8, 0.08);
+  border-left: 2px solid rgba(255, 186, 8, 0.5);
+  color: #e5faed;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.admin-intel__reopen { display: flex; gap: 0.5rem; margin-top: 0.55rem; flex-wrap: wrap; }
+
+/* === Portal share CTA =============================================== */
+.admin-intel__portal-cta {
+  margin-top: 2rem;
+  padding: 0.85rem 1.15rem;
+  background: rgba(0, 40, 22, 0.35);
+  border: 1px dashed rgba(0, 255, 128, 0.4);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(0, 255, 128, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+.admin-intel__portal-cta a { color: #FFBA08; text-decoration: underline; }
+.admin-intel__portal-cta a:hover { color: #ffb060; }
+
+@media (max-width: 640px) {
+  .admin-intel__card-head { flex-direction: column; align-items: flex-start; }
+  .admin-intel__toggle { align-self: flex-end; }
+  .admin-intel__actions { flex-direction: column; }
+  .admin-intel__btn { width: 100%; }
+}
