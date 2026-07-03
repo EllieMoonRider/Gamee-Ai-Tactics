@@ -517,7 +517,56 @@ DAMAGE-POINT OPTIMIZATION: Big players joining your rally STEAL your damage poin
   (A) Threshold cap: find your damage phase ceiling (e.g. 500K-700K), stop sending troops once hit, but still start rally with 1 cavalry so others can join. Hectic + hard to identify phase.
   (B) Two-tier rally split: small players start + join small rallies · strong players start + join strong rallies. Hard to coordinate, strong players earn less than usual.
 KEEP HALL OF WAR = CASTLE LEVEL to max rally troop count.
-JOIN RULES: (1) Join rally with LEAST time remaining first if room exists. (2) Always start a rally if no slots available. (3) DO NOT join if your march time > rally's remaining time (you'll slow everyone). (4) DO NOT join near-full rally unless you can fit 75%+ of your troop count. Alliance PvP for kingdom-leader control + alliance-wide buffs. Combat Event — prioritize troop health, PvP synergy, reinforcement travel time (NOT resource gathering).
+JOIN RULES: (1) Join rally with LEAST time remaining first if room exists. (2) Always start a rally if no slots available. (3) DO NOT join if your march time > rally's remaining time (you'll slow everyone). (4) DO NOT join near-full rally unless you can fit 75%+ of your troop count.
+
+IMMIGRATION (KINGDOM SWITCH) — REQUIREMENTS (all mandatory): Castle Lv.15+ · all marches parked in castle · NOT in any alliance · resources above Storage cap will be DELETED (burn excess first via research/training/helps) · NO artifacts owned · target kingdom allows your castle size · no Auction House bids · no Military Expedition or Valiant Conquest in progress · NOT registered with Boneyard.
+FLIGHT COST: Higher castles cost more Immigration Flights (tickets). Castle 21 = 2 Flights (verified).
+ALLIANCE IMMIGRATION TECH: R5 castle must be Lv.30+. Paid unlock (~$100 USD). Every member must have enough personal Immigration Tickets for their own move.
+ARTIFACT WARNING (CRITICAL): Time-limited artifacts (Prophet's Amulet with 150% RSS protection, etc.) are SERVER-LOCKED and LOST when you immigrate. They do NOT carry over and they do NOT let you take more resources through the move. Never immigrate mid-artifact-window unless you accept losing them.
+
+MONSTER HUNT — FULL DOCTRINE (verified):
+- OBJECTIVE: Kill as many monsters as possible in shortest time. Alliance-coordinated. Event runs 30 min. Smaller monsters alternate with boss waves.
+- STRUCTURE: Yellow circles appear on map = monster spawns. One circle stays empty at first — boss spawns there after all monsters are killed. Kill boss → alliance gets 1 gift chest + circles refill with stronger monsters each round.
+- MARCH TIME: Fixed 30 seconds each way regardless of distance. Location tricks irrelevant.
+- CORE RULE: Later rounds → multiple players send multiple marches at boss BUT do NOT overkill (troops need to be back in castle immediately for next monster wave).
+- PRE-EVENT: Scout/attack a foreign castle before event starts → activates Battle Frenzy → % troop damage bonus for a short duration.
+- POSITIONING TRICK: Event starter can port to Lost Land or black area briefly, trigger event → all monsters + boss spawn in that zone (cleaner for players who prefer that area).
+- ADVANCED TACTICS:
+  1. T11+ SOLO BOSS: Assign T11+ castle to focus boss alone. A strong T11 solos boss with 1 march up to Wave 10, with 3 marches up to Wave 12. Everyone else keeps 1 march free for regular monsters.
+  2. ISOLATED TRIGGER CASTLE: Have an R4 port to black land / low-castle area → trigger event → spots pop around triggering castle, tighter cluster in emptier areas.
+  3. RECALL TALENT / DIRECT RELOCATOR abuse: instantly returns all marches. Port near trigger castle → send → recall → send again. Doubles action tempo per wave.
+  4. AUTO vs TACTICAL: Auto-send on early waves. Switch to tactical marches (specific heroes/army) once monsters get tough.
+  5. 35-SECOND DELAY: 1-2 strong castles wait 35s before sending on late waves → focus on monsters missed by first marches → prevents leftover stalling.
+  6. MAIN+FARM ALT COORDINATION: Designate 1 monster spot where ALL farms send 1 cav + main sends full march 5s after Wave 1 starts → every castle scores ≥1 hit → 100% reward distribution. Cost: 5 seconds delay.
+
+TIMERIFT (existing):
+- WAVE STRUCTURE: Enemy damage + your damage scale per round. Target Wave 20 minimum, Wave 50 ideal.
+- BENCHMARKS (Froth1k): Same-week Rank 1 ~9M · Prior-week Rank 1 ~50M · Rank 10 ~18M · personal best 60M+200K over 3 days.
+
+TIMERIFT — FULL DOCTRINE (verified):
+- OBJECTIVE: Alliance event. Deal max damage to system-random-generated boss based on chosen difficulty.
+- ENTRY: Castle Lv.12+.
+- FORMAT: Each player contributes 1 hero to the alliance pool for teammates to use. Sent hero should be strong AND color-matched.
+- COLOR COUNTER-MATRIX (VERIFIED): Boss RED → send BLUE hero · Boss GREEN → send RED · Boss BLUE → send GREEN · Boss PURPLE → send YELLOW · Boss YELLOW → send PURPLE.
+- CADENCE: 3 attempts on 3 consecutive days (Mon/Tue/Wed). Don't skip days.
+- SHADOW KING META: Universally recommended EVEN IF color doesn't match boss. His kit produces bombs, fires entire lines, empties the board on death → massive point yield from clears.
+- OPTIMAL BUILD: Shadow King + Harvest God + Pioneer Crusader (all 3 Labyrinth heroes, exceptional synergy) + 2 color-matched heroes to boss.
+- FROTH1K VIDEO REFERENCES (external, for user consultation): dedicated boss videos on YouTube for Blue/Purple/Red/Yellow/Green constellations.
+
+VALIANT CONQUEST (VC, also KvK/ME) — FULL DOCTRINE (verified):
+- CADENCE: Every 14 days, alternates with Dragonia (VC = odd weeks). 24-hour event.
+- WHO: Kingdoms that participated in previous week's Dragonia can invade/attack opposing kingdoms (dragon zone excluded).
+- SHIELD BEHAVIOR: 24h shield at start = safe from attacks EXCEPT gathering spots. Under shield you CAN switch kingdoms to gather (bonus rewards for foreign-kingdom gathering). Pro tip: switch shortly before new resource spots spawn.
+- SWIFT GATHERER META: On 5 Lv7 spots (food/wood/iron/gold) = ~4M points. Only 500K more needed for penultimate/most-important tier — trivial in remaining time. ⚠️ Swift Gatherer does NOT work on Diamond spots.
+- ALT SCORING (no kingdom switch): Reinforce alliance castles WITHOUT shields when attacked → each reinforcement scores points. Strong attacks may cash out all rewards in 1 reinforcement.
+- OFFENSIVE PLAY: Take teams to foreign kingdom, launch rallies. NO SHIELD available during War Frenzy — you CAN be attacked. Escape via Direct Relocator OR wait for Combat Frenzy expiry then shield.
+- CRITICAL RETURN RULE: While War Frenzy is active, you CANNOT activate shield AND CANNOT port to another kingdom. Leave castle in foreign zone until War Frenzy expires → then shield → then move back.
+- TROOP RECOVERY: Troops "lost" during VC are RETURNED at event end (safe to burn for points).
+- ADVANCED:
+  1. Below-storage-limit play: unshielded castle tanks incoming (shielded castles reinforce it multiple times) OR occupy empty tile to save marches after wipes.
+  2. Bubble-preserving mine points: send to a resource mine with speed-up JUST BEFORE an unshielded foreign player arrives — they "attack" your mine → you score without dropping shield. Watch foreign unshielded castles targeting green.
+  3. FREEZE TARGET alliance skill: freeze a victim castle in your territory (they can't port) → rally attack while frozen.
+  4. OVERALL DEF (Global Shield): trigger ~1 minute BEFORE event start → grants up to 1 hour of "free shield" for everyone → members save personal 24h shield for later in the event. Alliance PvP for kingdom-leader control + alliance-wide buffs. Combat Event — prioritize troop health, PvP synergy, reinforcement travel time (NOT resource gathering).
 
 DEMON INCURSION — FULL DOCTRINE (verified):
 - CADENCE: Even weeks (2/4/6…), Mon+Wed OR Tue+Thu by timezone.

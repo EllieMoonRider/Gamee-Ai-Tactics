@@ -286,25 +286,187 @@ Higher-level abyss = more HP → needs stronger alliance to burn it down, but pa
 
 **10. Do NOT join an almost-full rally with too few troops.** Rule of thumb: if rally is nearly full AND you can fit **75%+ of your troop count**, joining is safe. Below 75% = better to start your own.
 
+### Immigration — Kingdom Switch Requirements (VERIFIED)
+Moving your castle to a new kingdom requires meeting ALL of these prerequisites — the game blocks the immigration until every box is checked.
+
+**Prerequisites checklist**:
+- ✅ **Castle Lv.15+** — minimum level to immigrate.
+- ✅ **All marches parked inside the castle** — no troops out on tiles, rallies, reinforcements, or Hell Fortresses.
+- ✅ **NOT in any alliance** — leave your alliance first.
+- ✅ **Resources above Storage limit are DELETED** — anything above protected storage cap gets wiped, so **burn excess pre-move** through research, troop training, Alliance help acceleration, etc.
+- ✅ **Do NOT own any artifacts** — artifact ownership blocks immigration.
+- ✅ **Target kingdom allows your castle size** — some kingdoms restrict inbound based on your castle level (usually excluding max-tier).
+- ✅ **No bids in the Auction House** — pull/settle all bids first.
+- ✅ **No Military Expedition or Valiant Conquest in progress** — wait for the event window to close.
+- ✅ **NOT registered with Boneyard** — deregister before moving.
+
+**Flight cost by castle level**: Higher castles cost more Immigration Flights (tickets). Example verified: **Castle 21 (C21) requires 2 Flights**.
+
+### Immigration — Alliance-Wide Move (Immigration Tech)
+Moving an entire alliance to a new kingdom is a separate mechanic with strict conditions:
+- **R5's castle must be Lv.30+** to unlock alliance-level immigration.
+- Requires a **paid unlock** (~$100 USD equivalent, per verified community reporting).
+- **Every alliance member** must have **enough personal Immigration Tickets** to complete their own move to the target kingdom.
+
+### Immigration — Artifact Warning (CRITICAL)
+- **Time-limited artifacts** (example: **Prophet's Amulet** — 150% resource protection) do **NOT work across immigration**.
+- Artifacts are **server-locked** — they are **LOST when you immigrate** to a new kingdom.
+- ⚠️ Common trap: players ask whether the Prophet's Amulet's RSS-protection buff lets them carry more resources through immigration. **The answer is no** — the artifact is stripped on move.
+- **Doctrine**: Never immigrate mid-artifact-window. Burn artifact-boosted resource activity BEFORE immigrating, or accept the artifact loss.
+
 ### Battle of Saurnesia (Cross-Server / Alliance)
 - Cross-server matching event; alliances on isolated map compete for key resource buildings.
 - Points from: **Holding Wonders** (Ancient Tower, Divine Fountain) = static · **Dragon Cub Escort mechanic** = largest point spikes (guard/capture points along path).
 - Coordinate alliance entry windows.
 - **Battlefield Infirmary mindset:** troops safely returned afterward → do NOT fear aggressive high-tier rallies to push enemies out of 3-min wonder captures.
 
-### Monster Hunt
-- Coordinate hunting paths using the **Hunt Bonus chain multiplier**.
-- Never solo isolated high-level monsters.
-- Match stamina expenditures into continuous alliance rally loops on Hell Fortresses → multiplies point returns per stamina.
+### Monster Hunt — FULL DOCTRINE
+**Objective**: Kill as many monsters as possible in the shortest time. Alliance-coordinated event.
 
-### Timerift
-- Wave-based enemy encounter. Enemy damage + your damage both scale per round.
-- Target: Wave 20 minimum · Wave 50 ideal.
-- Reference benchmarks (Froth1k): Same-week Rank 1 ~9M · Prior-week Rank 1 ~50M · Rank 10 ~18M · personal best 60M+200K over 3 days.
+**Event Structure**:
+- Event starts → **yellow circles** appear on map = monster spawn points.
+- After a countdown, **monsters spawn inside the circles**.
+- **One circle stays empty at first** → once all other monsters are killed, the **BOSS** spawns in that empty circle.
+- Kill the boss → alliance receives **1 gift chest** + circles refill with fresh monsters.
+- **Each round, monsters get slightly stronger.**
+- Event runs **30 minutes**: smaller monsters alternate with boss waves throughout.
+
+**Fixed march time**: Distance from monster **does not matter** — marches are hard-locked at **30 seconds each way** (30s out + 30s back). Location tricks are irrelevant.
+
+**Core coordination doctrine**:
+- In **later rounds** (stronger bosses), multiple players should send **multiple marches** at the boss.
+- ⚠️ **Do NOT overcommit** — overkill wastes troops that need to be back in the castle immediately to attack the next monster wave.
+
+**Pre-event tip — Battle Frenzy activation**:
+- Before Monster Hunt starts, **scout/attack a foreign castle** to activate **Battle Frenzy** — grants a short-duration **percentage bonus to your troops**. Enter the event with the buff active.
+
+**Alliance positioning trick**:
+- If your alliance is in the Lost Land and you want to farm monsters in the **black area** (or vice versa), the **event starter** can briefly relocate their castle to the target zone and trigger the event.
+- Result: all monsters + boss spawn in that zone. Cleaner for players who prefer that area.
+
+**Advanced tactics (verified community intel)**:
+
+**1. T11+ Boss Solo Doctrine**
+- If your alliance has a castle with **T11+ troops**, assign them to **focus the boss alone**.
+- Everyone else keeps **one march free for regular monsters** — parallelizes the point flow.
+- **A strong T11 can solo the boss with 1 march up to Wave 10**, and **with 3 marches up to Wave 12**.
+
+**2. Trigger-Castle Isolation (spot clustering)**
+- Have an **R4** (or your event triggerer) **port to the black land** (or anywhere with few castles nearby).
+- Trigger the event from that isolated position.
+- Result: monster spots pop **around the triggering castle** — the fewer castles nearby, the **tighter the cluster**. Faster reaction times for everyone.
+
+**3. Recall Talent / Direct Relocator abuse**
+- **Recall skill** or **Direct Relocator** brings all marches back instantly.
+- Combo: port near the trigger castle → send marches → recall instantly → send again.
+- Effectively doubles or triples your action tempo per wave.
+
+**4. Auto vs. Tactical Send**
+- Early waves: safe to send using **Auto** to move fast.
+- Learn where your army breaks — that's where you switch to **tactical marches** (specific heroes, army composition).
+
+**5. Late-wave 35-second delay**
+- Have **1–2 strong castles** wait **35 seconds** before sending in **late waves**.
+- These reserves focus on monsters **not killed** by the first wave of marches → prevents leftover monsters from stalling wave progression.
+
+**6. Main + Farm coordination (multi-account)**
+- If you play a **main + a farm**, designate a specific monster spot where **all farms send 1 cav**, and where the **main sends a full march 5 seconds after Wave 1 starts**.
+- Result: all castles score at least 1 hit → **everyone gets full rewards**.
+- Cost: 5 seconds of delay. Reward: 100% loot distribution.
+
+**Doctrine summary**: Coordination > raw troop count. Assign boss duty, isolate spawn cluster, abuse Recall for tempo, delay reserves for cleanup, and if running alt farms, always structure the 1-cav-per-farm hit for reward guarantees.
+
+### Timerift — FULL DOCTRINE
+**Objective**: Alliance event. Deal maximum damage to a randomly-generated boss (system-selected by random generator based on previously chosen difficulty tier).
+
+**Entry**: All players with **Castle Lv.12+**.
+
+**Format**: Teamwork event — each player contributes **one hero** available to be used by other alliance members. Sent-hero should be **strong AND color-matched** to the boss.
+
+**Color Counter-Matrix (VERIFIED)**:
+- Boss **RED** → send **BLUE** hero
+- Boss **GREEN** → send **RED** hero
+- Boss **BLUE** → send **GREEN** hero
+- Boss **PURPLE** → send **YELLOW** hero
+- Boss **YELLOW** → send **PURPLE** hero
+
+**Cadence**: Challenge the boss **3 times on 3 consecutive days** (Monday / Tuesday / Wednesday). More points = better rewards tier.
+
+**Hero Strategy — Verified Community Wisdom**:
+
+**1. Shadow King is universally recommended** — even when the color doesn't match the boss.
+- Reason: Shadow King's kit produces **bombs**, **fires entire lines**, and **empties the playing field on death** — massive board clears = massive point yield.
+
+**2. Optimal Trio Build**: **Shadow King + Harvest God + Pioneer Crusader**, plus 2 additional heroes color-matched to the boss.
+- These 3 are **Labyrinth heroes** — their special abilities synergize exceptionally well in Timerift board mechanics.
+
+**Point-Tier Benchmarks (Froth1k, verified — from earlier dossier entry, updated)**:
+- Wave 20 minimum target · Wave 50 ideal.
+- Same-week Rank 1 ~ **9M points** · Prior-week Rank 1 ~ **50M** · Rank 10 ~ **18M** · Personal best benchmark: **60M + 200K over 3 days**.
+
+**Video References (Froth1k, external — for user consultation only)**:
+- vs. Blue boss: https://www.youtube.com/watch?v=KWxlE8DxDGg
+- vs. Purple boss: https://www.youtube.com/watch?v=qRZWVS7WeIY
+- vs. Red boss: https://youtu.be/cay4JJwbuPw
+- vs. Yellow boss: https://www.youtube.com/watch?v=3OlbCX6_c8E&t=157s
+- vs. Green boss: https://www.youtube.com/watch?v=QFUL1G68SgY
+
+**Doctrine summary**: Shadow King + Labyrinth trio (Harvest God, Pioneer Crusader) is the meta baseline. Color-match remaining 2 heroes. Attack all 3 days without skipping. Watch Froth1k's boss-specific videos for constellation refinements when climbing higher.
 
 ### Boneyard
 - Points-based alliance-driven competitive event.
 - **Catapult mechanic:** if scouted by a catapult, target waits 45 seconds before seeing incoming march contents — used to burn rival time.
+
+### Valiant Conquest (VC / also called KvK / ME) — FULL DOCTRINE
+**Cadence**: Every **14 days**, alternates with Dragonia (VC runs on **odd weeks**). Runs **24 hours**.
+
+**Who participates**: Kingdoms that took part in **Dragonia the previous week** can invade and fully attack opposing kingdoms (dragon zone excluded).
+
+**Shield Behavior**:
+- Setting a **24-hour shield at event start** = safe from attacks EXCEPT on **gathering spots**.
+- Under shield you CAN switch to a foreign kingdom to gather resources → **bonus rewards** for foreign-kingdom gathering.
+- **You don't have to fight** if you don't want to — pure gathering play is a valid strategy.
+- **Pro tip**: Switch to the foreign kingdom **shortly before new resource spots spawn** to grab them first.
+
+**Gathering Doctrine — "Swift Gatherer" Talent**:
+- Using **Swift Gatherer** on **5 Level-7 spots** (food/wood/iron/gold) = **~4 million points**.
+- Only **500,000 more points** needed to hit the **penultimate reward tier** (the most valuable practical tier).
+- Remaining 500K is trivial to earn in the remaining event time.
+- ⚠️ **Swift Gatherer does NOT work on Diamond spots** — do not attempt to shortcut diamond gathering with the talent.
+
+**Alternative Scoring — No Kingdom-Switch Required**:
+- **Reinforce alliance castles WITHOUT shields** when they're being attacked. Each reinforcement scores points.
+- **Depending on attack strength**, 1 reinforcement may cash out all rewards. Otherwise reinforce as often as needed to hit tiers.
+- **No fight risk** — you stay in your home kingdom.
+
+**Offensive Play — Foreign Kingdom Invasion**:
+- Take your teams to another kingdom and **launch rallies** against opponents to steal resources.
+- ⚠️ **NO SHIELD** available during War Frenzy — you can be attacked.
+- **Escape options during War Frenzy**: (1) **directed move** (Direct Relocator), or (2) wait until Combat Frenzy expires → activate shield.
+
+**Returning Home — CRITICAL**:
+- While **War Frenzy is active**, you **CANNOT activate a shield** AND **CANNOT port back to another kingdom**.
+- **DOCTRINE**: Leave your castle in the foreign zone until War Frenzy expires. Then activate shield → move back to alliance area.
+
+**Troop Recovery**: Troops "lost" in Valiant Conquest **are returned at event end** — this is a safe event to burn troops for points.
+
+**Advanced Tactics (verified community intel)**:
+
+**1. Below-Storage-Limit Attack Force play**
+- If your resources are below Storage cap (safe from plunder), you can join an alliance attack force in two roles:
+  - **Defending**: stay unshielded → shielded castles reinforce you multiple times → you tank incoming rallies.
+  - **Attacking**: "save" marches by occupying empty tiles → restore troops even after wipes → rally other castles attacking your alliance.
+
+**2. Bubble-Preserving Mine Points**
+- Send to a **resource mine** using **speed-up** just **before an unshielded foreign player** arrives.
+- They'll "attack" your mine when they land → **you score points** without ever dropping your shield.
+- **Watch unshielded foreign castles going for mines** — works especially well on green resource spots.
+
+**3. Alliance Skill Optimization**:
+- **Freeze Target**: A frozen castle CANNOT port. Pick a "victim" castle scoring in your territory → freeze it → you have enough time to rally-attack it. (Remember: save marches by occupying empty land or the Alliance Fort during recovery.)
+- **Overall Def (Global Shield)**: Trigger the alliance-wide shield **~1 minute BEFORE event start** → gives up to **1 hour of "free shield"** for everyone. This lets members save their personal 24h shield for the second half of the event instead of burning two shields.
+
+**Doctrine summary**: VC rewards flexible play — turtle-gather for guaranteed 4M+ points via Swift Gatherer on Level-7 spots, or run offense with troop-return safety. Time alliance-skill Overall Def 1min pre-event for the free hour of shield. Never activate personal shield until Combat Frenzy expires. Never try to port under War Frenzy.
 
 ### Feast Event
 - **Player cap: 3,000 seats** — arrive on time.
