@@ -131,18 +131,46 @@ Evolution table:
 - Reinforcement logistics: distance + travel time from members to central map matters.
 - **⚠️ Cross-title trap:** "Dragonia" also used in Merge Dragons for different mechanics. Red flags for wrong-game context: merge-style mini-game · "Dragon Cups" → NOT P&C.
 
-### Demon Incursion (PvE)
-- Waves of demons attack alliance castles.
-- **Alliance-optimal play:** stronger players send massive reinforcements to weakest/lowest-level members' castles → keeping weak castles from burning out early maximizes ALLIANCE + personal scores.
-- **Personal Rank 1 tactic (Froth1k):**
-  - Difficulty: Level 7 or Level 11. Level 8 = waste.
-  - Set farms ~250-260 km from castle · pre-reinforce farms with each other (locks out other players).
-  - Wait for **Wave 17 (elite)** to reach farms.
-  - Use **Recall Talent** to pull troops back fast; send to castles/farms → defend again (faster than most demon marches).
-  - **Wave 14 = elite** · **Wave 17 = elite** — highest point tiers.
-  - After Wave 17: most points scored, pull back.
-  - DO NOT waste diamonds on Direct Relocators or speedups. Rank 1 = 5,000 Diamonds.
-- Event cadence: ~2 weeks.
+### Demon Incursion (PvE) — FULL DOCTRINE
+**Cadence**: Even weeks (Week 2 / 4 / 6…). Runs Mon+Wed OR Tue+Thu depending on your time zone.
+
+**Structure**: 20 waves total launched from infernal fortresses.
+- **Waves 1–9, 11–19**: attack individual castles.
+- **Waves 10 and 20**: attack the **Alliance Fort** (NOT individual castles).
+- Higher difficulty levels increase both the number and type of attacking troops. **Elite troops** appear in higher waves (Wave 14 and Wave 17 are elite point tiers) and hit especially hard on attack — respect them.
+
+**Personal-max play (all members)**:
+- Deploy all **5 marches** as reinforcements to weaker castles → each reinforcement earns points.
+- On **Wave 10** and **Wave 20**, recall **1 march** and send it to reinforce the **Alliance Fort** for extra points.
+
+**Alliance-strategy fork — set doctrine BEFORE event start**:
+
+**Option A: Maximum Alliance ranking (TOP 10 push)**
+- **Strongest player enters the Alliance Fort first** (legion size matters).
+- Other top players fill in with **full marches**.
+- Remaining space can be filled with token troops (e.g. 1K).
+- ⚠️ **Total Fort score is divided among ALL castles inside the Fort** — more castles = fewer points per player.
+- ⚠️ Small castles inside the Fort that will drop below 50% twice waste allocation slots — once you're below 50% twice, you've lost your fight and won't receive further points.
+- **DOCTRINE**: Only put castles in the Fort that can actually cash in the Fort points.
+
+**Option B: Even distribution (points for everyone)**
+- Strongest player still enters the Fort first (legion size).
+- All other players enter with a **predetermined troop count** so points distribute proportionally to strength across the whole alliance.
+
+**Personal Rank-1 tactic (Froth1k, verified)**:
+- Difficulty: **Level 7 or Level 11**. Level 8 = wasted effort.
+- Set **farms ~250–260 km** from castle. Pre-reinforce farms with each other (locks other players out from stealing them).
+- Wait for **Wave 17 (elite)** to reach the farms.
+- Use **Recall Talent** to pull troops back fast · redeploy to castles/farms → defend again (faster than most demon marches).
+- **Wave 14 = elite · Wave 17 = elite** — the highest point tiers.
+- After Wave 17: most points banked, pull back.
+- **DO NOT** burn diamonds on Direct Relocators or Speedups. Rank 1 target = ~5,000 Diamonds spent.
+
+**Extra-points tricks (advanced)**:
+1. **Ghost-reinforce inactive castles post-event**: If your alliance has very-far inactive castles, they can still be reinforced *after* the battle formally ends — troops en route may still count. After Wave 20 completes, port your castle near a distant inactive castle and reinforce it while marches are still in transit.
+2. **Empty-castle 100% score trick**: If a smaller reinforced castle uses its own troops to reinforce yet another (inactive) castle, so the small castle you reinforced is now "empty", the reinforcer gets **100% of the points** for defending it. This is the max possible score per defense event.
+
+**PRIORITY ORDER (personal)**: Rank 7/11 farm-lock tactic > Fort reinforcement on Wave 10/20 > Ghost-reinforce inactives post-event > Standard 5-march reinforcement rotation.
 
 ### Battle of Saurnesia (Cross-Server / Alliance)
 - Cross-server matching event; alliances on isolated map compete for key resource buildings.

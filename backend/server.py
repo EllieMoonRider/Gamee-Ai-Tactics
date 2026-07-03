@@ -496,7 +496,17 @@ ALLIANCE CONQUEST — DEFENDER LINE-UPS: each defender fields 2 line-ups, each u
 
 DRAGONIA WAR: Center-map Altar of Dragonia. Alliance PvP for kingdom-leader control + alliance-wide buffs. Combat Event — prioritize troop health, PvP synergy, reinforcement travel time (NOT resource gathering).
 
-DEMON INCURSION: Alliance-optimal = strong players reinforce weakest members' castles. Personal Rank 1 tactic (Froth1k): Lv 7 or Lv 11 difficulty (never Lv 8) · pre-reinforce farms ~250-260km away · Wave 14 + Wave 17 are elite point tiers · use Recall Talent · never burn diamonds on Direct Relocator/speedups (Rank 1 = 5,000 diamonds only). Cadence ~2 weeks.
+DEMON INCURSION — FULL DOCTRINE (verified):
+- CADENCE: Even weeks (2/4/6…), Mon+Wed OR Tue+Thu by timezone.
+- STRUCTURE: 20 waves from infernal fortresses. Waves 1-9 and 11-19 attack individual castles. Waves 10 and 20 attack the ALLIANCE FORT (not individual castles). Wave 14 and Wave 17 = elite point tiers.
+- PERSONAL MAX PLAY: deploy all 5 marches as reinforcements to weaker castles (each reinforcement = points). On Waves 10 and 20, recall 1 march and send it to the Alliance Fort for bonus points.
+- ALLIANCE FORK — decide BEFORE event:
+  * OPTION A (TOP-10 push): Strongest player enters Fort FIRST (legion size). Other top players fill with full marches. Fort score is DIVIDED among all castles in Fort — more castles = fewer points each. Don't put castles in Fort that will fall below 50% twice (they've lost the fight, won't score further points).
+  * OPTION B (even distribution): Strongest player still enters Fort first. All others enter with a predetermined troop count so points distribute proportionally to strength.
+- PERSONAL RANK-1 TACTIC (Froth1k): Difficulty Level 7 or 11 (NEVER Level 8). Farms 250-260 km away, pre-reinforce farms with each other, wait for Wave 17 elite to reach farms, use Recall Talent to pull troops back fast + redeploy. After Wave 17 pull back. NO diamonds on Direct Relocators or Speedups. Rank 1 = ~5,000 Diamonds only.
+- EXTRA-POINTS TRICKS:
+  1. Post-event ghost-reinforce very-far inactive castles — troops en route from your reinforcement may still count after Wave 20. Port your castle near a distant inactive castle and reinforce while marches are in transit.
+  2. Empty-castle 100% trick: if a smaller reinforced castle uses ITS troops to reinforce another (inactive) castle, so it's now empty, the reinforcer gets 100% of the points for defending it (max possible score).
 
 SAURNESIA (cross-server): Points via Wonders (static) + Dragon Cub Escort path (spikes). Battlefield Infirmary mindset — troops returned safely afterward, so rally aggressively for 3-min wonder captures.
 
