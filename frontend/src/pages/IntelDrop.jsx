@@ -307,8 +307,8 @@ export default function IntelDrop() {
                     disabled={images.length >= MAX_IMAGES}
                     data-testid="intel-file-input"
                   />
-                  <UploadSimple size={16} weight="bold" />
-                  {images.length >= MAX_IMAGES ? "MAX REACHED" : "ATTACH SCREENSHOTS"}
+                  <UploadSimple size={18} weight="bold" />
+                  {images.length >= MAX_IMAGES ? "MAX REACHED" : "TAP TO ATTACH SCREENSHOTS"}
                 </label>
                 {images.length > 0 && (
                   <div className="intel-previews">

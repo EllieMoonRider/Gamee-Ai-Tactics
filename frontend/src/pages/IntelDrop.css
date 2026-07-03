@@ -315,31 +315,42 @@
   pointer-events: none;
 }
 .intel-upload-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.55rem;
-  padding: 0.7rem 1.1rem;
-  background: rgba(0, 22, 12, 0.85);
-  border: 1px dashed rgba(0, 255, 128, 0.6);
+  padding: 0.9rem 1.2rem;
+  min-height: 48px; /* mobile-friendly tap target — Apple's 44px min */
+  width: 100%;
+  max-width: 320px;
+  background: rgba(0, 40, 22, 0.9);
+  border: 2px solid #00FF80;
   color: #00FF80;
   font-family: "JetBrains Mono", monospace;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   cursor: pointer;
   transition: all 0.18s ease;
   align-self: flex-start;
-  clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
   user-select: none;
-  -webkit-tap-highlight-color: rgba(0, 255, 128, 0.2);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 255, 128, 0.3);
+  box-shadow: 0 0 14px rgba(0, 255, 128, 0.35), inset 0 0 8px rgba(0, 255, 128, 0.15);
+  text-shadow: 0 0 6px rgba(0, 255, 128, 0.6);
 }
-.intel-upload-btn:hover:not(.intel-upload-btn--disabled) {
-  background: rgba(0, 40, 22, 0.9);
-  box-shadow: 0 0 16px rgba(0, 255, 128, 0.4);
+.intel-upload-btn:hover:not(.intel-upload-btn--disabled),
+.intel-upload-btn:active:not(.intel-upload-btn--disabled) {
+  background: rgba(0, 60, 34, 0.95);
+  box-shadow: 0 0 22px rgba(0, 255, 128, 0.65), inset 0 0 12px rgba(0, 255, 128, 0.25);
+  transform: translateY(-1px);
 }
 .intel-upload-btn--disabled {
   opacity: 0.4;
   cursor: not-allowed;
+  border-color: rgba(0, 255, 128, 0.3);
+  box-shadow: none;
 }
 
 .intel-previews {
