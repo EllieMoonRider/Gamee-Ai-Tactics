@@ -2901,7 +2901,7 @@ INTEL_TEXT_MAX = 20000
 async def intel_submit(
     game_slug: str = Form(...),
     category: str = Form(...),
-    intel_text: str = Form(...),
+    intel_text: Optional[str] = Form(""),
     contributor_name: Optional[str] = Form(None),
     contributor_handle: Optional[str] = Form(None),
     source_url: Optional[str] = Form(None),
@@ -2915,10 +2915,13 @@ async def intel_submit(
         raise HTTPException(400, "Invalid game selection")
     if category not in INTEL_CATEGORIES:
         raise HTTPException(400, "Invalid category")
+    # Accept submission if EITHER text (5+ chars) OR at least one image is provided.
+    # Admin reviews everything before it hits Cypher, so barriers are kept minimal.
     txt = (intel_text or "").strip()
-    if len(txt) < INTEL_TEXT_MIN:
-        raise HTTPException(400, f"Intel too short — minimum {INTEL_TEXT_MIN} characters")
-    if len(txt) > INTEL_TEXT_MAX:
+    has_images = bool(images and any(f and getattr(f, "filename", None) for f in images))
+    if not txt and not has_images:
+        raise HTTPException(400, "Please provide intel text OR attach at least one screenshot.")
+    if txt and len(txt) > INTEL_TEXT_MAX:
         raise HTTPException(400, f"Intel too long — maximum {INTEL_TEXT_MAX} characters")
 
     # Validate + store optional screenshots in dedicated intel GridFS bucket
@@ -2963,7 +2966,7 @@ async def intel_submit(
     return {
         "ok": True,
         "reference": submission["reference"],
-        "message": "Intel received and queued for review. Lt. Atlas will file verified intel to CypherAI within 24 hours.",
+        "message": "Intel received and queued for review. Verified intel will be filed into CypherAI's live dossier within 24 hours.",
     }
 
 

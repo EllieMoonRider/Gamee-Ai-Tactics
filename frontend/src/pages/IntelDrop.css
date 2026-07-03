@@ -135,6 +135,7 @@
   margin: 0 auto 0.85rem;
   max-width: 640px;
   text-align: center;
+  text-wrap: balance;
 }
 .intel-welcome__body strong { color: #FFBA08; }
 .intel-welcome__signoff {
@@ -148,53 +149,52 @@
   font-style: italic;
 }
 
-/* === Tutorial (3 steps) ================================================== */
-.intel-tutorial { margin-bottom: 1.8rem; }
+/* === Tutorial (single condensed box) ====================================== */
+.intel-tutorial {
+  position: relative;
+  padding: 1.15rem 1.35rem 1.25rem;
+  margin-bottom: 1.8rem;
+  background: linear-gradient(180deg, rgba(0, 22, 12, 0.88) 0%, rgba(0, 8, 4, 0.94) 100%);
+  border: 1px solid rgba(0, 255, 128, 0.5);
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px);
+  box-shadow: 0 0 0 1px rgba(0, 255, 128, 0.08) inset, 0 4px 14px rgba(0, 0, 0, 0.5);
+  text-wrap: balance;
+}
+.intel-tutorial .intel-corner { border-color: rgba(0, 255, 128, 0.8); }
 .intel-tutorial__label {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 10.5px;
   letter-spacing: 0.28em;
-  color: rgba(0, 255, 128, 0.9);
-  text-shadow: 0 0 6px rgba(0, 255, 128, 0.5);
-  margin-bottom: 0.85rem;
-}
-.intel-tutorial__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 0.85rem;
-}
-.intel-step {
-  position: relative;
-  padding: 1rem 1.1rem 1.1rem;
-  background: linear-gradient(180deg, rgba(0, 22, 12, 0.85) 0%, rgba(0, 8, 4, 0.92) 100%);
-  border: 1px solid rgba(0, 255, 128, 0.45);
-  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
-  box-shadow: 0 0 0 1px rgba(0, 255, 128, 0.08) inset, 0 3px 12px rgba(0, 0, 0, 0.45);
-}
-.intel-step__num {
-  font-family: "Orbitron", "Bebas Neue", sans-serif;
-  font-weight: 900;
-  font-size: 1.9rem;
   color: #FFBA08;
-  text-shadow: 0 0 10px rgba(255, 186, 8, 0.55);
-  line-height: 1;
-  margin-bottom: 0.35rem;
+  text-shadow: 0 0 6px rgba(255, 186, 8, 0.55);
+  margin-bottom: 0.85rem;
+  text-align: center;
 }
-.intel-step__title {
+.intel-tutorial__list {
+  margin: 0;
+  padding: 0 0 0 1.35rem;
+  list-style: decimal;
+  color: #cfffe1;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-wrap: balance;
+}
+.intel-tutorial__list li {
+  padding-left: 0.35rem;
+}
+.intel-tutorial__list li::marker {
+  color: #FFBA08;
   font-family: "Orbitron", sans-serif;
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.03em;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+.intel-tutorial__list strong {
   color: #ffb060;
-  text-shadow: 0 0 6px rgba(255, 107, 0, 0.45);
-  margin-bottom: 0.5rem;
+  text-shadow: 0 0 4px rgba(255, 107, 0, 0.35);
 }
-.intel-step__body {
-  font-size: 0.82rem;
-  color: #a8c8b8;
-  line-height: 1.6;
-}
-.intel-step__body strong { color: #FFBA08; }
 
 /* === Form =============================================================== */
 .intel-form {
@@ -224,6 +224,15 @@
   margin-bottom: 0.3rem;
 }
 .intel-req { color: #FFBA08; text-shadow: 0 0 6px rgba(255, 186, 8, 0.5); }
+.intel-optional {
+  color: #7ea993;
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  font-style: italic;
+  margin-left: 0.35rem;
+  text-transform: none;
+}
 .intel-hint { font-size: 0.72rem; color: #7ea993; font-style: italic; }
 .intel-count { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: #7ea993; text-align: right; }
 .intel-count--low { color: #FFBA08; text-shadow: 0 0 4px rgba(255, 186, 8, 0.5); }

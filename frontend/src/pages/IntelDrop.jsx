@@ -78,10 +78,10 @@ export default function IntelDrop() {
 
   const submit = async (e) => {
     e.preventDefault();
-    const hasText = text.trim().length >= 5;
+    const hasText = text.trim().length >= 1;
     const hasImage = images.length > 0;
-    // Accept either meaningful text (5+ chars) OR at least one screenshot.
-    // Admin reviews everything before it reaches Cypher, so barriers can be light.
+    // Accept ANY meaningful contribution: text alone, screenshot alone, or both.
+    // Admin reviews everything before it reaches Cypher.
     if (!hasText && !hasImage) {
       toast.error("Please type your intel OR attach a screenshot before transmitting.");
       document.querySelector('[data-testid="intel-text"]')?.focus();
@@ -186,36 +186,23 @@ export default function IntelDrop() {
           </div>
         ) : (
           <>
-            {/* Tutorial — 3 steps */}
+            {/* Tutorial — single condensed box, balanced text (no orphan lines) */}
             <div className="intel-tutorial" data-testid="intel-tutorial">
-              <div className="intel-tutorial__label">// HOW TO DROP INTEL · 3 STEPS</div>
-              <div className="intel-tutorial__grid">
-                <div className="intel-step">
-                  <div className="intel-step__num">01</div>
-                  <div className="intel-step__title">Pick the Theater</div>
-                  <div className="intel-step__body">
-                    Choose which of the 3 active games your intel is about — Conquest, Survival, or Chaos.
-                    Cypher keeps each theater&apos;s intel <strong>strictly separate</strong>, no cross-mixing.
-                  </div>
-                </div>
-                <div className="intel-step">
-                  <div className="intel-step__num">02</div>
-                  <div className="intel-step__title">Drop the Intel</div>
-                  <div className="intel-step__body">
-                    Paste your intel, guide, mechanic notes, or event walkthrough. Include screenshots
-                    if helpful. Longer + more specific = better. Cite your source if it&apos;s from a
-                    stream or YouTube video.
-                  </div>
-                </div>
-                <div className="intel-step">
-                  <div className="intel-step__num">03</div>
-                  <div className="intel-step__title">Get Credited</div>
-                  <div className="intel-step__body">
-                    Give us your name / Discord handle (optional). Once Lt. Atlas verifies your intel
-                    and files it, your name goes into Cypher&apos;s dossier as the source.
-                  </div>
-                </div>
-              </div>
+              <span className="intel-corner tl" /><span className="intel-corner tr" />
+              <span className="intel-corner bl" /><span className="intel-corner br" />
+              <div className="intel-tutorial__label">// HOW TO DROP INTEL</div>
+              <ol className="intel-tutorial__list">
+                <li>
+                  <strong>Pick the theater</strong> — P&amp;C, P&amp;S, or P&amp;Chaos.
+                </li>
+                <li>
+                  <strong>Drop your intel</strong> — type it out OR attach a screenshot.
+                  Either works. Both is even better.
+                </li>
+                <li>
+                  <strong>Add your name</strong> for credit (optional), then tap TRANSMIT.
+                </li>
+              </ol>
             </div>
 
             {/* The form */}
@@ -260,21 +247,20 @@ export default function IntelDrop() {
                 {catMeta?.help && <div className="intel-hint">{catMeta.help}</div>}
               </div>
 
-              {/* Intel text */}
+              {/* Intel text — OPTIONAL if a screenshot is attached */}
               <div className="intel-field">
                 <label className="intel-label" htmlFor="intel-text">
-                  <Sparkle size={14} weight="duotone" /> THE INTEL <span className="intel-req">*</span>
+                  <Sparkle size={14} weight="duotone" /> THE INTEL <span className="intel-optional">— optional if screenshot attached</span>
                 </label>
                 <textarea
                   id="intel-text"
                   value={text}
                   onChange={e => setText(e.target.value)}
-                  placeholder={`Type your intel for ${gameMeta?.name} — or drop a quick caption if you're attaching a screenshot. Mechanics, hero names, event schedules, exploits, source quotes — all welcome. Every scrap helps Cypher.`}
+                  placeholder={`Type your intel for ${gameMeta?.name} — or leave this blank and just attach a screenshot below. Mechanics, hero names, event schedules, exploits, source quotes — all welcome.`}
                   className="intel-textarea"
                   rows={12}
-                  minLength={20}
+                  minLength={0}
                   maxLength={20000}
-                  required
                   data-testid="intel-text"
                 />
                 <div className="intel-count">
@@ -390,14 +376,14 @@ export default function IntelDrop() {
               <div className="intel-submit-row">
                 {/* Readiness indicator — clear visual confirmation that content is queued */}
                 <div
-                  className={`intel-readiness ${(text.trim().length >= 5 || images.length > 0) ? "intel-readiness--ready" : "intel-readiness--empty"}`}
+                  className={`intel-readiness ${(text.trim().length >= 1 || images.length > 0) ? "intel-readiness--ready" : "intel-readiness--empty"}`}
                   data-testid="intel-readiness"
                 >
-                  {(text.trim().length >= 5 || images.length > 0) ? (
+                  {(text.trim().length >= 1 || images.length > 0) ? (
                     <>
                       ✓ READY TO TRANSMIT ·{" "}
-                      {text.trim().length >= 5 && <span>{text.length} chars</span>}
-                      {text.trim().length >= 5 && images.length > 0 && " · "}
+                      {text.trim().length >= 1 && <span>{text.length} chars</span>}
+                      {text.trim().length >= 1 && images.length > 0 && " · "}
                       {images.length > 0 && <span>{images.length} screenshot{images.length > 1 ? "s" : ""}</span>}
                     </>
                   ) : (
