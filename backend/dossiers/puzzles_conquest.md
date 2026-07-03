@@ -162,6 +162,118 @@ Stats boost troops vs. monsters, hell forts, and other players.
 - **Battle 3** — unlocks at **Castle 36 + Institute 36**.
 - Upgrade with resources + speedups (accelerates process).
 
+## Farms — Alt-Account Resource Generation Doctrine (VERIFIED)
+Farms are dedicated alt accounts built to feed resources to your main castle.
+
+### Farm Creation Rules
+- **1 account per kingdom, per device** — you cannot make 2 accounts in the same kingdom.
+- **Workaround**: Create accounts in **OTHER** kingdoms → migrate them to your main's kingdom.
+- **Path**: More (bottom-left "+") → Settings → Manage Character → New Character → pick a kingdom to spawn the farm in.
+
+### Farm Migration
+**Below Castle Lv.6**:
+- Use the free **Starter Teleport** the game grants: **works until Castle Lv.5** AND within **7 days of account creation** AND only when moving to a kingdom where you do NOT already have a castle.
+
+**Above Castle Lv.5**:
+- **Global Teleport** via **Alliance Shop** — costs **500,000 Alliance Coins**.
+- **$5 pack** in Mall (unlocks after **C15**) grants **1 Global Teleport**.
+
+### Farm Building Layout (35-building cap — VERIFIED)
+- **1 Food Mine**
+- **1 Wood Mine**
+- **8 Iron Mines**
+- **8 Gold Mines**
+- **7 Hospitals**
+- **10 Training Camps**
+
+**Why the imbalance?** Food + Wood are cheap and generate fast from monsters/hell forts already. Iron + Gold are the bottlenecks — max them. Hospitals + Training Camps support troop rebuilds after wipe.
+
+### Why Hospitals on a Market-Only Farm?
+Even if you send resources via Market (not by attacking your farm), hospitals still matter because:
+- Farms **gather** on tiles → gather troops can be attacked while out.
+- Wounded gathering troops need Hospital slots or they're **DEAD**.
+- Losing 100% of your farm's gather troops = 24+ hours of retraining downtime.
+
+### Training Camps — Ongoing Need
+- **Yes, all the time.** Farms constantly lose troops (attacks by main, hell fort wipes, wounded troops that overflow hospital cap).
+- Also used for the Alt-Coordination Monster Hunt trick (1-cav-per-farm hit for reward distribution — see Monster Hunt doctrine).
+
+### Optimal Farm Castle Level: **C22** (VERIFIED)
+- **C22** = the sweet spot for farms.
+- Reason 1: **Unlocks T8 catapults** → gather MORE per march load.
+- Reason 2: T8 cats give **~2 days of gathering time with a full march** — massive uptime per march.
+- Reason 3: Post-C22, training/transport cost climbs faster than benefit. Above C22 = diminishing returns for farm purpose.
+
+### F2P vs Paid Farms
+- **F2P farm is 100% viable** — everything (Global Teleports via alliance coins, VIP via daily login + alliance shop points, gear/tech via time) is earnable without paying.
+- Paid farms grow faster but the ceiling is the same. F2P just takes longer.
+
+### Market — Send Resources Home
+- Upgrade the **Market** on the farm to **same level as its Castle** — max transport size + reduced tax.
+- Sending resources to your main via Market costs a tax on delta between distances/levels.
+
+### Gathering Speed Optimization
+**Train Cavalry** for faster marches OR **Catapults** for larger load capacity (higher payload = fewer march cycles needed to deplete a tile).
+
+**Institute (Tech)**: Focus **Economy** category — grants gathering speed + higher output from castle's own mines.
+
+**Sauroi (Economy Skill)**: Level Food/Wood/Iron/Gold **gathering speed** + **Troop Load** — troop load reduces the number of troops needed to clear a resource tile.
+
+### Farm-Friendly Heroes
+
+**Resource Output** (easy to reach Lv.5, gives resource output stat):
+- **2★**: Naax · Lamassu · Garnet · Florine
+- **4★**: Regina · Ammon · Apollo · Toke
+
+**Gathering Speed** (easy to reach Lv.5):
+- **3★**: Dracula · Eri · Cerno · Elros · Harald
+
+### March Slots
+To unlock all **5 marches** for max gathering efficiency:
+- **1 free march** from game start.
+- **3 marches** from Institute (requires Castle 20 + Institute 20).
+- **1 march** from **VIP 8** (~80,000 Gems to reach, but VIP Points also earnable from Alliance Shop + daily login).
+- **Total = 5 marches.**
+
+### Baseline Farm Output Example (VERIFIED)
+With **5 marches, 3-hour gather speed on Lv.5 tiles, over 12 hours non-stop gathering**:
+- Food: **4.8M**
+- Wood: **4.8M**
+- Iron: **800K**
+- Gold: **200K**
+
+Plus **Monsters + Hell Fortress boxes** = extra Food and Wood.
+
+### Resource-Rich Events
+**Direct participation events** (need to send at least 1 march):
+- Gate of Abyss
+- Monster Hunt
+
+**Alliance Showdown** (whole-alliance milestone rewards):
+- Team hits **Level 20** → **40,000 Diamonds** per player.
+- Team hits **Level 30** → **90,000 Diamonds** per player.
+- Also drops resource picks.
+
+### Diamond Exchange Shop — Endgame Farm Play
+**Requires VIP 10** on farm. **HOARD diamonds** until the shop appears.
+- **Resource Choice Chest** = **500 Diamonds** per piece · buy **up to 200**.
+- **All 200 chests** = **100,000 Diamonds**.
+- **If all 200 spent on ONE resource type**:
+  - Food: **300M**
+  - Wood: **300M**
+  - Iron: **60M**
+  - Gold: **15M**
+
+**Doctrine**: A properly-farmed VIP-10 alt can push **300M Food/Wood** to your main in a single diamond-shop cycle. This is the endgame reason to invest in farms.
+
+### Farm Attack Tax (VERIFIED CLARIFICATION)
+Many players attack their own farms to skip the Market tax on resource transfer.
+- ⚠️ **The attack-your-farm method is NOT tax-free**.
+- **When you attack a castle, you lose 30% of the resources you plunder** to the attack tax.
+- Compare the **attacker's** post-battle report vs. the **defender's** to verify — the delta is the 30% tax.
+- Many players eat the tax anyway because attacking is **faster** than sending many individual Market shipments.
+- **Doctrine**: Market for large, planned shipments (lower tax, higher volume). Attack for speed when you need resources fast and can absorb the 30%.
+
 ## Kingdom Boosts — Queen/King Buff Timing Doctrine (VERIFIED)
 Queens and Kings can activate kingdom-wide boosts. Timing them correctly multiplies value for the whole kingdom.
 

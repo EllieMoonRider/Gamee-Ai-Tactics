@@ -493,6 +493,26 @@ STAMINA STACKING EXPLOIT (Ace Lord Day 3 or off-hours; requires friend/farm rall
 - STEPS: (1) Max Stam at 120. (2) Start HF45 rally with 1 troop for 1hr → your Stam drops to 90. (3) Stam regenerates during 1hr. (4) When HF45 defeats you, the paid Stam RETURNS. (5) Re-max Stam, start another HF45 (1hr) with a different castle + your 2nd march. (6) Chain until all 5 marches are locked in HF45 rallies simultaneously. (7) Before daily reset, open the first 3 daily-quest Stam boxes to max your bank.
 - EFFECT: Effectively STORES far more Stam than your cap normally allows, deployable in burst for Day 3 Master Trainer / heavy Stam events. Time-sensitive; only worth it for specific Stam-heavy targets.
 
+FARMS (alt-account resource generation, VERIFIED):
+- SETUP: 1 account per kingdom per device. Create in OTHER kingdoms + migrate. Path: More(+) → Settings → Manage Character → New Character.
+- MIGRATION: Below C6 use free Starter Teleport (until C5 within 7 days of creation, target kingdom must not already have your castle). Above C5 use Global Teleport (500k Alliance Coins from Alliance Shop, or $5 pack from Mall unlocked at C15).
+- BUILDING LAYOUT (35-cap): 1 Food mine · 1 Wood mine · 8 Iron mines · 8 Gold mines · 7 Hospitals · 10 Training Camps. Iron/Gold heavy because they're the bottleneck.
+- OPTIMAL FARM CASTLE LEVEL: C22 (unlocks T8 catapults; T8 cats give ~2 days gathering time with a full march; above C22 = diminishing returns).
+- HOSPITALS MATTER even if you Market-send: gather troops get attacked while out, wounded need hospital slots or they DIE.
+- TRAINING CAMPS ongoing need: farms constantly lose troops.
+- F2P farms 100% viable. Paid grows faster but same ceiling.
+- MARKET: Upgrade to same level as farm's Castle for max transport size + reduced tax.
+- GATHERING TECH: Cavalry = faster march, Catapults = bigger load. Institute Economy + Sauroi Economy (gathering speed + Troop Load).
+- FARM-FRIENDLY HEROES (easy to level to Lv.5):
+  - Resource Output: 2★ Naax, Lamassu, Garnet, Florine · 4★ Regina, Ammon, Apollo, Toke.
+  - Gathering Speed: 3★ Dracula, Eri, Cerno, Elros, Harald.
+- 5-MARCH UNLOCK: 1 free + 3 from Institute (C20+Institute 20) + 1 from VIP 8 (80k Gems or earn VIP pts from Alliance Shop+daily login) = 5 total.
+- BASELINE OUTPUT: 5 marches, 3hr gather on Lv.5 tiles, 12hrs non-stop → 4.8M Food · 4.8M Wood · 800K Iron · 200K Gold.
+- RESOURCE EVENTS: Gate of Abyss + Monster Hunt (need march participation). Alliance Showdown Lv20 = 40k Diamonds/player · Lv30 = 90k Diamonds/player.
+- DIAMOND EXCHANGE SHOP (VIP 10 farm required, HOARD diamonds): Resource Choice Chest = 500 Diamonds × up to 200 = 100k Diamonds total. All-in on 1 resource: 300M Food · 300M Wood · 60M Iron · 15M Gold. This is the endgame farm play.
+
+FARM ATTACK TAX (VERIFIED): Attacking your own farm is NOT tax-free. You LOSE 30% of plundered resources to the attack tax (verify by comparing attacker vs defender battle reports; delta = 30% tax). Many players eat the tax because it's faster than many Market shipments. DOCTRINE: Market for large planned shipments (lower tax, higher volume). Attack for speed when you can absorb 30% loss.
+
 CASTLE UNLOCKS: C10 Tower of Trial · C12 Mystery Shop · C15 Glory Level · C16 The Pit · C18 Sour Gems + Sour Sigil trials · C20 Auction House + 4th March Queue · C25 More Sigil trials · VIP 8 for 5th March Queue (max 5).
 
 CASTLE UPGRADE RULE: Wall must be upgraded FIRST + one secondary building. Chain of dependencies.
