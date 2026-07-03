@@ -431,16 +431,115 @@ If the Commander's directive is vague, do NOT guess. ASK a targeted clarifying q
 """
 
 
+PC_DOSSIER = """
+=== PUZZLES & CONQUEST INTEL DOSSIER (VERIFIED) ===
+
+RESOURCES: Food · Wood · Iron · Gold · Miscellaneous.
+
+TROOP HEROES (all-3-skills — best for rallies):
+- Infantry: 3★ Al-Morrah · 4★ Fuga · 5★ Sarbor, Poseidon, Zhong Kui. 2-skill: 2★ Florine, 3★ Eri, 4★ Regina (replaces Al-Morrah at Lv 131).
+- Cavalry: 3★ Talon · 4★ Malice · 5★ Lux, Guan Yu, Cleopatra. 2-skill: 2★ Naax, 3★ Dracula, 4★ Apollo (replaces Talon at Lv 131).
+- Ranged: 3★ Hendrick · 4★ Deedoe · 5★ Zeus, Ne Zha, Jiang Ziya. 2-skill: 2★ Garnet, 3★ Cerno, 4★ Toke (replaces Hendrick at Lv 131).
+
+TRAP COUNTERS: Launch Traps counter Cavalry · Arrow Tower counters Ranged · Ground Traps counter Infantry · nothing counters Siege.
+
+CASTLE UNLOCKS: C10 Tower of Trial · C12 Mystery Shop · C15 Glory Level · C16 The Pit · C18 Sour Gems + Sour Sigil trials · C20 Auction House + 4th March Queue · C25 More Sigil trials · VIP 8 for 5th March Queue (max 5).
+
+CASTLE UPGRADE RULE: Wall must be upgraded FIRST + one secondary building. Chain of dependencies.
+
+BUILDING DEPENDENCIES: Watch Tower ← Farm · Trap Workshop ← Lumber Camp · Infantry Barracks ← Recruiting Center · Ranged Barracks ← Infirmary.
+
+CASTLE 40 build time: 1,260 days original, ~300-400 with speedups.
+
+HERO IDEAL LEVELS: 2★ Lv 31 · 3★ Lv 71 · 4★ Lv 131 · 5★ Lv 212. Maxing past ideal = wasteful (376,610 Soulstones to max 2★ vs 49,460 for Lv 31 for only ~20K Might gain).
+
+ARENA: Blue vs Red is strong matchup. **Poseidon: DEFENSE ONLY, never attack.** Combos: Animus + Nefertari (Animus loads MP after skill = unbeatable) · Nezha + Animus. Prep threshold: hero +5 with 1 red equipment. Hero Championship = top Arena rankers = PRIMARY Troop Gem source.
+
+FORMATION RESEARCH (Institute Lv 28): 12K Infantry front + Cavalry mix = 81% win rate vs Cavalry-only 79%. Only Infantry provides real front-line defense.
+
+HELL FORTRESS RALLIES: Cavalry ~60% win to advance target · Range/Infantry ~65-70%. Best mix: Infantry + Range (Inf tanks, Range damages).
+
+ACE LORD 6-PHASE: (1) Gathering — empty army into tiles night before, return at reset. (2) Construction/Research — start days-long upgrades ahead so they finish naturally. (3) Stamina/AP — dump on Hell Fortress rallies with alliance. (4) Training Speedups — train T9+ for exponential points; save bulk for phases 6-7. (5) Gear/Gems/Curios — open ALL loot on this day. (6/7) Sprint — pop Hero Recruit tokens, use all speedups, activate training boosts BEFORE start.
+
+GOLDEN RULE: HOARD. Never spend outside designated event windows. Save: Demon chests · Hero flags · Promo chests · 8★ Promoter chests · Stamina · Rune stones.
+
+WEEKLY ROTATION — GET WEEK (aka Off Week; alternates with Ace Week; do NOT burn Ace-reserved speedups/tokens here):
+D1 Hero: Hero Upgrade · Timed Recruit (2d) · Time Rift (3d) · Sun frags · Banner Brawl (7d).
+D2 Development: New Development (speedups+Manor) · Gather (no frags) · Monster Hunt · Alliance Party.
+D3 Gear+Runes: Gear Upgrade (+Orb Adv) · Rune Upgrade & Relics · Orb Adventure (3d, replaces Joy 777).
+D4 Sauroi: Sauroi Power (+Orb Adv) · Army Expansion (no frags) · Monster Hunt · Hell Event (3/day × 3d).
+D5 Gems: Gem & Warsigil Upgrade (+Orb Adv) · Battle of Saurnesia/Clash/Ice Bay · Alliance Party.
+D6 Diamond: Diamond Expert (2d, shovel alts) · Valiant Conquest · Recharge Rebate Diamond · Hunter Tactics (2d).
+D7 Saurgil: Saurgil (mats+refine) · Blessing of Glory (Stone/Mark) · Recharge Rebate Saurgil · Blackrock Mine · Joint Operation.
+
+WEEKLY ROTATION — ACE WEEK (alternates with Get Week; deploy hoarded resources; supports the 6-phase Ace Lord push):
+D1 Hunt & Gather: Gather · Stamina · AP · gain Diamonds · Temple Trial · Curio (non-Ace) · Apex (10d) · Lucky Draw/Divination (3d) · Trial of Fire and Ice (3d).
+D2 Might Push: Build Might + Tech Might · Demon Incursion · Alliance Party.
+D3 Master Trainer: burn Training Speedups here.
+D4 Hero Rising: Hero Rising · Lucky Spin (2d) · Demon Incursion · Hell Event (3/day × 3d).
+D5 Promote Mats: Acquire Promote Mats + Essence · Battle of Saurnesia/Clash/Ice Bay · Alliance Party.
+D6 Summons: Hero Hall Summons + Refinements + Saurgil Summons (open hoarded chests) · Alliance Conquest · Hunter Tactics (2d) · Military Expedition.
+D7 Might + Undead: Build Might · Tech Might · Troop Training · Undead Lord · Boneyard.
+
+ALLIANCE SHOWDOWN — INEFFICIENT TASKS (Jungleboogie verified; avoid unless mandatory):
+Resource Gather 113pts (=138pt output with less time) · Resource Transport ALL (farms only) · Get Materials 113pts (2× effort vs 120pts) · Mystery Shop 100pts (4 more purchases vs 122pts) · Training Quantity ALL (Troop Might easier) · Troop/Build/Tech Might 113pts (2× vs 120pts) · Speedup ALL (Might Up more efficient) · Helps 109pts (20 more helps vs 127pts) · Hero Frags 113pts (2× vs 120pts) · Consume Stamina 104pts (250 more vs 118pts) · Heal Units ALL.
+
+ALLIANCE SHOWDOWN — MYSTERY TASK POINT TIERS (Jungleboogie verified):
+150 pts: 3k Diamonds · 350 AP/Stam · 200k Alliance Coins · 280k Equip Mats · 25 Helps · Mystery Shop×8 · 1M Troop Might · 5 Packs · 9k Diamond Recharge · 350k Tech Might · 100k Build Might.
+180 pts: 9k Diamond Recharge · 750 AP/Stam · 400k Alliance Coins · 150k Build Might · 1.5M Train Might · 400k Equip Mats · 400k Hero Frags · 50 Helps · Mystery Shop×16.
+210 pts: 12 Packs · 12k Diamond Recharge · 75k Diamonds · 1125 AP/Stam · 600k Alliance Coins · 750k Tech Might · 600k Equip Mats · 600k Hero Frags · 75 Helps · Mystery Shop×24 · Gathering · 1.3M Troop Might.
+240 pts: 15 Packs · 15k Diamond Recharge · 100k Diamonds · 1500 AP/Stam · 800k Alliance Coins · 300k Build Might · 1M Tech Might · 800k Equip Mats · 800k Hero Frags · 100 Helps · Mystery Shop×32 · 3M Troop Might.
+
+ALLIANCE CONQUEST — BATTLE PHASE (verified): 24-hour phase · each participant gets 2 attacks · each successful attack = 100 Alliance Points (max 200/player) · only 30 alliance members selected by leadership can participate · non-participants see Spectate button (view-only, cannot attack or reinforce during battle phase) · coordinate targets in alliance chat pre-battle to avoid double-hits.
+ALLIANCE CONQUEST — SHIELD SYSTEM: green shield = attackable · red shield = already defeated, locked out · pick which enemy line-up to fight · WIN → their shield turns red + alliance banks 100 pts · LOSE → attack attempt burned, 0 points, shield stays green (line-up still attackable by others).
+ALLIANCE CONQUEST — DEFENDER LINE-UPS: each defender fields 2 line-ups, each usable ONCE · if line-up 1 already fought, must send line-up 2 · when BOTH line-ups defeated, defender is locked out (no more incoming). Battle Record log post-phase shows who fought whom, win/loss — accountability + intel tool for next cycle.
+
+DRAGONIA WAR: Center-map Altar of Dragonia. Alliance PvP for kingdom-leader control + alliance-wide buffs. Combat Event — prioritize troop health, PvP synergy, reinforcement travel time (NOT resource gathering).
+
+DEMON INCURSION: Alliance-optimal = strong players reinforce weakest members' castles. Personal Rank 1 tactic (Froth1k): Lv 7 or Lv 11 difficulty (never Lv 8) · pre-reinforce farms ~250-260km away · Wave 14 + Wave 17 are elite point tiers · use Recall Talent · never burn diamonds on Direct Relocator/speedups (Rank 1 = 5,000 diamonds only). Cadence ~2 weeks.
+
+SAURNESIA (cross-server): Points via Wonders (static) + Dragon Cub Escort path (spikes). Battlefield Infirmary mindset — troops returned safely afterward, so rally aggressively for 3-min wonder captures.
+
+MONSTER HUNT: Chain hunts via Hunt Bonus multiplier. Never solo isolated high-monsters. Stamina → continuous alliance Hell Fortress rally loops.
+
+TIMERIFT: Wave-based, both sides scale per round. Target Wave 20 min · Wave 50 ideal.
+
+BONEYARD: Alliance-driven points. Catapult scout = 45-second stall on incoming march reveal.
+
+FEAST: 3,000-seat cap. Variants: Common Feast, Heart Feast (and others). Rewards Startup Blessings + Glories.
+
+ALLIANCE HELP: ~1 min per help. Reward: 800 Alliance Coins/help (daily cap 40,000). Speedup Help Cap governed ONLY by Embassy level (no Embassy = 2 helpers · Embassy L1 = 4 · each upgrade increases both count + efficiency). CAP IS LOCKED AT ALLIANCE HALL LEVEL WHEN TASK STARTED, NOT CURRENT LEVEL.
+
+TERRITORY: Held resources (plunderable above Storage) vs Bag (safe, must withdraw to spend). Daily Cap = 10 hours of hourly output (not 24). Fast Producer talent = 5× hourly output, does NOT count against Daily Cap, activatable 2×/day.
+
+TRAPS + SIEGE: Traps functionally useless per Froth1k (build for daily quests only). Siege does NOT get bonus damage joining Archer rallies.
+
+DEFENSIVE: Shields > Wall Repair. Wall repair slow (~15 min per pass). Wall defeat → territory on fire 30 min → auto-relocate if wall drops to 0. Assign heroes to guard the wall.
+
+BANK: Daily 1-day 7% > 30-day 20-50% for daily-active players.
+
+FOOD: Food not protected by Storage is eaten by troops. Do NOT manually open food bags — system pulls automatically.
+
+CROSS-TITLE TRAP: "Dragonia" also used in Merge Dragons for different mechanics. Red flags for wrong-game context: merge-style mini-game, "Dragon Cups" → this is NOT P&C, escalate.
+
+STRICT: Never invent hero names, monster names, event names, patch numbers, or building levels not listed above. Non-P&C content → File 47.
+=== END DOSSIER ===
+"""
+
+
 def system_prompt_for(game_slug: str) -> str:
     game = next((g for g in GAMES if g["slug"] == game_slug), None)
     name = game["name"] if game else "37Games title"
     genre = game["genre"] if game else "mobile strategy game"
-    return (
+    base = (
         CYPHER_VOICE_CODEX.replace("[GAME NAME]", name)
         + f"\n=== CURRENT SPECIALIZATION ===\n"
         f"You are the dedicated CypherAI tactical specialist for '{name}' ({genre}). "
         f"You ONLY answer about '{name}'. Every strategy, hero reference, and numeric callout must be specific to this title."
     )
+    if game_slug == "puzzles-conquest":
+        base += "\n\n" + PC_DOSSIER
+    return base
 
 
 def deepdive_system_prompt(game_slug: str, mode: str) -> str:

@@ -1,0 +1,322 @@
+/* ============================================================================
+   GameBeacons — Layer 2
+   Cinematic tactical beacons on the holographic grid floor.
+   Three theaters: Puzzles & Survival, Puzzles & Conquest, Puzzles & Chaos.
+   Rich neon-green + burnt-orange, hexagonal clip-paths, pulsing ground rings.
+   ============================================================================ */
+
+.game-beacons {
+  position: absolute;
+  inset: 0;
+  z-index: 20; /* above holo floor (1.5), below hamburger menu (40) */
+  pointer-events: none;
+}
+
+/* === Individual beacon ==================================================== */
+.beacon {
+  position: absolute;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  pointer-events: auto;
+  opacity: 0;
+  animation: beacon-fade-in 0.9s ease-out forwards;
+  --beacon-color: #00FF80;
+  filter: drop-shadow(0 0 12px rgba(0, 255, 128, 0.35));
+  transition: filter 0.25s ease, transform 0.25s ease;
+}
+
+.beacon:hover,
+.beacon:focus-visible {
+  outline: none;
+  filter: drop-shadow(0 0 22px rgba(0, 255, 128, 0.9));
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.beacon--primary {
+  filter: drop-shadow(0 0 18px rgba(255, 107, 0, 0.55));
+}
+.beacon--primary:hover,
+.beacon--primary:focus-visible {
+  filter: drop-shadow(0 0 28px rgba(255, 107, 0, 1));
+}
+
+@keyframes beacon-fade-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* === Ground-anchor pulsing ring — flat ellipse on the floor plane ========= */
+.beacon__ring {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%) rotateX(72deg);
+  width: 110px;
+  height: 110px;
+  border: 2px solid var(--beacon-color);
+  border-radius: 50%;
+  box-shadow: 0 0 18px var(--beacon-color), inset 0 0 12px var(--beacon-color);
+  animation: beacon-ring-pulse 2.6s ease-in-out infinite;
+  opacity: 0.85;
+}
+.beacon__ring--2 {
+  animation-delay: 1.3s;
+  width: 150px;
+  height: 150px;
+  opacity: 0.55;
+}
+.beacon--primary .beacon__ring { border-color: #FF6B00; box-shadow: 0 0 22px #FF6B00, inset 0 0 14px #FF6B00; }
+.beacon--primary .beacon__ring--2 { border-color: #FF6B00; box-shadow: 0 0 22px #FF6B00, inset 0 0 10px #FF6B00; }
+
+@keyframes beacon-ring-pulse {
+  0%, 100% { transform: translateX(-50%) rotateX(72deg) scale(0.85); opacity: 0.4; }
+  50%      { transform: translateX(-50%) rotateX(72deg) scale(1.15); opacity: 0.95; }
+}
+
+/* === Vertical light column rising from the ring =========================== */
+.beacon__column {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 78px;
+  background: linear-gradient(
+    to top,
+    var(--beacon-color) 0%,
+    rgba(0, 255, 128, 0.6) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 10px var(--beacon-color);
+  animation: beacon-column-flicker 3.4s ease-in-out infinite;
+}
+.beacon--primary .beacon__column {
+  background: linear-gradient(
+    to top,
+    #FF6B00 0%,
+    rgba(255, 107, 0, 0.6) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px #FF6B00;
+}
+
+@keyframes beacon-column-flicker {
+  0%, 100% { opacity: 0.8; }
+  45%      { opacity: 1; }
+  50%      { opacity: 0.5; }
+  55%      { opacity: 1; }
+}
+
+/* === Tactical panel (main clickable card) ================================= */
+.beacon__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 200px;
+  max-width: 240px;
+  padding: 0.85rem 1.1rem 0.9rem;
+  margin-bottom: 78px; /* raises panel above the light column */
+  background:
+    linear-gradient(180deg, rgba(0, 22, 12, 0.92) 0%, rgba(0, 8, 4, 0.96) 100%);
+  border: 1px solid var(--beacon-color);
+  clip-path: polygon(
+    12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px),
+    calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px
+  );
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 128, 0.08) inset,
+    0 6px 18px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 255, 128, 0.28);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.beacon--primary .beacon__panel {
+  border-color: #FF6B00;
+  box-shadow:
+    0 0 0 1px rgba(255, 107, 0, 0.12) inset,
+    0 6px 22px rgba(0, 0, 0, 0.6),
+    0 0 26px rgba(255, 107, 0, 0.5);
+}
+
+.beacon:hover .beacon__panel,
+.beacon:focus-visible .beacon__panel {
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 128, 0.2) inset,
+    0 8px 24px rgba(0, 0, 0, 0.7),
+    0 0 32px rgba(0, 255, 128, 0.65);
+}
+.beacon--primary:hover .beacon__panel,
+.beacon--primary:focus-visible .beacon__panel {
+  box-shadow:
+    0 0 0 1px rgba(255, 107, 0, 0.25) inset,
+    0 8px 26px rgba(0, 0, 0, 0.7),
+    0 0 38px rgba(255, 107, 0, 0.85);
+}
+
+/* Tactical corner brackets */
+.beacon__corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--beacon-color);
+}
+.beacon--primary .beacon__corner { border-color: #FF6B00; }
+.beacon__corner.tl { top: 4px; left: 4px; border-right: none; border-bottom: none; }
+.beacon__corner.tr { top: 4px; right: 4px; border-left: none; border-bottom: none; }
+.beacon__corner.bl { bottom: 4px; left: 4px; border-right: none; border-top: none; }
+.beacon__corner.br { bottom: 4px; right: 4px; border-left: none; border-top: none; }
+
+/* Header row: codename + intel badge */
+.beacon__header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.22em;
+  color: rgba(0, 255, 128, 0.8);
+  text-transform: uppercase;
+}
+
+.beacon__codename {
+  color: rgba(0, 255, 128, 0.85);
+  text-shadow: 0 0 6px rgba(0, 255, 128, 0.5);
+}
+.beacon--primary .beacon__codename {
+  color: rgba(255, 107, 0, 0.9);
+  text-shadow: 0 0 6px rgba(255, 107, 0, 0.6);
+}
+
+.beacon__intel {
+  font-weight: 700;
+  padding: 2px 6px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+}
+.beacon__intel--verified {
+  color: #FFBA08;
+  text-shadow: 0 0 6px rgba(255, 186, 8, 0.6);
+}
+.beacon__intel--pending {
+  color: rgba(0, 255, 128, 0.6);
+  border-style: dashed;
+}
+
+/* Icon in center */
+.beacon__icon-wrap {
+  width: 52px;
+  height: 52px;
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--beacon-color);
+  color: var(--beacon-color);
+  background: radial-gradient(circle at center, rgba(0, 255, 128, 0.16), rgba(0, 255, 128, 0));
+  box-shadow: 0 0 14px rgba(0, 255, 128, 0.35), inset 0 0 10px rgba(0, 255, 128, 0.15);
+}
+.beacon--primary .beacon__icon-wrap {
+  border-color: #FF6B00;
+  color: #FF6B00;
+  background: radial-gradient(circle at center, rgba(255, 107, 0, 0.22), rgba(255, 107, 0, 0));
+  box-shadow: 0 0 16px rgba(255, 107, 0, 0.55), inset 0 0 12px rgba(255, 107, 0, 0.2);
+}
+
+/* Theater tag */
+.beacon__theater {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(0, 255, 128, 0.85);
+  text-shadow: 0 0 6px rgba(0, 255, 128, 0.55);
+  margin-top: 0.4rem;
+}
+.beacon--primary .beacon__theater {
+  color: #FFBA08;
+  text-shadow: 0 0 8px rgba(255, 186, 8, 0.7);
+}
+
+/* Name */
+.beacon__name {
+  font-family: "Orbitron", "Bebas Neue", sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  color: #ffb060;
+  text-shadow: 0 0 8px rgba(255, 107, 0, 0.55);
+  line-height: 1.15;
+  text-align: center;
+}
+
+.beacon__tagline {
+  font-family: "Orbitron", "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 0.66rem;
+  color: #cfffe1;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* CTA at bottom */
+.beacon__cta {
+  margin-top: 0.55rem;
+  padding: 0.32rem 0.85rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.28em;
+  color: var(--beacon-color);
+  border: 1px solid var(--beacon-color);
+  background: rgba(0, 22, 12, 0.7);
+  border-radius: 2px;
+  transition: background 0.18s ease, color 0.18s ease, letter-spacing 0.18s ease;
+}
+.beacon--primary .beacon__cta {
+  color: #FF6B00;
+  border-color: #FF6B00;
+  background: rgba(22, 8, 0, 0.7);
+}
+.beacon:hover .beacon__cta,
+.beacon:focus-visible .beacon__cta {
+  background: rgba(0, 255, 128, 0.15);
+  letter-spacing: 0.34em;
+}
+.beacon--primary:hover .beacon__cta,
+.beacon--primary:focus-visible .beacon__cta {
+  background: rgba(255, 107, 0, 0.18);
+}
+
+/* === Mobile / narrow landscape tuning ===================================== */
+@media (max-width: 900px) {
+  .beacon__panel {
+    min-width: 158px;
+    max-width: 190px;
+    padding: 0.65rem 0.85rem 0.75rem;
+    margin-bottom: 62px;
+  }
+  .beacon__icon-wrap { width: 42px; height: 42px; }
+  .beacon__name { font-size: 0.85rem; }
+  .beacon__tagline { font-size: 0.6rem; }
+  .beacon__column { height: 62px; }
+  .beacon__ring { width: 82px; height: 82px; }
+  .beacon__ring--2 { width: 115px; height: 115px; }
+}
+
+@media (max-width: 640px) {
+  .beacon__panel {
+    min-width: 140px;
+    max-width: 168px;
+    padding: 0.55rem 0.7rem 0.65rem;
+  }
+  .beacon__theater { font-size: 8px; letter-spacing: 0.22em; }
+  .beacon__cta { font-size: 8.5px; padding: 0.25rem 0.6rem; }
+}

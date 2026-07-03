@@ -7,6 +7,7 @@ import LandscapePrompt from "../components/LandscapePrompt";
 import CommandCenterWidget from "../components/CommandCenterWidget";
 import CommandCenterMenu from "../components/CommandCenterMenu";
 import RadarBriefing from "../components/RadarBriefing";
+import GameBeacons from "../components/GameBeacons";
 import "../components/CommandCenter.css";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
@@ -355,6 +356,12 @@ const Dashboard = () => {
       </div>
 
       <CommandCenterMenu />
+
+      {/* === LAYER 2 — Game Beacons on the holographic floor ===
+          Three cinematic tap-targets for the 3 active theaters:
+          Puzzles & Survival · Puzzles & Conquest (primary) · Puzzles & Chaos.
+          Each routes to /game/:slug where the tailored War Room lives. */}
+      <GameBeacons />
 
       {/* Welcome briefing inside the radar — every login, skippable. */}
       <AnimatePresence>

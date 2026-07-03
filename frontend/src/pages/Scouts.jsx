@@ -1,16 +1,48 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import Navbar from "../components/Navbar";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
-import { Sparkle, UploadSimple, FilmStrip, GameController, Lightning, Coins, Trophy, ArrowsClockwise } from "@phosphor-icons/react";
+import {
+  Sparkle, UploadSimple, FilmStrip, GameController, Lightning,
+  Coins, ArrowLeft, ShieldStar, Target, LockKey,
+} from "@phosphor-icons/react";
+import "../components/CommandCenter.css";
+import "./Scouts.css";
 
 const KIND_META = {
-  upload_game_screenshot: { icon: UploadSimple, color: "#FFBA08", title: "Upload game update screenshot", help: "Snap your latest 37Games loading screen / patch notes / event banner. Helps the community track new content." },
-  watch_video: { icon: FilmStrip, color: "#FFAA33", title: "Watch a recommended video", help: "Open a CypherAI-curated strategy video. Bonus credit on first daily click." },
-  try_recommended_game: { icon: GameController, color: "#FF6B00", title: "Try a recommended game", help: "Open another 37Games title from the catalog and play 5+ min. Self-report; we trust commanders." },
-  daily_login: { icon: Lightning, color: "#A1A1AA", title: "Daily login bonus", help: "Just for showing up." },
+  upload_game_screenshot: {
+    icon: UploadSimple,
+    codename: "OP-01",
+    title: "Field Recon Upload",
+    help: "Transmit a screenshot of a live 37Games patch note, event banner, or loading screen. Intel expands the tactical database.",
+  },
+  watch_video: {
+    icon: FilmStrip,
+    codename: "OP-02",
+    title: "Signal Interception",
+    help: "Review a CypherAI-curated strategy broadcast from the intel network. Bonus credit on first daily interception.",
+  },
+  try_recommended_game: {
+    icon: GameController,
+    codename: "OP-03",
+    title: "Adjacent Theater Sweep",
+    help: "Deploy into another 37Games title for 5+ minutes. Report back with the theater engaged.",
+  },
+  daily_login: {
+    icon: Lightning,
+    codename: "OP-04",
+    title: "Daily Check-In",
+    help: "Signal your presence at the Command Center. Small credit, guaranteed daily.",
+  },
 };
+
+// Scope-reduced to the 3 active theaters (Feb 2026)
+const ADJACENT_THEATERS = [
+  { slug: "puzzles-conquest", name: "Puzzles & Conquest" },
+  { slug: "puzzles-survival", name: "Puzzles & Survival" },
+  { slug: "puzzles-chaos",    name: "Puzzles & Chaos" },
+];
 
 const Scouts = () => {
   const { user } = useAuth();
@@ -30,7 +62,7 @@ const Scouts = () => {
       let body;
       let cfg = {};
       if (kind === "upload_game_screenshot") {
-        body = formExtra.file;  // FormData
+        body = formExtra.file;
         cfg = { headers: { "Content-Type": "multipart/form-data" } };
       } else {
         const fd = new FormData();
@@ -40,9 +72,10 @@ const Scouts = () => {
       }
       const { data: out } = await api.post(`/scouts/earn/${kind}`, body, cfg);
       setData(out);
-      toast.success(`+${out.rewards.find(r => r.kind === kind)?.credit_per_action || ""} credit`);
+      const reward = out.rewards.find(r => r.kind === kind);
+      toast.success(`+${reward?.credit_per_action || ""} credit locked in`);
     } catch (err) {
-      toast.error(err?.response?.data?.detail || "Could not record action");
+      toast.error(err?.response?.data?.detail || "Transmission failed");
     } finally { setBusy(null); }
   };
 
@@ -50,7 +83,7 @@ const Scouts = () => {
     const f = e.target.files?.[0];
     if (!f) return;
     if (!f.type.startsWith("image/")) {
-      toast.error("Image files only");
+      toast.error("Image intel only");
       return;
     }
     const fd = new FormData();
@@ -70,96 +103,168 @@ const Scouts = () => {
       toast.success(`+${units} Deep Dive baseline${units > 1 ? "s" : ""} unlocked`);
       await refresh();
     } catch (err) {
-      toast.error(err?.response?.data?.detail || "Could not redeem");
+      toast.error(err?.response?.data?.detail || "Redemption failed");
     } finally { setBusy(null); }
   };
 
   if (!data) {
     return (
-      <div className="command-center min-h-screen">
-        <Navbar />
-        <div className="max-w-5xl mx-auto px-6 py-10"><div className="h-16 shimmer rounded" /></div>
+      <div className="scout-dashboard scout-dashboard--loading" data-testid="scout-loading">
+        <div className="scout-shell">
+          <div className="scout-loading-bar" />
+          <p className="scout-loading-txt">// SCOUT NETWORK · SYNCING TELEMETRY…</p>
+        </div>
       </div>
     );
   }
 
   const balance = data.credits;
   const redeemable = data.redeemable_now;
+  const progressPct = Math.min(100, (balance / data.redeem_cost) * 100);
 
   return (
-    <div className="command-center min-h-screen">
-      <Navbar />
-      <div className="max-w-5xl mx-auto px-6 py-10 space-y-6">
-        {/* Header */}
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <div className="tactical-label text-[#FF6B00] mb-2">// F2P PATH</div>
-            <h1 className="font-display text-3xl sm:text-4xl font-black tracking-tighter flex items-center gap-3">
-              <Sparkle size={32} weight="duotone" className="text-[#FF6B00]" /> Tactical Scouts
-            </h1>
-            <p className="text-sm text-zinc-400 mt-2 max-w-xl">
-              Earn credits by helping the community. <strong className="text-white">1 credit = $1</strong>. Stack <strong className="text-[#FFBA08]">3 credits</strong> to unlock 1 free Deep Dive (worth $2.99).
-            </p>
-          </div>
-          {/* Balance card */}
-          <div className="surface rounded-md p-5 min-w-[240px]" data-testid="scout-balance-card">
-            <div className="tactical-label text-[#FFBA08] mb-1">// CURRENT CREDITS</div>
-            <div className="flex items-baseline gap-2">
-              <div className="font-display text-5xl font-black text-[#FFBA08]" data-testid="scout-balance">{balance.toFixed(2)}</div>
-              <Coins size={20} weight="duotone" className="text-[#FFBA08]" />
+    <div className="scout-dashboard" data-testid="scout-dashboard">
+      {/* Ambient grid background — same neon-green language as the Command Center */}
+      <div className="scout-bg" aria-hidden="true" />
+      <div className="scout-scanline" aria-hidden="true" />
+
+      <div className="scout-shell">
+        {/* Header rail — back link + name */}
+        <div className="scout-header">
+          <Link to="/dashboard" className="scout-back" data-testid="scout-back-dashboard">
+            <ArrowLeft size={14} weight="bold" /> COMMAND CENTER
+          </Link>
+          <span className="scout-header__ident">
+            OPERATOR: <strong>{user?.username || "COMMANDER"}</strong>
+          </span>
+        </div>
+
+        {/* Mission briefing headline */}
+        <div className="scout-briefing">
+          <div className="scout-briefing__label">// TACTICAL SCOUT PROGRAM · F2P CREDIT LOOP</div>
+          <h1 className="scout-briefing__title">
+            <Sparkle size={22} weight="duotone" /> Scout Network
+          </h1>
+          <p className="scout-briefing__desc">
+            Complete field operations to earn credits. Stack <strong>3 credits</strong> to
+            unlock <strong>1 Deep Dive baseline</strong> — same vision-AI analysis Pro operators
+            pay $2.99 for. Caps reset daily at 00:00 UTC.
+          </p>
+        </div>
+
+        {/* Two-column top bar — balance ledger + progress vault */}
+        <div className="scout-topbar">
+          {/* Ledger */}
+          <div className="scout-ledger" data-testid="scout-balance-card">
+            <span className="scout-corner tl" />
+            <span className="scout-corner tr" />
+            <span className="scout-corner bl" />
+            <span className="scout-corner br" />
+            <div className="scout-ledger__label">// CURRENT CREDITS</div>
+            <div className="scout-ledger__balance" data-testid="scout-balance">
+              {balance.toFixed(2)}
+              <Coins size={22} weight="duotone" />
             </div>
-            <div className="mt-3 text-xs text-zinc-400">
-              Redeemable now: <strong className="text-[#FFAA33]">{redeemable} Deep Dive{redeemable !== 1 ? "s" : ""}</strong>
+            <div className="scout-ledger__sub">
+              REDEEMABLE: <strong>{redeemable}</strong> Deep Dive{redeemable !== 1 ? "s" : ""}
             </div>
-            <button
-              onClick={() => redeem(1)}
-              disabled={busy === "redeem" || redeemable < 1}
-              className="btn-primary w-full mt-3 !py-2 text-sm"
-              data-testid="scout-redeem-btn"
-            >
-              {busy === "redeem" ? "Unlocking…" : `Redeem 3 credits → +1 Deep Dive`}
-            </button>
-            {redeemable >= 2 && (
+            <div className="scout-ledger__actions">
               <button
-                onClick={() => redeem(redeemable)}
-                disabled={busy === "redeem"}
-                className="btn-outline w-full mt-2 !py-1.5 text-xs"
-                data-testid="scout-redeem-all-btn"
+                onClick={() => redeem(1)}
+                disabled={busy === "redeem" || redeemable < 1}
+                className="scout-btn scout-btn--primary"
+                data-testid="scout-redeem-btn"
               >
-                Redeem all {redeemable} → +{redeemable} Deep Dives
+                {busy === "redeem" ? "UNLOCKING…" : "REDEEM 3 CR → +1 DEEP DIVE"}
               </button>
-            )}
+              {redeemable >= 2 && (
+                <button
+                  onClick={() => redeem(redeemable)}
+                  disabled={busy === "redeem"}
+                  className="scout-btn scout-btn--ghost"
+                  data-testid="scout-redeem-all-btn"
+                >
+                  REDEEM ALL ({redeemable})
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Vault progress */}
+          <div className="scout-vault">
+            <span className="scout-corner tl" />
+            <span className="scout-corner tr" />
+            <span className="scout-corner bl" />
+            <span className="scout-corner br" />
+            <div className="scout-vault__label">// NEXT UNLOCK PROGRESS</div>
+            <div className="scout-vault__meta">
+              <span>
+                {(balance % data.redeem_cost).toFixed(2)} / {data.redeem_cost.toFixed(2)} cr
+              </span>
+              <span className="scout-vault__pct">{progressPct.toFixed(0)}%</span>
+            </div>
+            <div className="scout-vault__bar">
+              <div
+                className="scout-vault__fill"
+                style={{ width: `${(balance % data.redeem_cost) / data.redeem_cost * 100}%` }}
+              />
+              <div className="scout-vault__tick" style={{ left: "0%" }} />
+              <div className="scout-vault__tick" style={{ left: "33.33%" }} />
+              <div className="scout-vault__tick" style={{ left: "66.66%" }} />
+              <div className="scout-vault__tick" style={{ left: "100%" }} />
+            </div>
+            <div className="scout-vault__desc">
+              Each Deep Dive vault requires <strong>3.00</strong> credits. Chain multiple ops
+              per day — caps refresh at reset.
+            </div>
           </div>
         </div>
 
-        {/* Rewards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-testid="scout-rewards">
+        {/* Operations grid */}
+        <div className="scout-ops-label">// AVAILABLE FIELD OPERATIONS · {data.rewards.length} ACTIVE</div>
+        <div className="scout-ops" data-testid="scout-rewards">
           {data.rewards.map(r => {
-            const meta = KIND_META[r.kind] || { icon: Sparkle, color: "#A1A1AA", title: r.kind, help: "" };
+            const meta = KIND_META[r.kind] || { icon: Sparkle, codename: "OP-??", title: r.kind, help: "" };
             const Icon = meta.icon;
             const used = r.daily_cap - r.today_remaining;
             const exhausted = r.today_remaining === 0;
             return (
-              <div key={r.kind} className="surface rounded-md p-5" data-testid={`scout-card-${r.kind}`}>
-                <div className="flex items-start gap-3">
-                  <div className="w-11 h-11 rounded-md border flex items-center justify-center flex-shrink-0"
-                       style={{ background: `${meta.color}15`, borderColor: `${meta.color}50` }}>
-                    <Icon size={22} weight="duotone" style={{ color: meta.color }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <h3 className="font-display font-bold text-base">{meta.title}</h3>
-                      <span className="tactical-label" style={{ color: meta.color }}>+{r.credit_per_action} cr</span>
-                    </div>
-                    <p className="text-xs text-zinc-400 mt-1">{meta.help}</p>
-                    <div className="mt-2 flex items-center justify-between text-[11px] font-mono-tactical text-zinc-500">
-                      <span>TODAY: {used}/{r.daily_cap}</span>
-                      <span>{r.today_remaining} REMAINING</span>
-                    </div>
-                  </div>
+              <div
+                key={r.kind}
+                className={`scout-op ${exhausted ? "scout-op--locked" : ""}`}
+                data-testid={`scout-card-${r.kind}`}
+              >
+                <span className="scout-corner tl" />
+                <span className="scout-corner tr" />
+                <span className="scout-corner bl" />
+                <span className="scout-corner br" />
+
+                <div className="scout-op__header">
+                  <span className="scout-op__codename">{meta.codename}</span>
+                  <span className="scout-op__reward">+{r.credit_per_action} CR</span>
                 </div>
 
-                <div className="mt-4">
+                <div className="scout-op__icon">
+                  <Icon size={28} weight="duotone" />
+                </div>
+
+                <h3 className="scout-op__title">{meta.title}</h3>
+                <p className="scout-op__help">{meta.help}</p>
+
+                <div className="scout-op__cap">
+                  <span>DAILY CAP</span>
+                  <span className="scout-op__cap-count">
+                    {used}/{r.daily_cap}
+                  </span>
+                </div>
+                <div className="scout-op__cap-bar">
+                  <div
+                    className="scout-op__cap-fill"
+                    style={{ width: `${(used / r.daily_cap) * 100}%` }}
+                  />
+                </div>
+
+                <div className="scout-op__action">
                   {r.kind === "upload_game_screenshot" && (
                     <>
                       <input
@@ -167,27 +272,30 @@ const Scouts = () => {
                         type="file"
                         accept="image/*"
                         onChange={onScreenshot}
-                        className="hidden"
+                        className="scout-file-hidden"
                         data-testid={`scout-upload-input-${r.kind}`}
                       />
                       <button
                         disabled={exhausted || busy === r.kind}
                         onClick={() => fileRef.current?.click()}
-                        className="btn-primary w-full !py-2 text-sm"
+                        className="scout-btn scout-btn--primary scout-btn--full"
                         data-testid={`scout-action-${r.kind}`}
                       >
-                        {busy === r.kind ? "Uploading…" : exhausted ? "Cap reached · back tomorrow" : "Upload screenshot"}
+                        {busy === r.kind ? "TRANSMITTING…" : exhausted ? <><LockKey size={12} weight="bold" /> CAP REACHED</> : <>UPLOAD INTEL <span>▸</span></>}
                       </button>
                     </>
                   )}
                   {r.kind === "watch_video" && (
                     <button
                       disabled={exhausted || busy === r.kind}
-                      onClick={() => { window.open("https://www.youtube.com/results?search_query=puzzles+and+conquest+strategy+guide", "_blank"); setTimeout(() => onWatchVideo("yt-" + Date.now()), 1200); }}
-                      className="btn-primary w-full !py-2 text-sm"
+                      onClick={() => {
+                        window.open("https://www.youtube.com/results?search_query=puzzles+and+conquest+strategy+guide", "_blank");
+                        setTimeout(() => onWatchVideo("yt-" + Date.now()), 1200);
+                      }}
+                      className="scout-btn scout-btn--primary scout-btn--full"
                       data-testid={`scout-action-${r.kind}`}
                     >
-                      {busy === r.kind ? "Recording…" : exhausted ? "Cap reached · back tomorrow" : "Watch a strategy video"}
+                      {busy === r.kind ? "LOGGING…" : exhausted ? <><LockKey size={12} weight="bold" /> CAP REACHED</> : <>INTERCEPT SIGNAL <span>▸</span></>}
                     </button>
                   )}
                   {r.kind === "try_recommended_game" && (
@@ -195,27 +303,25 @@ const Scouts = () => {
                       disabled={exhausted || busy === r.kind}
                       defaultValue=""
                       onChange={(e) => { if (e.target.value) onTryGame(e.target.value); e.target.value = ""; }}
-                      className="w-full bg-[#0c0c0c] border border-white/10 rounded px-3 py-2 text-sm"
+                      className="scout-select"
                       data-testid={`scout-action-${r.kind}`}
                     >
-                      <option value="" disabled>{exhausted ? "Cap reached · back tomorrow" : "Pick a 37Games title you tried…"}</option>
-                      <option value="puzzles-conquest">Puzzles & Conquest</option>
-                      <option value="puzzles-survival">Puzzles & Survival</option>
-                      <option value="puzzles-chaos">Puzzles & Chaos</option>
-                      <option value="days-of-empire">Days of Empire</option>
-                      <option value="infinity-kingdom">Infinity Kingdom</option>
-                      <option value="legend-rise-mythic-heroes">Legend: Rise of Mythic Heroes</option>
-                      <option value="soul-land-reloaded">Soul Land Reloaded</option>
+                      <option value="" disabled>
+                        {exhausted ? "CAP REACHED · BACK TOMORROW" : "SELECT ADJACENT THEATER…"}
+                      </option>
+                      {ADJACENT_THEATERS.map(t => (
+                        <option key={t.slug} value={t.slug}>{t.name}</option>
+                      ))}
                     </select>
                   )}
                   {r.kind === "daily_login" && (
                     <button
                       disabled={exhausted || busy === r.kind}
                       onClick={onDailyLogin}
-                      className="btn-outline w-full !py-2 text-sm"
+                      className="scout-btn scout-btn--ghost scout-btn--full"
                       data-testid={`scout-action-${r.kind}`}
                     >
-                      {busy === r.kind ? "Recording…" : exhausted ? "Claimed today ✓" : "Claim daily bonus"}
+                      {busy === r.kind ? "LOGGING…" : exhausted ? <>✓ CLAIMED TODAY</> : <>CLAIM CHECK-IN <span>▸</span></>}
                     </button>
                   )}
                 </div>
@@ -224,14 +330,26 @@ const Scouts = () => {
           })}
         </div>
 
-        {/* How it works */}
-        <div className="surface rounded-md p-5 text-sm text-zinc-300">
-          <div className="tactical-label text-[#FFBA08] mb-2">// HOW IT WORKS</div>
-          <ul className="space-y-1.5 text-xs text-zinc-400">
-            <li>· Earn credits by completing scout actions (caps reset daily UTC).</li>
-            <li>· 3 credits = 1 Deep Dive baseline (worth $2.99 — same vision-AI quality).</li>
-            <li>· Extra baselines never expire and stack with Pro.</li>
-            <li>· Anti-farm: caps + image validation on screenshot uploads.</li>
+        {/* Doctrine block */}
+        <div className="scout-doctrine">
+          <span className="scout-corner tl" />
+          <span className="scout-corner tr" />
+          <span className="scout-corner bl" />
+          <span className="scout-corner br" />
+          <div className="scout-doctrine__label">// SCOUT PROGRAM DOCTRINE</div>
+          <ul>
+            <li>
+              <Target size={14} weight="duotone" /> Complete ops to bank credits.
+              Caps hard-reset daily at 00:00 UTC.
+            </li>
+            <li>
+              <ShieldStar size={14} weight="duotone" /> 3 credits = 1 Deep Dive baseline.
+              Extra baselines never expire and stack alongside Pro allowance.
+            </li>
+            <li>
+              <Sparkle size={14} weight="duotone" /> Anti-farm: server-side caps + image
+              validation on screenshot uploads. Try to game it and Cypher will notice.
+            </li>
           </ul>
         </div>
       </div>
