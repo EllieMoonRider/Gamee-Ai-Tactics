@@ -494,7 +494,30 @@ ALLIANCE CONQUEST — BATTLE PHASE (verified): 24-hour phase · each participant
 ALLIANCE CONQUEST — SHIELD SYSTEM: green shield = attackable · red shield = already defeated, locked out · pick which enemy line-up to fight · WIN → their shield turns red + alliance banks 100 pts · LOSE → attack attempt burned, 0 points, shield stays green (line-up still attackable by others).
 ALLIANCE CONQUEST — DEFENDER LINE-UPS: each defender fields 2 line-ups, each usable ONCE · if line-up 1 already fought, must send line-up 2 · when BOTH line-ups defeated, defender is locked out (no more incoming). Battle Record log post-phase shows who fought whom, win/loss — accountability + intel tool for next cycle.
 
-DRAGONIA WAR: Center-map Altar of Dragonia. Alliance PvP for kingdom-leader control + alliance-wide buffs. Combat Event — prioritize troop health, PvP synergy, reinforcement travel time (NOT resource gathering).
+DRAGONIA WAR: Center-map Altar of Dragonia.
+
+DRAGONDOM CONQUEST (Quarterly, 2-month event, Castle Lv29+): 3 stages sequential —
+Stage 1 OVERLORD WAR: 30min prep + 2h30min battle · 6 groups. Ticket 10,000 Diamonds (or 100k Exploit in Dragondom Shop).
+Stage 2 GRAND WARDEN WAR: 30min prep + 3h30min battle · 3 groups. Ticket 20,000 Diamonds.
+Stage 3 SUPREME KING WAR: 30min prep + 4h30min battle · NO groups (all kingdoms compete). Ticket buyable in Dragondom Shop saves 20k Diamonds.
+Each stage has 3 phases: VOTING (top 10 lords per kingdom vote from proposed battle times) · BATTLE (button appears lower-right, tap to enter map, position near Cursed Land to intercept marches) · END (winner = longest cumulative fortress occupation; >50% of round = guaranteed win).
+DANGER: Castle sitting on Cursed Land (even partial) = attackable by ANYONE, even during prep window. Wounded units in prep phase DO NOT go to Dragondom Infirmary.
+MAP: 4 altars + 1 fortress. Shield of Grace protects during 30-min prep. Enemy-held altars deal 3% damage/min to soldiers in fortress. Post-battle wounded units → Dragondom Infirmary.
+EXPLOIT: Quest currency for Dragondom Shop. Cap 2M/war. Persists across 3 wars but wipes at full event end. Shop does NOT refresh mid-event.
+FEASTS (Ruler-only, during event only): Overlord = 5, Grand Warden = 10, Supreme King = 15. 3 variants (differ in duration + host reward). Best attendance Sat/Sun. Use delayed launch + advance announcement to maximize attendance.
+DRAGONDOM SHOP BUYING PRIORITY (verified): (1) RARE items — chest of rare Scrolls, Spar (ONLY obtainable here). (2) Spinels/Promoters during Lord Event windows for extra points. (3) Save for unique rewards + Enhancement Materials chests + Alchemist Handbooks + Cryptic Engineering + Curio. (4) Supreme King War ticket (saves 20k Diamonds). (5) Speed-ups LAST priority.
+
+GATE OF ABYSS (Alliance rally event): Defeat Abyss Legion within timer. Rewards by damage dealt.
+REWARDS: Oath Runes II or III (tier depends on Abyss Lord level) · Alliance Coins · Saurgem Essence · Food/Wood/Iron/Gold · Saurgem Spinels (unlocks 10K+ damage) · 8★ Saurgem Promoters (unlocks 500K+ damage). Higher abyss level = more HP but bigger payouts.
+CORE LOOP: Start a rally + join every rally you see. Max 5 rallies per player. Rally window = 5 min + march time.
+STAGGER: 30-25min→1st, 24-19→2nd, 18-13→3rd, 12-7→4th, 6-1→5th.
+LOCATION: Post-update march time is fixed 30 seconds each way — abyss location NO LONGER matters. Don't waste diamonds relocating.
+TROOPS: Send best 5 marches with heroes. Fill remaining rallies with catapults ONLY if no other troops available (cats do NOT reduce march time, still 30s).
+DAMAGE-POINT OPTIMIZATION: Big players joining your rally STEAL your damage points. Two defenses:
+  (A) Threshold cap: find your damage phase ceiling (e.g. 500K-700K), stop sending troops once hit, but still start rally with 1 cavalry so others can join. Hectic + hard to identify phase.
+  (B) Two-tier rally split: small players start + join small rallies · strong players start + join strong rallies. Hard to coordinate, strong players earn less than usual.
+KEEP HALL OF WAR = CASTLE LEVEL to max rally troop count.
+JOIN RULES: (1) Join rally with LEAST time remaining first if room exists. (2) Always start a rally if no slots available. (3) DO NOT join if your march time > rally's remaining time (you'll slow everyone). (4) DO NOT join near-full rally unless you can fit 75%+ of your troop count. Alliance PvP for kingdom-leader control + alliance-wide buffs. Combat Event — prioritize troop health, PvP synergy, reinforcement travel time (NOT resource gathering).
 
 DEMON INCURSION — FULL DOCTRINE (verified):
 - CADENCE: Even weeks (2/4/6…), Mon+Wed OR Tue+Thu by timezone.

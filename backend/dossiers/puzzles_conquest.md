@@ -172,6 +172,120 @@ Evolution table:
 
 **PRIORITY ORDER (personal)**: Rank 7/11 farm-lock tactic > Fort reinforcement on Wave 10/20 > Ghost-reinforce inactives post-event > Standard 5-march reinforcement rotation.
 
+### Dragondom Conquest (Quarterly Mega-Event) — FULL DOCTRINE
+**Cadence**: Approximately **once per quarter**, runs for **2 months**.
+**Entry requirement**: Castle **Lv.29+**.
+
+**3 Stages (sequential)**:
+
+| Stage | Prep | Battle | Grouping |
+|-------|------|--------|----------|
+| **1. Overlord War** | 30 min | 2 hr 30 min | Kingdoms split into **6 groups** |
+| **2. Grand Warden War** | 30 min | 3 hr 30 min | Kingdoms split into **3 groups** |
+| **3. Supreme King War** | 30 min | 4 hr 30 min | **NO groups** — all kingdoms compete |
+
+**Winner per group** = player with the **longest cumulative occupation time** as captain of the fortresses during the battle.
+
+**Each stage has 3 phases**:
+
+1. **Voting Period**: The **top 10 most powerful lords** in each kingdom (within the group) vote from proposed battle times. Highest-voted time wins.
+2. **Battle Period**: When battle opens, a button appears in the lower-right corner — tap to enter the designated map.
+   - **Ticket cost** (Diamond Shop / Bag):
+     - Overlord War ticket = **10,000 Diamonds**
+     - Grand Warden War ticket = **20,000 Diamonds**
+     - **Advantageous alternative**: Dragondom Shop for **100,000 Exploit** — much better than diamond spend.
+     - **Pro tip**: You can buy a **Supreme King War ticket** from the Dragondom Shop and save **20,000 Diamonds** — a strong investment.
+   - Once ticketed, move your castle to the map. **Position close to the Cursed Land** so you can intercept marches heading for altars/fortress.
+   - ⚠️ **DANGER**: If ANY part of your castle sits ON the Cursed Land, **anyone can attack it** — even during the 30-min preparation window.
+   - ⚠️ **Wounded units do NOT go to the Dragondom Infirmary** while in preparation phase.
+3. **End of Battle**: Occupation time tallied → winner announced.
+
+**Battle Mechanics**:
+- Map contains **4 altars + 1 fortress**.
+- During the 30-min prep, altars + fortress are protected by **Shield of Grace** — unattackable (except castles on Cursed Land).
+- After prep ends, Shields drop → fortress battle begins.
+- **Fortress winner** = longest total occupation (need not be continuous). Occupying **>50% of round duration** = guaranteed win.
+- When altars are captured by an **enemy alliance**, they deal **3% damage per minute** to the number of soldiers in the fortress.
+- After battle, wounded units go to **Dragondom Infirmary** (except during prep phase — those are lost).
+
+**Quests during battle** → yield **Exploit** currency for the Dragondom Shop. **Cap: 2 million Exploit per war**. Exploit persists across up to **3 wars**, but is wiped when the full event ends.
+
+**Rewards (3 types)**:
+1. **Titles** distributed by the Ruler to participants + chests with rewards.
+2. **Feast** (see below).
+3. **Quest rewards** — more quests completed = more rewards.
+
+**Feasts (Ruler-only power)**:
+- Overlord = **5 feasts**, Grand Warden = **10 feasts**, Supreme King = **15 feasts**.
+- Only holdable **during** the Dragondom Conquest event.
+- **3 feast variants** — different duration + host reward.
+- **Ruler tips**:
+  1. **Do NOT rush** — best attendance is **Saturday and Sunday**.
+  2. Announce feast time in advance. Use **delayed launch** to maximize attendance.
+  3. More participants + more purchases at feast = more rewards for **everyone**.
+
+**Dragondom Shop — Buying Doctrine**:
+⚠️ **Shop does NOT refresh during the event.** Plan purchases.
+
+**Buy priority (verified)**:
+1. **RARE items** that are hard/impossible to get elsewhere. **Chest of rare Scrolls** = high value. **Spar** = ONLY obtainable here.
+2. Purchase **Spinels / Promoters** during Lord Event windows for extra points.
+3. **Save up** enough Exploit to buy the unique rewards + **Enhancement Materials chests + Alchemist Handbooks + Cryptic Engineering + Curio** — highly efficient.
+4. **Supreme King War ticket** — buy from shop, saves 20,000 Diamonds.
+5. **Speed-ups** — LOW priority. Only buy if nothing else useful remains.
+
+**Doctrine summary**: This is a **team event**. Invite alliance members to participate — combined participation multiplies feast rewards and coordinated fortress holds are how titles get won.
+
+### Gate of Abyss — FULL DOCTRINE
+**Objective**: Defeat the **Abyss Legion** at the Gate of Abyss within a time limit. Alliance members rally against the gate; rewards distributed by **damage dealt** after gate closes.
+
+**Rewards** (scale with damage AND with abyss level):
+- **Oath Runes II or III** (rune tier depends on Abyss Lord level)
+- Alliance Coins
+- Saurgem Essence
+- Food · Wood · Iron · Gold
+- **Saurgem Spinels** (unlocks at **10K+ damage**)
+- **8★ Saurgem Promoters** (unlocks at **500K+ damage**)
+
+Higher-level abyss = more HP → needs stronger alliance to burn it down, but pays out better.
+
+**Core loop**: Start a rally. Join every rally you see. Repeat until gate closes.
+
+**Best-practice tactics (verified)**:
+
+**1. Location (post-update)** — March time is a fixed **30 seconds** each way regardless of position. **Abyss location no longer matters.** Do not waste diamonds relocating for this.
+
+**2. Everyone starts a rally.** Max **5 rallies per player** simultaneously. 5-minute rally window + march time included. More rallies from more players = more damage burst. Approximate stagger:
+- 30–25 min → 1st rally
+- 24–19 min → 2nd rally
+- 18–13 min → 3rd rally
+- 12–7 min → 4th rally
+- 6–1 min → 5th rally
+
+**3. Fill rallies with whatever you have.** Even catapults work if you don't have 5 full marches of infantry/cavalry/ranged. **Avoid catapults unless necessary.** Sending catapults does **NOT** affect the 30-second march time (universal).
+
+**4. Send your best 5 marches with heroes assigned.**
+
+**5. Damage-Point Optimization (advanced)** — Big players joining your rally will **steal your damage points**. Two ways to defend against this:
+
+**Option A — Threshold cap**: There are damage-reward phases. Find your personal max phase (e.g. "I know my ceiling is 500K–700K damage and I can't reach the next phase"). Once you hit your ceiling, **stop sending troops** to Gate of Abyss — any further damage is wasted AND stolen from others. But still start a rally with **1 cavalry** so others can join it.
+- ⚠️ Hectic: requires self-restraint, coordination, and finding your damage phase (changes as you grow).
+
+**Option B — Two-tier rally split**: Small players start rallies + only small players join them (damage even). Strong players start their own rallies + only strong players join those (damage even at the top).
+- ⚠️ Hard to run: strong players earn less than usual, needs coordination, needs enough players online for both tiers.
+
+*(Skip Option A/B entirely if damage rewards aren't your priority.)*
+
+**6. Hall of War level = Castle level.** Keeps your rally troop count maxed. Underleveled HoW = fewer troops per rally = fewer rallies fill = alliance loses damage.
+
+**7. Join the rally with the LEAST time remaining first** — as long as there's still room for your troops. Prioritize filling almost-departing rallies over starting fresh ones.
+
+**8. Always start a rally if none are available.** Empty rally slot = your alliance mates have nowhere to send troops.
+
+**9. Do NOT join a rally if your march time exceeds the rally's remaining time.** You'll slow everyone down and possibly cost the alliance a full rally launch.
+
+**10. Do NOT join an almost-full rally with too few troops.** Rule of thumb: if rally is nearly full AND you can fit **75%+ of your troop count**, joining is safe. Below 75% = better to start your own.
+
 ### Battle of Saurnesia (Cross-Server / Alliance)
 - Cross-server matching event; alliances on isolated map compete for key resource buildings.
 - Points from: **Holding Wonders** (Ancient Tower, Divine Fountain) = static · **Dragon Cub Escort mechanic** = largest point spikes (guard/capture points along path).
