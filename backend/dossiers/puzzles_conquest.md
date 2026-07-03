@@ -35,6 +35,167 @@ Food · Wood · Iron · Gold · Miscellaneous.
 - **Ground Traps** → counter Infantry
 - Nothing counters Siege
 
+## Troop Type Doctrine (VERIFIED)
+
+**4 Troop Types**: Infantry · Cavalry · Ranged (Archer) · Siege.
+
+**Rock-Paper-Scissors Matrix**:
+- **Infantry** > **Ranged/Archer** > **Cavalry** > **Infantry** (cycle).
+- **Infantry / Archer / Cavalry** all > **Siege**.
+
+**INFANTRY**:
+- High defense + high health, **lowest attack** of the 3 main types.
+- Best for **overall defense** — structures, castle, front-line tanking.
+- Strong against **Archers** · Weak against **Cavalry**.
+
+**CAVALRY**:
+- Balanced attack/defense/health + **higher march speed** (mobility advantage).
+- Good for **defense AND attack** — extra speed to hit objectives faster than Infantry/Archers.
+- Strong against **Infantry** · Weak against **Archers**.
+
+**ARCHERS (Ranged)**:
+- **High attack**, low defense + health.
+- Best for **capturing objectives** and **castle attacks**.
+- Strong against **Cavalry** · Weak against **Infantry**.
+
+**SIEGE**:
+- **Large carrying capacity** — gather resource tiles with fewer troops OR plunder castles once defenders are wiped.
+- Do NOT rally with (see earlier: Siege gets NO bonus in Archer rallies).
+
+## Stats — How to Increase Troop Power (VERIFIED)
+
+Stats boost troops vs. monsters, hell forts, and other players.
+
+**Stat sources**: Heroes · Gear · Gems · Saurgems · Warsigils · Curios · Glory · Sauroi · Blessings · Talents · Tech.
+
+### Hero Stat Contributions
+
+**Infantry-only heroes (buff only Infantry troops)**:
+- 2★ Florine
+- 3★ Eri, Al-Morrah
+- 4★ Fuga, Regina
+- 5★ Sarbor, Poseidon
+
+**Cavalry-only heroes**:
+- 2★ Naax
+- 3★ Dracula, Talon
+- 4★ Apollo, Malice
+- 5★ Lux, Cleopatra, Guan Yu
+
+**Archer-only heroes**:
+- 2★ Garnet
+- 3★ Hendrick, Cerno
+- 4★ Toke, Deedoe
+- 5★ Ne'Zha, Zeus
+
+**All-troop heroes (buff every troop type in your march)**:
+- 2★/3★: NONE
+- 4★: Yune
+- 5★: Yang, Medusa, Sun Wukong, Orochi, Jumong, Skender
+
+**Mix heroes (buff 2 troop types)** — 5★ only, no 2/3/4★ mix heroes exist:
+- **Shadow King** → Archer + Cavalry attack, plus Troop Defense.
+- **Pioneer-Crusader** → Infantry + Cavalry attack, plus Troop Defense.
+- **Harvest King** → Ranged + Infantry attack, plus Troop Defense.
+
+### Gems
+- **6 pages** of gems available. Each page holds: 1 Infantry, 1 Cavalry, 1 Archer, and 1 Troop gem.
+- **Raise gem star** with **Gem Spinels** (obtained from Tower of Trial + exchange shops).
+- **Enhance** gems with **Gem Essence** (Tower of Trial events + exchange shops).
+
+### Saurgems
+- **Unlock tiers**: Castle Lv 16, 20, 22, 30, 33.
+- **5 pages** of saurgems, **3 saurgems per page**.
+- **Source**: Pit Shop.
+- **Star level**: raise with **Saurgem Spinels + Saurgem Promoters**.
+- **Enchant**: with **Saurgem Essence**.
+
+### Warsigils
+- **Unlock tiers**: Castle Lv 25, 27, 29, 32.
+- **4 pages** of warsigils, **3 warsigils per page**.
+- Provide specific troop-type stats AND all-troop stats.
+- **Source**: Daily Quests when you hit **120 and 150 Activity Points** (both thresholds).
+- **Spinels + Essence**: exchange shops.
+
+### Curios
+- **Unlock**: Castle Lv 20.
+- **Crafting cost**: 100 Meteoric Iron per craft.
+- Curios have **rarity levels** — higher rarity = bigger stats (exclusive/higher-tier curios are hero-type specific).
+- **Equip requirement**: Hero must be **Level 210+** to wear curios.
+
+### Glory (Marks of Glory)
+- **Source**: exchange shops and events → **Mark of Glory**.
+- Spend Marks of Glory in **main buildings** to buff stats.
+- **Building-to-stat map**:
+  - **Castle · Siege Factory · Goddess Statue · Trap Workshop · Watch Tower · Hall of War** → Troop ATK/DEF/HP (universal).
+  - **Institute** → Infantry DEF
+  - **Market** → Infantry HP
+  - **Infantry Barracks** → Infantry ATK
+  - **Wall** → Cavalry DEF
+  - **Blacksmith** → Cavalry HP
+  - **Cavalry Barracks** → Cavalry ATK
+  - **Warehouse** → Archer DEF
+  - **Alliance Hall** → Archer HP
+  - **Ranged Barracks** → Archer ATK
+
+### Sauroi
+- Under the **Military Skill** section.
+- Raise stat level of specific troops (HP + Attack only — no defense here).
+- Upgrade paths:
+  - Infantry / Range / Cavalry / Siege → Attack + Health.
+  - Troops → Attack, Defense, Hit Points (universal).
+  - Troops → Damage Reduction.
+- **Higher Sauroi level unlocks additional stat categories.**
+
+### Blessings
+- Add Troop HP, DEF, ATK.
+- Upgrade with **Stone of Blessing** — each level requires exponentially more.
+- Stone of Blessing: buy with Diamonds OR obtain from certain events.
+
+### Talents
+- **Military talent tree** = the one that gives troop stats.
+- Lord level-up grants talent points → invest into Military tree.
+
+### Technology (Institute)
+- **Military** — base military tech.
+- **Military 2** — unlocks at **Castle 30 + Institute 30**.
+- **Battle 3** — unlocks at **Castle 36 + Institute 36**.
+- Upgrade with resources + speedups (accelerates process).
+
+## Kingdom Boosts — Queen/King Buff Timing Doctrine (VERIFIED)
+Queens and Kings can activate kingdom-wide boosts. Timing them correctly multiplies value for the whole kingdom.
+
+### Before Ace Lord Week
+
+**Fast Comeback** — Troop creation speed **+300%** buff.
+- **Duration**: Depends on each individual lady/lord's losses (personalized).
+- **When to activate**: Immediately **after Dragonia success** — reinforces the kingdom's post-battle rebuild.
+
+**Light of Fortune** — Additional Diamonds **+5%**.
+- **Requirement**: Only available if **another Dragon is taken**.
+- **Duration**: 1 week.
+- **When to activate**: **Monday after the Dragonia event.**
+
+### During Ace Lord Week
+
+**Gathering Boost** — Gathering speed **+20%**.
+- **Duration**: 24 hours.
+- **When to activate**: **Monday of Ace Lord Week** (aligns with Day 1 Hunt & Gather).
+
+**Construction Boost** — Construction speed **+20%**.
+- **Duration**: 24 hours.
+- **When to activate**: **Tuesday of Ace Lord Week** (aligns with Day 2 Might Push, especially Build Might).
+
+**Training Boost** — Troop creation speed **+30%**.
+- **Duration**: 1 week (longest boost duration).
+- **When to activate**: **Thursday of Ace Lord Week** (spans through Day 4 Hero Rising + Day 7 Troop Training).
+
+**Research Boost** — Research speed **+20%**.
+- **Duration**: 24 hours.
+- **When to activate**: **Saturday of Ace Lord Week** (aligns with Day 6 or Day 7 tech pushes).
+
+**Doctrine summary**: Queens/Kings should stagger boosts to match the alliance's Ace Lord phase spend. Monday = gather, Tuesday = construction, Thursday = week-long training buff, Saturday = research. Post-Dragonia: Fast Comeback immediately + Light of Fortune the Monday after.
+
 ## Castle Unlocks (verified)
 - **C10** → Tower of Trial
 - **C12** → Mystery Shop opens
@@ -634,6 +795,31 @@ Ace Lord is THE big-push week. This is when hoarded resources (from Get Week) ge
 - Boneyard
 
 **PHASE-ALIGNMENT NOTE**: This 7-day rotation supports the 6-phase Ace Lord push (Gathering → Construction/Research → Stamina/AP → Training Speedups → Gear/Gems/Curios → Sprint/Recruit). Day-of-week focuses roughly map onto phase spend windows.
+
+### Stamina Stacking Exploit — Ace Lord Day 3 & Off-Hours (VERIFIED)
+Used when you need max Stamina for a big push (Day 3 of Ace Lord Week) or when no alliance mates are online to run Hell Fortresses with you. **Requires alliance friends or personal farms as rally-hosts.**
+
+**Setup** — Know your numbers:
+- Determine Stam cost per **Hell Fortress 45 (HF45)** rally. Example: **30 Stam per HF45**.
+- **Max stackable Stam**: 120 (base cap) + 5×30 (daily quest boxes) + 30 (Ryska daily reward) = **300 Stam**.
+- **PRO TIP** (Rebel): Reset Ryska for the day → +50 more → 120 + 5×40 + 30 = **350 Stam** stackable.
+
+**Step-by-step exploit**:
+1. Start at **120 Stam max**.
+2. Start an HF45 rally with **1 troop** and set duration to **1 hour**.
+3. Your Stam depletes to **90** (cost paid).
+4. Over that 1-hour window, Stam **regenerates naturally**.
+5. When HF45 **defeats you**, the paid Stam **returns** to your account.
+6. Repeat: max your Stam again with 1 ongoing rally, then start **another HF45 (1hr) with a different castle** and join with your **2nd march**.
+7. Chain until **all 5 marches** are locked into HF45 rallies simultaneously.
+8. Before daily reset, open the **first 3 daily-quest boxes** that grant Stam (max your bank right before it converts into rally value).
+
+**Effect**: You've effectively **stored** far more Stam than your cap normally allows — deployable in a burst for Day 3 (Master Trainer / heavy stamina spend).
+
+**Constraints**:
+- Requires cooperative rally hosts (friends or your own farms).
+- Timing-sensitive — miscount your Stam-per-HF45 and the loop breaks.
+- Only worth it when there's a specific Stam-heavy target coming (Ace Lord Day 3 · big Hell Fortress push · specific event).
 
 ## Alliance Showdown Event — Inefficient-Task Table (Jungleboogie, verified)
 Some Alliance Showdown tasks pay LESS points per unit of effort than alternate tasks. Avoid these unless mandatory or as a specific alt-account play.

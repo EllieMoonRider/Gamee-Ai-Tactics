@@ -443,6 +443,56 @@ TROOP HEROES (all-3-skills — best for rallies):
 
 TRAP COUNTERS: Launch Traps counter Cavalry · Arrow Tower counters Ranged · Ground Traps counter Infantry · nothing counters Siege.
 
+TROOP TYPE DOCTRINE:
+- 4 troop types: Infantry · Cavalry · Ranged (Archer) · Siege.
+- ROCK-PAPER-SCISSORS: Infantry > Archer > Cavalry > Infantry (cycle). Inf/Arch/Cav > Siege.
+- INFANTRY: high DEF+HP, LOWEST attack. Best for defense (structures, castle, front-line). Strong vs Archers, weak vs Cavalry.
+- CAVALRY: balanced ATK/DEF/HP + HIGHEST march speed (mobility). Good for offense + defense. Strong vs Infantry, weak vs Archers.
+- ARCHERS: HIGH attack, low DEF+HP. Best for capturing objectives + castle attacks. Strong vs Cavalry, weak vs Infantry.
+- SIEGE: LARGE carrying capacity. Use for resource gathering (fewer troops needed) or plundering castles after defenders wiped. Siege gets NO bonus in Archer rallies.
+
+STAT SOURCES (all 11): Heroes · Gear · Gems · Saurgems · Warsigils · Curios · Glory · Sauroi · Blessings · Talents · Tech.
+
+HERO STAT BUFFS:
+- INFANTRY-only heroes: 2★ Florine · 3★ Eri, Al-Morrah · 4★ Fuga, Regina · 5★ Sarbor, Poseidon.
+- CAVALRY-only heroes: 2★ Naax · 3★ Dracula, Talon · 4★ Apollo, Malice · 5★ Lux, Cleopatra, Guan Yu.
+- ARCHER-only heroes: 2★ Garnet · 3★ Hendrick, Cerno · 4★ Toke, Deedoe · 5★ Ne'Zha, Zeus.
+- ALL-TROOP heroes (buff every troop in march): 4★ Yune · 5★ Yang, Medusa, Sun Wukong, Orochi, Jumong, Skender. NO 2/3★ all-troop heroes exist.
+- MIX heroes (buff 2 troop types) — 5★ only: Shadow King = Archer+Cavalry ATK + Troop DEF · Pioneer-Crusader = Infantry+Cavalry ATK + Troop DEF · Harvest King = Ranged+Infantry ATK + Troop DEF.
+
+GEMS: 6 pages, each holds 1 Infantry + 1 Cavalry + 1 Archer + 1 Troop gem. Star up with Gem Spinels (Tower of Trial + exchange shops). Enhance with Gem Essence.
+SAURGEMS: Unlock at C16, C20, C22, C30, C33. 5 pages, 3 saurgems per page. Source: Pit Shop. Star up with Saurgem Spinels + Promoters. Enchant with Saurgem Essence.
+WARSIGILS: Unlock at C25, C27, C29, C32. 4 pages, 3 warsigils per page. Give specific-troop-type stats + all-troop stats. Source: Daily Quests at 120 and 150 Activity Points. Spinels + Essence from exchange shops.
+CURIOS: Unlock at C20. Craft cost = 100 Meteoric Iron each. Rarity tiers = bigger stats (top rarity is hero-type-specific). Equip requires hero Lv.210+.
+
+GLORY (Marks of Glory) - spent in main buildings, each building gives specific stats:
+- Universal Troop ATK/DEF/HP buildings: Castle · Siege Factory · Goddess Statue · Trap Workshop · Watch Tower · Hall of War.
+- Infantry: Institute=DEF · Market=HP · Infantry Barracks=ATK.
+- Cavalry: Wall=DEF · Blacksmith=HP · Cavalry Barracks=ATK.
+- Archer: Warehouse=DEF · Alliance Hall=HP · Ranged Barracks=ATK.
+
+SAUROI (Military Skill section): Raise troop stats — HP + Attack only (no defense here). Upgrade Inf/Range/Cav/Siege ATK+HP · Troops ATK/DEF/HP (universal) · Troops DMG Reduction. Higher Sauroi level unlocks more stat categories.
+BLESSINGS: Add Troop HP/DEF/ATK. Upgrade with Stone of Blessing (each level costs exponentially more). Stone of Blessing = diamond purchase or event drops.
+TALENTS: Military talent tree = the troop-stat one. Lord level-ups grant talent points.
+TECHNOLOGY (Institute): Military tree · Military 2 (unlocks at C30 + Institute 30) · Battle 3 (unlocks at C36 + Institute 36). Costs resources + speedups.
+
+KINGDOM BOOSTS — Queen/King Timing (VERIFIED):
+BEFORE ACE LORD WEEK:
+- FAST COMEBACK (+300% troop creation speed, duration = individual losses): activate IMMEDIATELY after Dragonia success.
+- LIGHT OF FORTUNE (+5% diamonds, 1 week duration, ONLY if another Dragon is taken): activate MONDAY after Dragonia event.
+DURING ACE LORD WEEK:
+- GATHERING BOOST (+20% gathering, 24h): Monday of Ace Week (Day 1 Hunt & Gather).
+- CONSTRUCTION BOOST (+20% construction, 24h): Tuesday of Ace Week (Day 2 Might Push - Build Might).
+- TRAINING BOOST (+30% troop creation, 1 WEEK duration): Thursday of Ace Week (covers Day 4 Hero Rising through Day 7 Troop Training).
+- RESEARCH BOOST (+20% research, 24h): Saturday of Ace Week (Day 6/7 tech pushes).
+KING/QUEEN DOCTRINE: Stagger boosts to match alliance Ace Lord phase spend. Never fire all boosts on same day.
+
+STAMINA STACKING EXPLOIT (Ace Lord Day 3 or off-hours; requires friend/farm rally-hosts):
+- Determine your Stam cost per HF45 rally (example: 30 Stam).
+- MAX STACK: 120 base + 5×30 daily quest boxes + 30 Ryska daily = 300 Stam. WITH Ryska reset: 120 + 5×40 + 30 = 350 Stam (Rebel tip).
+- STEPS: (1) Max Stam at 120. (2) Start HF45 rally with 1 troop for 1hr → your Stam drops to 90. (3) Stam regenerates during 1hr. (4) When HF45 defeats you, the paid Stam RETURNS. (5) Re-max Stam, start another HF45 (1hr) with a different castle + your 2nd march. (6) Chain until all 5 marches are locked in HF45 rallies simultaneously. (7) Before daily reset, open the first 3 daily-quest Stam boxes to max your bank.
+- EFFECT: Effectively STORES far more Stam than your cap normally allows, deployable in burst for Day 3 Master Trainer / heavy Stam events. Time-sensitive; only worth it for specific Stam-heavy targets.
+
 CASTLE UNLOCKS: C10 Tower of Trial · C12 Mystery Shop · C15 Glory Level · C16 The Pit · C18 Sour Gems + Sour Sigil trials · C20 Auction House + 4th March Queue · C25 More Sigil trials · VIP 8 for 5th March Queue (max 5).
 
 CASTLE UPGRADE RULE: Wall must be upgraded FIRST + one secondary building. Chain of dependencies.
