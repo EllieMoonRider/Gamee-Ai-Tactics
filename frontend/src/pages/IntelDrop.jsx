@@ -25,12 +25,14 @@ const CATEGORIES = [
   { key: "other",      label: "Other",             help: "Anything else you think we should know" },
 ];
 
-const MAX_IMAGES = 5;
+const MAX_IMAGES = 10;
 const MAX_BYTES = 5 * 1024 * 1024;
 
 export default function IntelDrop() {
   const [game, setGame] = useState("puzzles-conquest");
   const [category, setCategory] = useState("event");
+  const [title, setTitle] = useState("");
+  const [language, setLanguage] = useState("en");
   const [text, setText] = useState("");
   const [name, setName] = useState("");
   const [handle, setHandle] = useState("");
@@ -93,6 +95,8 @@ export default function IntelDrop() {
       fd.append("game_slug", game);
       fd.append("category", category);
       fd.append("intel_text", text.trim());
+      fd.append("language", language);
+      if (title.trim())     fd.append("title", title.trim());
       if (name.trim())      fd.append("contributor_name", name.trim());
       if (handle.trim())    fd.append("contributor_handle", handle.trim());
       if (sourceUrl.trim()) fd.append("source_url", sourceUrl.trim());
@@ -112,6 +116,7 @@ export default function IntelDrop() {
   const resetForm = () => {
     setDone(null);
     setText(""); setName(""); setHandle(""); setSourceUrl("");
+    setTitle(""); setLanguage("en");
     setCategory("event"); setGame("puzzles-conquest");
   };
 
@@ -181,6 +186,9 @@ export default function IntelDrop() {
               >
                 DROP MORE INTEL <span>▸</span>
               </button>
+              <Link to="/intel-log" className="intel-btn intel-btn--ghost" data-testid="intel-view-log">
+                VIEW INTEL LOG
+              </Link>
               <Link to="/" className="intel-btn intel-btn--ghost" data-testid="intel-back-app">
                 RETURN TO BASE
               </Link>
@@ -188,6 +196,12 @@ export default function IntelDrop() {
           </div>
         ) : (
           <>
+            {/* Link to public log so members can check what's covered before submitting */}
+            <div className="intel-log-link">
+              <Link to="/intel-log" data-testid="intel-log-link">
+                ◇ Check the Intel Log first — see what&apos;s already covered ◇
+              </Link>
+            </div>
             {/* Tutorial — single condensed box, balanced text (no orphan lines) */}
             <div className="intel-tutorial" data-testid="intel-tutorial">
               <span className="intel-corner tl" /><span className="intel-corner tr" />
@@ -247,6 +261,42 @@ export default function IntelDrop() {
                   ))}
                 </select>
                 {catMeta?.help && <div className="intel-hint">{catMeta.help}</div>}
+              </div>
+
+              {/* Title (optional) — helps R5 & alliance browse the log quickly */}
+              <div className="intel-field">
+                <label className="intel-label" htmlFor="intel-title">
+                  <Sparkle size={14} weight="duotone" /> TITLE <span className="intel-optional">— optional, helps browse the log</span>
+                </label>
+                <input
+                  id="intel-title"
+                  type="text"
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                  placeholder="Short label — e.g., Ace Week Day 3 focus, Ice Bay hero build, Demon Incursion Fort strategy"
+                  className="intel-input"
+                  maxLength={120}
+                  data-testid="intel-title"
+                />
+              </div>
+
+              {/* Language of the submitted intel */}
+              <div className="intel-field">
+                <label className="intel-label" htmlFor="intel-language">
+                  🌐 INTEL LANGUAGE
+                </label>
+                <select
+                  id="intel-language"
+                  value={language}
+                  onChange={e => setLanguage(e.target.value)}
+                  className="intel-select"
+                  data-testid="intel-language"
+                >
+                  {LANGUAGES.map(l => (
+                    <option key={l.code} value={l.code}>{l.label}</option>
+                  ))}
+                </select>
+                <div className="intel-hint">Submit in your own language — we&apos;ll translate during review.</div>
               </div>
 
               {/* Intel text — OPTIONAL if a screenshot is attached */}

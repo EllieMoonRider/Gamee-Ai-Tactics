@@ -93,6 +93,24 @@
 .intel-corner.bl { bottom: 4px; left: 4px; border-right: none; border-top: none; }
 .intel-corner.br { bottom: 4px; right: 4px; border-left: none; border-top: none; }
 
+.intel-log-link {
+  margin-bottom: 1.2rem;
+  padding: 0.7rem 1rem;
+  background: rgba(0, 191, 255, 0.06);
+  border: 1px dashed rgba(0, 191, 255, 0.45);
+  text-align: center;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+.intel-log-link a {
+  color: #7ee0ff;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-decoration: none;
+  text-shadow: 0 0 6px rgba(0, 191, 255, 0.4);
+}
+.intel-log-link a:hover { color: #00FF80; text-shadow: 0 0 8px rgba(0, 255, 128, 0.55); }
+
 /* === Welcome banner ====================================================== */
 .intel-welcome {
   position: relative;

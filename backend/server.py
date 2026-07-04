@@ -2902,6 +2902,8 @@ async def intel_submit(
     game_slug: str = Form(...),
     category: str = Form(...),
     intel_text: Optional[str] = Form(""),
+    title: Optional[str] = Form(None),
+    language: Optional[str] = Form("en"),
     contributor_name: Optional[str] = Form(None),
     contributor_handle: Optional[str] = Form(None),
     source_url: Optional[str] = Form(None),
@@ -2951,6 +2953,8 @@ async def intel_submit(
         "reference": f"INTEL-{uuid.uuid4().hex[:8].upper()}",
         "game_slug": game_slug,
         "category": category,
+        "title": (title or "").strip()[:120] or None,
+        "language": (language or "en").strip().lower() if (language or "en").strip().lower() in INTEL_LANGUAGES else "other",
         "intel_text": txt,
         "contributor_name": (contributor_name or "").strip() or None,
         "contributor_handle": (contributor_handle or "").strip() or None,
@@ -2976,6 +2980,8 @@ def _serialize_intel(doc: dict) -> dict:
         "reference": doc.get("reference"),
         "game_slug": doc["game_slug"],
         "category": doc["category"],
+        "title": doc.get("title"),
+        "language": doc.get("language", "en"),
         "intel_text": doc["intel_text"],
         "contributor_name": doc.get("contributor_name"),
         "contributor_handle": doc.get("contributor_handle"),
@@ -2987,6 +2993,40 @@ def _serialize_intel(doc: dict) -> dict:
         "reviewer_email": doc.get("reviewer_email"),
         "review_notes": doc.get("review_notes"),
     }
+
+
+@api.get("/intel/log")
+async def intel_public_log(game_slug: Optional[str] = None):
+    """Public read-only intel log — shows what's been filed so contributors can avoid duplicates.
+    Returns titles + categories + contributor names only. No full text (privacy)."""
+    q: dict = {"status": {"$in": ["approved", "filed"]}}
+    if game_slug and game_slug != "all":
+        if game_slug not in INTEL_GAMES:
+            raise HTTPException(400, "Invalid game filter")
+        q["game_slug"] = game_slug
+    cur = db.intel_submissions.find(q).sort("submitted_at", -1).limit(300)
+    docs = []
+    async for d in cur:
+        title = d.get("title") or (d.get("intel_text") or "")[:80]
+        docs.append({
+            "reference": d.get("reference"),
+            "game_slug": d.get("game_slug"),
+            "category": d.get("category"),
+            "title": title,
+            "language": d.get("language", "en"),
+            "contributor_name": d.get("contributor_name"),
+            "screenshot_count": len(d.get("image_refs", [])),
+            "status": d.get("status"),
+            "submitted_at": d.get("submitted_at"),
+        })
+    # Also return summary counts per game
+    summary = {}
+    for g in INTEL_GAMES:
+        summary[g] = await db.intel_submissions.count_documents({
+            "status": {"$in": ["approved", "filed"]},
+            "game_slug": g,
+        })
+    return {"entries": docs, "summary": summary}
 
 
 @api.get("/intel/submissions")

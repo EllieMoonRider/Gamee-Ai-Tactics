@@ -20,6 +20,7 @@ import Seats from "./pages/Seats";
 import Calendar from "./pages/Calendar";
 import Scouts from "./pages/Scouts";
 import IntelDrop from "./pages/IntelDrop";
+import IntelLog from "./pages/IntelLog";
 import AdminIntel from "./pages/AdminIntel";
 import Help from "./pages/Help";
 import AdminSupport from "./pages/AdminSupport";
@@ -66,6 +67,7 @@ function App() {
           <Route path="/help" element={<Help />} />
           <Route path="/cypher" element={<AboutCypher />} />
           <Route path="/intel-drop" element={<IntelDrop />} />
+          <Route path="/intel-log" element={<IntelLog />} />
           <Route path="/share/d/:token" element={<PublicDeepDive />} />
           <Route path="/share/b/:token" element={<PublicBuild />} />
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />

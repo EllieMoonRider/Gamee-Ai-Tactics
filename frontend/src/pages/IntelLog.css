@@ -1,0 +1,180 @@
+/* Intel Log — public running tally of filed intel */
+.intel-log__title {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+  color: #ffb060;
+  text-shadow: 0 0 12px rgba(255, 107, 0, 0.55);
+  margin: 0 0 0.5rem;
+  text-align: center;
+}
+.intel-log__desc {
+  color: #a8c8b8;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto 1.6rem;
+  font-size: 0.9rem;
+  text-wrap: balance;
+}
+
+.intel-log__summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1.4rem;
+}
+.intel-log__stat {
+  position: relative;
+  padding: 0.85rem 0.75rem;
+  background: rgba(0, 22, 12, 0.85);
+  border: 1px solid rgba(255, 186, 8, 0.5);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+  text-align: center;
+}
+.intel-log__stat .intel-corner { border-color: #FFBA08; }
+.intel-log__stat-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: rgba(0, 255, 128, 0.75);
+  margin-bottom: 0.15rem;
+}
+.intel-log__stat-count {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  color: #FFBA08;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(255, 186, 8, 0.55);
+  margin-bottom: 0.15rem;
+}
+.intel-log__stat-label {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: #ffb060;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+
+.intel-log__filters {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.intel-log__pill {
+  padding: 0.4rem 0.85rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(0, 255, 128, 0.7);
+  background: rgba(0, 22, 12, 0.7);
+  border: 1px solid rgba(0, 255, 128, 0.4);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
+}
+.intel-log__pill:hover { color: #00FF80; border-color: #00FF80; }
+.intel-log__pill--active {
+  color: #050505;
+  background: #FFBA08;
+  border-color: #FFBA08;
+  box-shadow: 0 0 12px rgba(255, 186, 8, 0.5);
+}
+
+.intel-log__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.intel-log__entry {
+  position: relative;
+  padding: 0.75rem 0.95rem 0.85rem;
+  background: rgba(0, 16, 8, 0.85);
+  border: 1px solid rgba(0, 255, 128, 0.35);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.intel-log__entry:hover {
+  border-color: #00FF80;
+  box-shadow: 0 0 14px rgba(0, 255, 128, 0.35);
+}
+.intel-log__entry-top {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  margin-bottom: 0.35rem;
+}
+.intel-log__entry-game {
+  color: #FFBA08;
+  padding: 1px 6px;
+  border: 1px solid rgba(255, 186, 8, 0.45);
+  border-radius: 2px;
+}
+.intel-log__entry-cat {
+  color: #cfffe1;
+  padding: 1px 6px;
+  background: rgba(255, 107, 0, 0.15);
+  border-radius: 2px;
+}
+.intel-log__entry-lang {
+  color: #00FF80;
+  padding: 1px 6px;
+  border: 1px solid rgba(0, 255, 128, 0.35);
+  border-radius: 2px;
+}
+.intel-log__entry-title {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffb060;
+  text-shadow: 0 0 4px rgba(255, 107, 0, 0.35);
+  margin-bottom: 0.35rem;
+  text-wrap: balance;
+}
+.intel-log__entry-meta {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: #7ea993;
+}
+.intel-log__entry-meta span { display: inline-flex; align-items: center; gap: 0.3rem; }
+.intel-log__entry-date { margin-left: auto; color: #556a5f; }
+
+.intel-log__empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #7ea993;
+  border: 1px dashed rgba(0, 255, 128, 0.3);
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+.intel-log__empty svg { color: rgba(0, 255, 128, 0.4); margin-bottom: 0.75rem; }
+.intel-log__empty p { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.15em; }
+
+.intel-log__cta {
+  margin-top: 2rem;
+  padding: 0.85rem 1.15rem;
+  background: rgba(255, 107, 0, 0.08);
+  border: 1px dashed rgba(255, 107, 0, 0.45);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #ffb060;
+  text-align: center;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+.intel-log__cta a {
+  color: #FFBA08;
+  text-decoration: underline;
+  margin-left: 0.5rem;
+  text-shadow: 0 0 6px rgba(255, 186, 8, 0.4);
+}
