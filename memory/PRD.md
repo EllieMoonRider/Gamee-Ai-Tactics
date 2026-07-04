@@ -91,6 +91,17 @@ User direction iterations:
 - Widget rail (Tutorial + Tactical Scout)
 - Hamburger menu (top-right)
 - RadarBriefing (typewriter in radar dome)
+- **Responsive rework (Feb 2026)**: Below 900px the 3 game beacons switch from absolute-positioned scattered to a clean bottom-anchored flex row (no overlap, war-room art preserved). Below 720px, widget rail flexes and titles shrink.
+
+## Intel Portal — Community Crowdsourcing (Feb 2026)
+- Public `/intel-drop` (no-auth): title + language + text + up to **10 screenshots** + credit fields
+- Admin `/admin/intel` review queue with:
+  - **Quick Approve / Reject buttons on collapsed cards** (Feb 2026 — no expand needed)
+  - Intel preview text (first 180 chars) visible on collapsed cards for fast triage
+  - Language tag surfaced on card sub-row
+  - Card title as visual anchor
+- Public `/intel-log` (read-only ledger showing approved/filed items — prevents alliance duplicates)
+- 18 supported submission languages (en/es/pt/fr/de/it/ru/tr/ar/zh/ja/ko/vi/th/id/tl/hi/other)
 
 ## Prioritized Backlog
 

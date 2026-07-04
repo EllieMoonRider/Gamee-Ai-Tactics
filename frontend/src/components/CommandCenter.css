@@ -304,14 +304,29 @@
 
 /* Mobile / narrow landscape — condense widgets */
 @media (max-width: 720px) {
-  .cc-widget {
-    min-width: 132px;
-    padding: 0.55rem 0.85rem 0.65rem;
+  .cc-widget-rail {
+    gap: 0.5rem;
+    max-width: calc(100vw - 4.5rem);
   }
-  .cc-widget__title { font-size: 0.86rem; }
+  .cc-widget {
+    min-width: 0;
+    flex: 1 1 auto;
+    max-width: 48%;
+    padding: 0.5rem 0.7rem 0.6rem;
+  }
+  .cc-widget__title { font-size: 0.8rem; text-wrap: balance; }
   .cc-widget__label { font-size: 8.5px; }
+  .cc-widget__arrow { display: none; }
   .radar-briefing {
     width: min(74vw, 440px);
     top: 12%;
   }
+}
+
+@media (max-width: 480px) {
+  .cc-widget-rail { top: 0.65rem; left: 0.65rem; gap: 0.4rem; }
+  .cc-menu-wrap { top: 0.65rem; right: 0.65rem; }
+  .cc-widget { padding: 0.45rem 0.55rem 0.55rem; }
+  .cc-widget__title { font-size: 0.72rem; letter-spacing: 0.02em; }
+  .cc-widget__label { font-size: 8px; letter-spacing: 0.18em; }
 }

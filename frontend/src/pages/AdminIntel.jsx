@@ -206,12 +206,49 @@ export default function AdminIntel() {
                 </button>
               </div>
 
+              {/* Title (if provided) — most useful signal on collapsed card */}
+              {s.title && (
+                <div className="admin-intel__card-title" data-testid={`title-${s.reference}`}>
+                  {s.title}
+                </div>
+              )}
+
+              {/* Preview of intel text on collapsed card so admin can triage without expanding */}
+              {selected !== s.id && s.intel_text && (
+                <div className="admin-intel__preview" data-testid={`preview-${s.reference}`}>
+                  {s.intel_text.length > 180 ? s.intel_text.slice(0, 180) + "…" : s.intel_text}
+                </div>
+              )}
+
               <div className="admin-intel__card-sub">
                 <span><User size={12} weight="duotone" /> {s.contributor_name || "Anonymous"}{s.contributor_handle ? ` · ${s.contributor_handle}` : ""}</span>
                 <span><CalIcon size={12} weight="duotone" /> {new Date(s.submitted_at).toLocaleString()}</span>
                 {s.image_refs?.length > 0 && <span><ImageSquare size={12} weight="duotone" /> {s.image_refs.length} screenshot{s.image_refs.length > 1 ? "s" : ""}</span>}
                 {s.source_url && <span><LinkSimple size={12} weight="duotone" /> source linked</span>}
+                {s.language && s.language !== "en" && <span className="admin-intel__lang-tag">🌐 {s.language.toUpperCase()}</span>}
               </div>
+
+              {/* Quick actions on collapsed pending cards — approve/reject without expanding */}
+              {selected !== s.id && s.status === "pending" && (
+                <div className="admin-intel__quick-actions" data-testid={`quick-actions-${s.reference}`}>
+                  <button
+                    onClick={() => updateStatus(s.id, "approved")}
+                    disabled={busy === s.id}
+                    className="intel-btn admin-intel__btn admin-intel__btn--approve admin-intel__btn--quick"
+                    data-testid={`quick-approve-${s.reference}`}
+                  >
+                    <CheckCircle size={14} weight="bold" /> QUICK APPROVE
+                  </button>
+                  <button
+                    onClick={() => updateStatus(s.id, "rejected")}
+                    disabled={busy === s.id}
+                    className="intel-btn admin-intel__btn admin-intel__btn--reject admin-intel__btn--quick"
+                    data-testid={`quick-reject-${s.reference}`}
+                  >
+                    <XCircle size={14} weight="bold" /> REJECT
+                  </button>
+                </div>
+              )}
 
               {selected === s.id && (
                 <div className="admin-intel__body" data-testid={`body-${s.reference}`}>

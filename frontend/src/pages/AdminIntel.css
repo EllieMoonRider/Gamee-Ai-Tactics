@@ -333,5 +333,78 @@
   .admin-intel__card-head { flex-direction: column; align-items: flex-start; }
   .admin-intel__toggle { align-self: flex-end; }
   .admin-intel__actions { flex-direction: column; }
-  .admin-intel__btn { width: 100%; }
+  .admin-intel__btn { width: 100%; min-height: 44px; }
+  .admin-intel__quick-actions { flex-direction: row; }
+  .admin-intel__quick-actions .admin-intel__btn { flex: 1; }
+}
+
+/* === Card title (contributor-supplied) — big visual anchor =============== */
+.admin-intel__card-title {
+  font-family: "Orbitron", "Bebas Neue", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  color: #ffb060;
+  text-shadow: 0 0 6px rgba(255, 107, 0, 0.4);
+  margin: 0.2rem 0 0.55rem;
+  text-wrap: balance;
+}
+
+/* === Preview text on collapsed cards — triage without expanding ========== */
+.admin-intel__preview {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: #b8dcc8;
+  line-height: 1.5;
+  padding: 0.55rem 0.75rem;
+  margin: 0.5rem 0 0.6rem;
+  background: rgba(0, 8, 4, 0.55);
+  border-left: 2px solid rgba(255, 186, 8, 0.35);
+  white-space: pre-wrap;
+  text-wrap: pretty;
+  max-height: 4.5em;
+  overflow: hidden;
+  position: relative;
+}
+.admin-intel__preview::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1.4em;
+  background: linear-gradient(to bottom, transparent, rgba(0, 12, 6, 0.9));
+  pointer-events: none;
+}
+
+/* === Language tag on card-sub row ======================================== */
+.admin-intel__lang-tag {
+  color: #FFBA08 !important;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-shadow: 0 0 5px rgba(255, 186, 8, 0.5);
+}
+
+/* === Quick actions on collapsed card — inline approve/reject ============= */
+.admin-intel__quick-actions {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed rgba(0, 255, 128, 0.2);
+  flex-wrap: wrap;
+}
+.admin-intel__btn--quick {
+  padding: 0.55rem 0.9rem !important;
+  font-size: 10px !important;
+  letter-spacing: 0.2em !important;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.admin-intel__btn--quick:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

@@ -297,26 +297,60 @@
 
 /* === Mobile / narrow landscape tuning ===================================== */
 @media (max-width: 900px) {
+  /* Below 900px, switch from absolute-scattered to a clean flex row along the bottom.
+     The three beacons no longer overlap and the war-room background art stays visible. */
+  .game-beacons {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    gap: 0.4rem;
+    padding: 0 0.5rem 0.8rem;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    inset: auto 0 0 0;
+  }
+  .beacon {
+    position: static;
+    transform: none;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .beacon:hover,
+  .beacon:focus-visible {
+    transform: translateY(-4px);
+  }
+  @keyframes beacon-fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  /* Ring + column shrink and sit under the panel */
+  .beacon__ring, .beacon__ring--2 { display: none; }
+  .beacon__column { display: none; }
   .beacon__panel {
-    min-width: 158px;
-    max-width: 190px;
-    padding: 0.65rem 0.85rem 0.75rem;
-    margin-bottom: 62px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    padding: 0.65rem 0.55rem 0.7rem;
+    margin-bottom: 0;
   }
   .beacon__icon-wrap { width: 42px; height: 42px; }
-  .beacon__name { font-size: 0.85rem; }
-  .beacon__tagline { font-size: 0.6rem; }
-  .beacon__column { height: 62px; }
-  .beacon__ring { width: 82px; height: 82px; }
-  .beacon__ring--2 { width: 115px; height: 115px; }
+  .beacon__name { font-size: 0.82rem; text-wrap: balance; }
+  .beacon__tagline { display: none; }
+  .beacon__theater { font-size: 8px; letter-spacing: 0.22em; }
+  .beacon__cta { font-size: 8.5px; padding: 0.28rem 0.5rem; letter-spacing: 0.22em; }
+  .beacon__header { font-size: 7.5px; letter-spacing: 0.18em; gap: 0.35rem; }
 }
 
 @media (max-width: 640px) {
-  .beacon__panel {
-    min-width: 140px;
-    max-width: 168px;
-    padding: 0.55rem 0.7rem 0.65rem;
-  }
-  .beacon__theater { font-size: 8px; letter-spacing: 0.22em; }
-  .beacon__cta { font-size: 8.5px; padding: 0.25rem 0.6rem; }
+  .beacon__panel { padding: 0.55rem 0.4rem 0.65rem; }
+  .beacon__header .beacon__intel { font-size: 7px; padding: 1px 4px; }
+  .beacon__icon-wrap { width: 36px; height: 36px; }
+  .beacon__name { font-size: 0.75rem; }
+  .beacon__cta { font-size: 8px; padding: 0.24rem 0.4rem; }
 }
