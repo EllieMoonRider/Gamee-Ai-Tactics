@@ -371,15 +371,19 @@
 
 /* Landscape phones — extra short viewport (typical: 800×360). Beacons must
    claim only ~35% of vertical space so the war-room art + knights + radar remain
-   the primary visual. */
+   the primary visual. AND must clear the "Made with Emergent" platform badge
+   at bottom-right (~55px tall). */
 @media (max-height: 500px) and (orientation: landscape) {
   .game-beacons {
-    padding: 0 0.5rem 0.35rem;
+    padding: 0 0.5rem 3.5rem;    /* ← extra bottom clearance for Emergent badge */
     gap: 0.4rem;
   }
-  .beacon__panel { padding: 0.3rem 0.4rem 0.4rem; }
-  .beacon__icon-wrap { width: 26px; height: 26px; margin-top: 0.1rem; }
-  .beacon__icon-wrap svg { width: 16px; height: 16px; }
-  .beacon__name { font-size: 0.66rem; letter-spacing: 0.01em; }
-  .beacon__cta { margin-top: 0.22rem; padding: 0.18rem 0.35rem; font-size: 7px; }
+  .beacon__panel { padding: 0.28rem 0.4rem 0.4rem; }
+  .beacon__icon-wrap { width: 24px; height: 24px; margin-top: 0.05rem; }
+  .beacon__icon-wrap svg { width: 15px; height: 15px; }
+  .beacon__name { font-size: 0.62rem; letter-spacing: 0.01em; }
+  .beacon__cta { margin-top: 0.2rem; padding: 0.16rem 0.32rem; font-size: 6.5px; }
+  /* Give the rightmost beacon extra clearance from the Emergent badge which
+     sits bottom-right and is unavoidable platform chrome */
+  .beacon:last-child { margin-right: 3.5rem; }
 }
