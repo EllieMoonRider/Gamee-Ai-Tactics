@@ -5,7 +5,10 @@ import axios from "axios";
 import {
   Envelope, UploadSimple, Image as ImageIcon, X, ShieldCheck,
   ArrowLeft, CheckCircle, GameController, Info, Sparkle,
+  ListChecks, CaretDown,
 } from "@phosphor-icons/react";
+import IntelFiledList from "../components/IntelFiledList";
+import "../components/IntelFiledList.css";
 import "./IntelDrop.css";
 
 const API = process.env.REACT_APP_BACKEND_URL;
@@ -224,12 +227,9 @@ export default function IntelDrop() {
           </div>
         ) : (
           <>
-            {/* Link to public log so members can check what's covered before submitting */}
-            <div className="intel-log-link">
-              <Link to="/intel-log" data-testid="intel-log-link">
-                ◇ Check the Intel Log first — see what&apos;s already covered ◇
-              </Link>
-            </div>
+            {/* Collapsible "Already Filed" widget — click to expand alphabetical list */}
+            <FiledWidget />
+
             {/* Tutorial — single condensed box, balanced text (no orphan lines) */}
             <div className="intel-tutorial" data-testid="intel-tutorial">
               <span className="intel-corner tl" /><span className="intel-corner tr" />
@@ -490,3 +490,30 @@ export default function IntelDrop() {
     </div>
   );
 }
+
+/* Collapsible widget — shows the alphabetical list of already-filed intel.
+   Click to expand. Kept collapsed by default so the form stays the primary focus. */
+function FiledWidget() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`intel-filed-widget ${open ? "intel-filed-widget--open" : ""}`} data-testid="intel-filed-widget">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="intel-filed-widget__toggle"
+        data-testid="intel-filed-widget-toggle"
+        aria-expanded={open}
+      >
+        <ListChecks size={16} weight="duotone" />
+        <span>{open ? "Hide filed intel" : "Check what's already filed"}</span>
+        <CaretDown size={12} weight="bold" className={`intel-filed-widget__caret ${open ? "intel-filed-widget__caret--open" : ""}`} />
+      </button>
+      {open && (
+        <div className="intel-filed-widget__body">
+          <IntelFiledList testidPrefix="drop-filed" />
+        </div>
+      )}
+    </div>
+  );
+}
+

@@ -95,12 +95,16 @@ User direction iterations:
 
 ## Intel Portal — Community Crowdsourcing (Feb 2026)
 - Public `/intel-drop` (no-auth): title + language + text + up to **10 screenshots** + credit fields
+- **Auto-verify rule (Feb 2026)**: any submission with ≥1 screenshot is auto-approved on submit — photographic evidence bypasses admin review. Text-only submissions still land in `pending` for human triage.
+- **`FiledWidget`** collapsible inline on `/intel-drop` — click "Check what's already filed" to see alphabetical list of filed intel without leaving the form
 - Admin `/admin/intel` review queue with:
+  - `AUTO` badge distinguishes auto-verified from manually approved
   - **Quick Approve / Reject buttons on collapsed cards** (Feb 2026 — no expand needed)
   - Intel preview text (first 180 chars) visible on collapsed cards for fast triage
   - Language tag surfaced on card sub-row
   - Card title as visual anchor
-- Public `/intel-log` (read-only ledger showing approved/filed items — prevents alliance duplicates)
+- Public `/intel-log` (read-only ledger, alphabetical, one line per entry — prevents alliance duplicates)
+- Shared `IntelFiledList` component powers both the widget and the standalone log page
 - 18 supported submission languages (en/es/pt/fr/de/it/ru/tr/ar/zh/ja/ko/vi/th/id/tl/hi/other)
 
 ## Prioritized Backlog

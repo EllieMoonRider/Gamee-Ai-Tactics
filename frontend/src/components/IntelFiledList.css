@@ -1,0 +1,70 @@
+/* Compact alphabetical list of filed intel — shared by /intel-drop widget and /intel-log page */
+
+.intel-filed__loading,
+.intel-filed__empty {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(0, 255, 128, 0.75);
+  text-align: center;
+  padding: 1rem;
+  margin: 0;
+}
+
+.intel-filed__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.intel-filed__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: #e5faed;
+  line-height: 1.35;
+  border-bottom: 1px dashed rgba(0, 255, 128, 0.15);
+  text-wrap: pretty;
+}
+.intel-filed__item:last-child { border-bottom: none; }
+
+.intel-filed__game {
+  flex-shrink: 0;
+  min-width: 52px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #FFBA08;
+  text-shadow: 0 0 5px rgba(255, 186, 8, 0.5);
+}
+
+.intel-filed__title {
+  flex: 1 1 auto;
+  color: #ffb060;
+  font-family: "Orbitron", "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.005em;
+  overflow-wrap: anywhere;
+}
+
+.intel-filed__author {
+  flex-shrink: 0;
+  font-size: 10px;
+  color: #7ea993;
+  letter-spacing: 0.05em;
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .intel-filed__item { padding: 0.35rem 0.4rem; gap: 0.4rem; font-size: 0.72rem; }
+  .intel-filed__game { min-width: 46px; font-size: 9px; }
+  .intel-filed__title { font-size: 0.76rem; }
+  .intel-filed__author { display: none; }
+}

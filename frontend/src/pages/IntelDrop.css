@@ -111,6 +111,67 @@
 }
 .intel-log-link a:hover { color: #00FF80; text-shadow: 0 0 8px rgba(0, 255, 128, 0.55); }
 
+/* === Collapsible "Already Filed" widget on the drop form ================== */
+.intel-filed-widget {
+  margin-bottom: 1.2rem;
+  background: rgba(0, 191, 255, 0.06);
+  border: 1px dashed rgba(0, 191, 255, 0.45);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.intel-filed-widget--open {
+  background: rgba(0, 191, 255, 0.09);
+  border-color: rgba(0, 191, 255, 0.7);
+  border-style: solid;
+}
+.intel-filed-widget__toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #7ee0ff;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: left;
+  text-shadow: 0 0 6px rgba(0, 191, 255, 0.4);
+  transition: color 0.15s ease;
+}
+.intel-filed-widget__toggle:hover,
+.intel-filed-widget__toggle:focus-visible {
+  color: #00FF80;
+  text-shadow: 0 0 8px rgba(0, 255, 128, 0.55);
+  outline: none;
+}
+.intel-filed-widget__toggle svg:first-child {
+  color: #FFBA08;
+  flex-shrink: 0;
+}
+.intel-filed-widget__toggle > span { flex: 1 1 auto; }
+.intel-filed-widget__caret {
+  color: #7ee0ff;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.intel-filed-widget__caret--open { transform: rotate(180deg); }
+
+.intel-filed-widget__body {
+  padding: 0.5rem 0.75rem 0.85rem;
+  border-top: 1px dashed rgba(0, 191, 255, 0.35);
+  max-height: 340px;
+  overflow-y: auto;
+  animation: filed-widget-in 0.2s ease-out;
+}
+@keyframes filed-widget-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* === Welcome banner ====================================================== */
 .intel-welcome {
   position: relative;
