@@ -158,7 +158,7 @@ export default function IntelDrop() {
           <Link to="/" className="intel-back" data-testid="intel-back-home">
             <ArrowLeft size={14} weight="bold" /> TACTICAL ALLY
           </Link>
-          <span className="intel-header__stamp">// CLASSIFICATION · ALLIANCE INTEL ONLY</span>
+          <span className="intel-header__stamp">CLASSIFICATION · ALLIANCE INTEL ONLY</span>
         </div>
 
         {/* Welcome banner (Ellie's message) */}
@@ -234,7 +234,7 @@ export default function IntelDrop() {
             <div className="intel-tutorial" data-testid="intel-tutorial">
               <span className="intel-corner tl" /><span className="intel-corner tr" />
               <span className="intel-corner bl" /><span className="intel-corner br" />
-              <div className="intel-tutorial__label">// HOW TO DROP INTEL</div>
+              <div className="intel-tutorial__label">HOW TO DROP INTEL</div>
               <ol className="intel-tutorial__list">
                 <li>
                   <strong>Pick&nbsp;the&nbsp;theater</strong> — P&amp;C,&nbsp;P&amp;S,&nbsp;or&nbsp;P&amp;Chaos.
@@ -417,7 +417,7 @@ export default function IntelDrop() {
 
               {/* Contributor credit */}
               <div className="intel-credit">
-                <div className="intel-credit__label">// CREDIT (optional but appreciated)</div>
+                <div className="intel-credit__label">CREDIT (optional but appreciated)</div>
                 <div className="intel-credit__grid">
                   <div>
                     <label className="intel-label--sm" htmlFor="intel-name">YOUR NAME / HANDLE</label>

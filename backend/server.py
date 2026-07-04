@@ -2962,7 +2962,7 @@ async def intel_submit(
         "game_slug": game_slug,
         "category": category,
         "title": (title or "").strip()[:120] or None,
-        "language": (language or "en").strip().lower() if (language or "en").strip().lower() in INTEL_LANGUAGES else "other",
+        "language": (language or "en").strip().lower() if (language or "en").strip().lower() in {"en","es","pt","fr","de","it","ru","tr","ar","zh","ja","ko","vi","th","id","tl","hi","other"} else "other",
         "intel_text": txt,
         "contributor_name": (contributor_name or "").strip() or None,
         "contributor_handle": (contributor_handle or "").strip() or None,

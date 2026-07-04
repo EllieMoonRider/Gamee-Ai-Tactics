@@ -21,7 +21,7 @@ export default function IntelLog() {
           <Link to="/intel-drop" className="intel-back" data-testid="log-back-drop">
             <ArrowLeft size={14} weight="bold" /> DROP MORE INTEL
           </Link>
-          <span className="intel-header__stamp">// INTEL LOG · PUBLIC READ</span>
+          <span className="intel-header__stamp">INTEL LOG · PUBLIC READ</span>
         </div>
 
         <h1 className="intel-log__title">Intel Log</h1>

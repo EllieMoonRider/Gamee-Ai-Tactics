@@ -35,7 +35,7 @@ export default function IntelFiledList({ testidPrefix = "filed" }) {
   }, [entries]);
 
   if (sorted === null) {
-    return <p className="intel-filed__loading">// SYNCING LOG…</p>;
+    return <p className="intel-filed__loading">SYNCING LOG…</p>;
   }
   if (sorted.length === 0) {
     return <p className="intel-filed__empty">Nothing filed yet. Be the first!</p>;
