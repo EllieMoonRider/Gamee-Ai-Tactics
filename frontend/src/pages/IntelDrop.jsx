@@ -28,6 +28,27 @@ const CATEGORIES = [
 const MAX_IMAGES = 10;
 const MAX_BYTES = 5 * 1024 * 1024;
 
+const LANGUAGES = [
+  { code: "en", label: "English" },
+  { code: "es", label: "Español (Spanish)" },
+  { code: "pt", label: "Português (Portuguese)" },
+  { code: "fr", label: "Français (French)" },
+  { code: "de", label: "Deutsch (German)" },
+  { code: "it", label: "Italiano (Italian)" },
+  { code: "ru", label: "Русский (Russian)" },
+  { code: "tr", label: "Türkçe (Turkish)" },
+  { code: "ar", label: "العربية (Arabic)" },
+  { code: "zh", label: "中文 (Chinese)" },
+  { code: "ja", label: "日本語 (Japanese)" },
+  { code: "ko", label: "한국어 (Korean)" },
+  { code: "vi", label: "Tiếng Việt (Vietnamese)" },
+  { code: "th", label: "ภาษาไทย (Thai)" },
+  { code: "id", label: "Bahasa Indonesia" },
+  { code: "tl", label: "Tagalog / Filipino" },
+  { code: "hi", label: "हिन्दी (Hindi)" },
+  { code: "other", label: "Other — note in the intel text" },
+];
+
 export default function IntelDrop() {
   const [game, setGame] = useState("puzzles-conquest");
   const [category, setCategory] = useState("event");
