@@ -186,11 +186,18 @@ export default function IntelDrop() {
 
         {done ? (
           /* === Success state === */
-          <div className="intel-success" data-testid="intel-success">
+          <div className={`intel-success ${done.auto_verified ? "intel-success--verified" : ""}`} data-testid="intel-success">
             <span className="intel-corner tl" /><span className="intel-corner tr" />
             <span className="intel-corner bl" /><span className="intel-corner br" />
             <CheckCircle size={56} weight="fill" className="intel-success__icon" />
-            <h2 className="intel-success__title">INTEL RECEIVED</h2>
+            <h2 className="intel-success__title">
+              {done.auto_verified ? "◆ INTEL AUTO-VERIFIED" : "INTEL RECEIVED"}
+            </h2>
+            {done.auto_verified && (
+              <div className="intel-success__badge" data-testid="intel-auto-verified-badge">
+                SCREENSHOT EVIDENCE · FILED TO LIVE LOG
+              </div>
+            )}
             <div className="intel-success__ref">
               Reference: <strong data-testid="intel-reference">{done.reference}</strong>
             </div>

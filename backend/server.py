@@ -2948,6 +2948,14 @@ async def intel_submit(
             )
             image_refs.append({"file_id": str(file_id), "mime": mime, "name": f.filename or "intel-shot", "size": len(data)})
 
+    # AUTO-VERIFY RULE (per R5 EllieMoonRider, Feb 2026):
+    # Any submission that includes at least one screenshot is auto-approved.
+    # Rationale: screenshots ARE the photographic evidence — no need for human triage.
+    # Admin can still retro-reject via /admin/intel if a bad shot slips through.
+    # Text-only submissions still land in "pending" for human review.
+    has_screenshots = len(image_refs) > 0
+    auto_status = "approved" if has_screenshots else "pending"
+
     submission = {
         "id": str(uuid.uuid4()),
         "reference": f"INTEL-{uuid.uuid4().hex[:8].upper()}",
@@ -2960,17 +2968,24 @@ async def intel_submit(
         "contributor_handle": (contributor_handle or "").strip() or None,
         "source_url": (source_url or "").strip() or None,
         "image_refs": image_refs,
-        "status": "pending",
+        "status": auto_status,
+        "auto_verified": has_screenshots,  # explicit flag for the admin console
         "submitted_at": now_iso(),
-        "reviewed_at": None,
-        "reviewer_email": None,
-        "review_notes": None,
+        "reviewed_at": now_iso() if has_screenshots else None,
+        "reviewer_email": "auto-verified@tactical-ally" if has_screenshots else None,
+        "review_notes": "Auto-verified — screenshot evidence attached." if has_screenshots else None,
     }
     await db.intel_submissions.insert_one(submission)
     return {
         "ok": True,
         "reference": submission["reference"],
-        "message": "Intel received and queued for review. Verified intel will be filed into CypherAI's live dossier within 24 hours.",
+        "status": auto_status,
+        "auto_verified": has_screenshots,
+        "message": (
+            "Screenshot received — auto-verified and filed into the public intel log. Thanks, allied contributor."
+            if has_screenshots
+            else "Intel received and queued for review. Verified intel will be filed into CypherAI's live dossier within 24 hours."
+        ),
     }
 
 
@@ -2988,6 +3003,7 @@ def _serialize_intel(doc: dict) -> dict:
         "source_url": doc.get("source_url"),
         "image_refs": doc.get("image_refs", []),
         "status": doc.get("status", "pending"),
+        "auto_verified": doc.get("auto_verified", False),
         "submitted_at": doc.get("submitted_at"),
         "reviewed_at": doc.get("reviewed_at"),
         "reviewer_email": doc.get("reviewer_email"),

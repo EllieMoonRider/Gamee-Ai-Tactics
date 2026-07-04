@@ -176,6 +176,19 @@
 }
 .admin-intel__category { color: #cfffe1; background: rgba(255, 107, 0, 0.15); }
 
+.admin-intel__auto-badge {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  color: #050505;
+  background: #FFBA08;
+  padding: 2px 7px;
+  border-radius: 2px;
+  border: 1px solid #FFBA08;
+  box-shadow: 0 0 6px rgba(255, 186, 8, 0.6);
+}
+
 .admin-intel__toggle {
   font-family: "JetBrains Mono", monospace;
   font-size: 10px;

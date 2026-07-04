@@ -194,6 +194,11 @@ export default function AdminIntel() {
                   >
                     {STATUS_STYLE[s.status]?.label || s.status}
                   </span>
+                  {s.auto_verified && (
+                    <span className="admin-intel__auto-badge" data-testid={`auto-verified-${s.reference}`}>
+                      ◆ AUTO
+                    </span>
+                  )}
                   <span className="admin-intel__game">{GAME_LABEL[s.game_slug] || s.game_slug}</span>
                   <span className="admin-intel__category">{CATEGORY_LABEL[s.category] || s.category}</span>
                 </div>
