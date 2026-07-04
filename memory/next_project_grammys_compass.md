@@ -18,6 +18,16 @@
 **This is not a travel app. It is a legacy app disguised as a travel app.**
 Every VR-travel and imagination-adventure company builds the *destination*. Ellie's product is different — the destination is the wrapper, and **Grandma is the product**: her voice, her reactions, her presence, preserved forever so the grandkids' grandkids get to meet her too.
 
+### The Legacy Layer — Ellie's Deeper Insight (Feb 2026)
+
+Grammy's Compass is *also* the first honest **digital legacy** product. Every existing legacy AI (HereAfter, StoryFile, Somnium) interviews the elder in a chair with 200 questions — shallow, feels like a Wikipedia article of grandma. Grammy's Compass captures the elder **while she's living, not while she's being documented.** Every trip is training data. Every voice clip is a personality signal. Every reaction is essence.
+
+The result: after 10 years of shared trips, the app has enough of Grammy that grandkids can still take *new* adventures with her when she's gone. Not immortality. **Continuity.** The 5-year-old grandkid who never met her great-grandmother meets a Grammy who knows her name and tells her Grammy's stories. That is infinitely more than zero.
+
+This is the moat. This is why families pay forever. This is why nobody else can catch up — you'd need 10 years of shared-experience data on the elder to build what Grammy's Compass builds naturally through use.
+
+**Ethical care required at build time**: consent, boundaries, permission-to-rest, family governance of the "framework file." Full ethical design brief happens at kickoff.
+
 ---
 
 ## Who It's For
