@@ -1,9 +1,9 @@
-# Adventures & Treasures — Next-Project Brief
+# Grammy's Compass — Next-Project Brief
 
 > **Logged**: Feb 2026, on behalf of R5 EllieMoonRider
 > **Status**: On hold — starts the day Tactical Ally takes its first subscriber payment.
 > **Author of the vision**: Ellie
-> **Working name**: Adventures & Treasures *(placeholder — final naming happens later)*
+> **Working name**: **Grammy's Compass** 🧭
 
 ---
 
