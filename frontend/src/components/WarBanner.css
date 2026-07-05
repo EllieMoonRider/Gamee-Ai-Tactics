@@ -1,0 +1,313 @@
+/* ============================================================================
+   WarBanner — heraldic P&C-style banner used for game beacons on the
+   Command Center holographic floor.
+   Structure: gold winged crown ▸ colored cloth ▸ jagged tattered bottom.
+   All colors driven by CSS variables per variant.
+   ============================================================================ */
+
+.war-banner {
+  --banner-gold-light: #f0d878;
+  --banner-gold:       #c99a3e;
+  --banner-gold-dark:  #7d5a1d;
+  --banner-jewel-light: #a0e6ff;
+  --banner-jewel:       #2f8fc4;
+  --banner-cloth-1:  #1c3d6b;
+  --banner-cloth-2:  #0c1f45;
+  --banner-cloth-3:  #04102a;
+  --banner-glow:     rgba(77, 200, 255, 0.55);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 180px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: #f4f0dc;
+  font-family: "Cinzel", "Orbitron", serif;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.28s ease;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.55));
+}
+.war-banner:hover,
+.war-banner:focus-visible {
+  transform: translateY(-6px) scale(1.03);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 14px var(--banner-glow));
+  outline: none;
+}
+
+/* Crown SVG sits at top, overlapping the cloth slightly */
+.war-banner__crown {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 200 / 60;
+  margin-bottom: -8px;
+  z-index: 3;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7));
+}
+
+/* Cloth — the body of the banner */
+.war-banner__cloth {
+  position: relative;
+  width: 92%;
+  padding: 1.6rem 0.75rem 1.1rem;
+  background: linear-gradient(
+    180deg,
+    var(--banner-cloth-1) 0%,
+    var(--banner-cloth-2) 55%,
+    var(--banner-cloth-3) 100%
+  );
+  /* Jagged/tattered bottom edge — classic heraldic banner shape */
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 82%,
+    92% 88%,
+    85% 84%,
+    76% 92%,
+    68% 86%,
+    58% 96%,
+    50% 88%,
+    42% 96%,
+    32% 86%,
+    24% 92%,
+    15% 84%,
+    8% 88%,
+    0 82%
+  );
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 0, 0, 0.35),
+    inset 0 -30px 40px rgba(0, 0, 0, 0.45);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 168px;
+  text-wrap: balance;
+}
+
+/* Vertical fold highlights — subtle diagonal light lines */
+.war-banner__fold {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.15) 40%, transparent 90%);
+  pointer-events: none;
+}
+.war-banner__fold--l { left: 30%; }
+.war-banner__fold--r { left: 70%; }
+
+/* Codename badge (top of cloth) */
+.war-banner__codename {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--banner-gold-light);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 4;
+}
+.war-banner__intel--verified { color: #ffd700; }
+.war-banner__intel--pending { color: rgba(240, 216, 120, 0.55); }
+
+/* Central emblem — the icon that identifies the game */
+.war-banner__emblem {
+  position: relative;
+  margin-top: 0.9rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--banner-gold-light);
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9));
+}
+.war-banner__emblem-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--banner-glow) 0%, transparent 70%);
+  opacity: 0.6;
+  z-index: -1;
+  animation: wb-emblem-pulse 3s ease-in-out infinite;
+}
+@keyframes wb-emblem-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.95); }
+  50%      { opacity: 0.75; transform: scale(1.05); }
+}
+.war-banner__emblem svg { width: 44px; height: 44px; }
+
+/* Game name */
+.war-banner__name {
+  margin-top: 0.3rem;
+  font-family: "Cinzel", "Orbitron", serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--banner-gold-light);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 0 8px rgba(0, 0, 0, 0.6);
+  padding: 0 0.3rem;
+  text-wrap: balance;
+}
+
+.war-banner__tagline {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 7.5px;
+  letter-spacing: 0.14em;
+  color: rgba(244, 240, 220, 0.72);
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0 0.4rem;
+  text-wrap: balance;
+  line-height: 1.35;
+}
+
+/* CTA — Engage button at bottom */
+.war-banner__cta {
+  margin-top: 0.35rem;
+  padding: 0.28rem 0.75rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: var(--banner-cloth-3);
+  background: var(--banner-gold-light);
+  border: 1px solid var(--banner-gold-dark);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: all 0.15s ease;
+}
+.war-banner:hover .war-banner__cta {
+  background: #fff2b0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9), 0 0 12px var(--banner-glow), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================================
+   VARIANT: CONQUEST (P&C) — Middle, hero. Royal blue cloth, polished gold,
+   sapphire jewel. This is Ellie's home game — highlighted state.
+   ============================================================================ */
+.war-banner--conquest {
+  --banner-gold-light: #f5dc8a;
+  --banner-gold:       #d4a244;
+  --banner-gold-dark:  #7a5620;
+  --banner-jewel-light: #a8e2ff;
+  --banner-jewel:       #2f8fc4;
+  --banner-cloth-1:  #1e4778;
+  --banner-cloth-2:  #0e2b52;
+  --banner-cloth-3:  #041228;
+  --banner-glow:     rgba(84, 195, 255, 0.65);
+}
+
+/* ============================================================================
+   VARIANT: SURVIVAL (P&S) — Left. Weathered blood-red/gray cloth,
+   tarnished gold. Zombie fingers + blood splatter overlays land here.
+   ============================================================================ */
+.war-banner--survival {
+  --banner-gold-light: #d4b478;
+  --banner-gold:       #907030;
+  --banner-gold-dark:  #4a3418;
+  --banner-jewel-light: #ff7060;
+  --banner-jewel:       #a01818;
+  --banner-cloth-1:  #4d2020;
+  --banner-cloth-2:  #2a1010;
+  --banner-cloth-3:  #0a0303;
+  --banner-glow:     rgba(220, 50, 40, 0.55);
+}
+/* Extra weathering — grain + stain */
+.war-banner--survival .war-banner__cloth {
+  background:
+    /* dark blood stain */
+    radial-gradient(ellipse 60% 40% at 30% 90%, rgba(60, 5, 5, 0.55), transparent),
+    linear-gradient(180deg, var(--banner-cloth-1) 0%, var(--banner-cloth-2) 60%, var(--banner-cloth-3) 100%);
+}
+
+/* ============================================================================
+   VARIANT: CHAOS (P&Chaos) — Right. Deep violet-black cloth,
+   corrupted/tarnished gold, dark crystal jewel.
+   ============================================================================ */
+.war-banner--chaos {
+  --banner-gold-light: #b593d0;
+  --banner-gold:       #6d4a8b;
+  --banner-gold-dark:  #2a1a3d;
+  --banner-jewel-light: #d68cff;
+  --banner-jewel:       #5f2088;
+  --banner-cloth-1:  #2b1a3d;
+  --banner-cloth-2:  #170824;
+  --banner-cloth-3:  #05010a;
+  --banner-glow:     rgba(180, 90, 255, 0.55);
+}
+/* Corruption cracks — faint diagonal lines across the cloth */
+.war-banner--chaos .war-banner__cloth::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(75deg, transparent 48%, rgba(214, 140, 255, 0.14) 49%, transparent 51%),
+    linear-gradient(105deg, transparent 60%, rgba(214, 140, 255, 0.1) 61%, transparent 63%);
+  mix-blend-mode: screen;
+}
+
+/* Primary banner (middle P&C) — subtly bigger + always glowing */
+.war-banner--primary {
+  max-width: 210px;
+  transform: translateY(-8px);
+}
+.war-banner--primary .war-banner__emblem-glow { opacity: 0.9; }
+.war-banner--primary .war-banner__crown { filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px var(--banner-glow)); }
+
+/* Entry animation */
+@keyframes wb-fade-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.war-banner {
+  animation: wb-fade-in 0.7s ease-out both;
+}
+
+/* ============================================================================
+   Mobile / narrow tuning
+   ============================================================================ */
+@media (max-width: 900px) {
+  .war-banner { max-width: 140px; }
+  .war-banner--primary { max-width: 160px; transform: translateY(-4px); }
+  .war-banner__cloth { padding: 1.2rem 0.5rem 0.8rem; min-height: 128px; }
+  .war-banner__emblem { width: 44px; height: 44px; margin-top: 0.4rem; }
+  .war-banner__emblem svg { width: 32px; height: 32px; }
+  .war-banner__name { font-size: 0.7rem; }
+  .war-banner__tagline { font-size: 6.5px; }
+  .war-banner__cta { font-size: 7.5px; padding: 0.22rem 0.55rem; letter-spacing: 0.22em; }
+}
+
+@media (max-width: 640px) {
+  .war-banner { max-width: 108px; }
+  .war-banner--primary { max-width: 118px; transform: translateY(-2px); }
+  .war-banner__cloth { padding: 1rem 0.4rem 0.65rem; min-height: 110px; }
+  .war-banner__emblem { width: 36px; height: 36px; }
+  .war-banner__emblem svg { width: 26px; height: 26px; }
+  .war-banner__name { font-size: 0.62rem; }
+  .war-banner__tagline { display: none; }
+  .war-banner__cta { font-size: 6.5px; padding: 0.18rem 0.45rem; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .war-banner { max-width: 116px; }
+  .war-banner--primary { max-width: 130px; transform: translateY(-2px); }
+  .war-banner__cloth { padding: 0.9rem 0.4rem 0.6rem; min-height: 104px; }
+  .war-banner__emblem { width: 34px; height: 34px; margin-top: 0.25rem; }
+  .war-banner__emblem svg { width: 22px; height: 22px; }
+  .war-banner__name { font-size: 0.58rem; letter-spacing: 0.02em; }
+  .war-banner__tagline { display: none; }
+  .war-banner__cta { font-size: 6px; padding: 0.16rem 0.4rem; }
+}
