@@ -263,31 +263,32 @@
   50%, 100% { opacity: 0; }
 }
 
-.radar-briefing__skip {
+.radar-briefing__skip-hint {
   position: absolute;
-  top: -14px;                    /* ← pinned to TOP-RIGHT of briefing, out of text flow */
-  right: -6px;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 5;
-  pointer-events: auto;
-  padding: 0.28rem 0.75rem;
+  pointer-events: none;
+  padding: 0.18rem 0.7rem;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.58rem;
-  letter-spacing: 0.28em;
-  color: #FF6B00;
-  background: rgba(0, 12, 6, 0.95);
-  border: 1px solid rgba(0, 255, 128, 0.7);
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.18s ease;
+  font-size: 0.52rem;
+  letter-spacing: 0.32em;
+  color: #7ee0ff;
+  text-shadow: 0 0 6px rgba(0, 191, 255, 0.6);
   text-transform: uppercase;
-  box-shadow: 0 0 12px rgba(0, 255, 128, 0.35);
+  white-space: nowrap;
+  animation: rb-hint-pulse 1.8s ease-in-out infinite;
 }
-.radar-briefing__skip:hover,
-.radar-briefing__skip:focus-visible {
+@keyframes rb-hint-pulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+.radar-briefing { cursor: pointer; }
+.radar-briefing:hover .radar-briefing__skip-hint {
   color: #ffb060;
-  border-color: #00FF80;
-  box-shadow: 0 0 14px rgba(0, 255, 128, 0.4);
-  outline: none;
+  text-shadow: 0 0 8px rgba(255, 107, 0, 0.6);
 }
 
 /* === Widget rail (top-left, holds Tutorial + Tactical Scout side-by-side) = */
@@ -328,7 +329,6 @@
   .radar-briefing__line--title { font-size: clamp(0.75rem, 2.2vw, 0.9rem); }
   .radar-briefing__line--header { font-size: clamp(0.62rem, 1.7vw, 0.72rem); }
   .radar-briefing__line--body { font-size: clamp(0.6rem, 1.5vw, 0.72rem); line-height: 1.4; max-width: 34ch; }
-  .radar-briefing__skip { top: -12px; right: -4px; padding: 0.22rem 0.6rem; font-size: 0.52rem; }
 }
 
 @media (max-width: 480px) {

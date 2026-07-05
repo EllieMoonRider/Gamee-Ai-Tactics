@@ -53,7 +53,14 @@ export default function RadarBriefing({ onDismiss }) {
   const handleSkip = () => onDismiss?.();
 
   return (
-    <div className="radar-briefing" data-testid="radar-briefing" role="dialog" aria-label="Command Center welcome briefing">
+    <div
+      className="radar-briefing"
+      data-testid="radar-briefing"
+      role="dialog"
+      aria-label="Command Center welcome briefing"
+      onClick={handleSkip}
+      title="Tap anywhere to skip"
+    >
       <div className="radar-briefing__scroll">
         {BRIEFING.slice(0, lineIdx + 1).map((line, i) => {
           const isCurrent = i === lineIdx && !done;
@@ -68,14 +75,9 @@ export default function RadarBriefing({ onDismiss }) {
         })}
       </div>
 
-      <button
-        type="button"
-        className="radar-briefing__skip"
-        onClick={handleSkip}
-        data-testid="radar-briefing-skip"
-      >
-        SKIP ▸
-      </button>
+      <div className="radar-briefing__skip-hint" aria-hidden="true">
+        TAP ANYWHERE TO SKIP
+      </div>
     </div>
   );
 }

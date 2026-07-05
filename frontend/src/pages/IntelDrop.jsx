@@ -153,12 +153,26 @@ export default function IntelDrop() {
       <div className="intel-scanline" aria-hidden="true" />
 
       <div className="intel-shell">
-        {/* Header */}
+        {/* Header — with compact language selector on the right */}
         <div className="intel-header">
           <Link to="/" className="intel-back" data-testid="intel-back-home">
             <ArrowLeft size={14} weight="bold" /> TACTICAL ALLY
           </Link>
-          <span className="intel-header__stamp">CLASSIFICATION · ALLIANCE INTEL ONLY</span>
+          <div className="intel-header__right">
+            <select
+              value={language}
+              onChange={e => setLanguage(e.target.value)}
+              className="intel-language-pill"
+              data-testid="intel-language"
+              aria-label="Intel language"
+              title="Submit in your own language — we'll translate during review"
+            >
+              {LANGUAGES.map(l => (
+                <option key={l.code} value={l.code}>{l.code === "en" ? "EN" : l.code.toUpperCase()} · {l.label}</option>
+              ))}
+            </select>
+            <span className="intel-header__stamp">CLASSIFICATION · ALLIANCE INTEL ONLY</span>
+          </div>
         </div>
 
         {/* Welcome banner (Ellie's message) */}
@@ -308,24 +322,7 @@ export default function IntelDrop() {
                 />
               </div>
 
-              {/* Language of the submitted intel */}
-              <div className="intel-field">
-                <label className="intel-label" htmlFor="intel-language">
-                  🌐 INTEL LANGUAGE
-                </label>
-                <select
-                  id="intel-language"
-                  value={language}
-                  onChange={e => setLanguage(e.target.value)}
-                  className="intel-select"
-                  data-testid="intel-language"
-                >
-                  {LANGUAGES.map(l => (
-                    <option key={l.code} value={l.code}>{l.label}</option>
-                  ))}
-                </select>
-                <div className="intel-hint">Submit in your own language — we&apos;ll translate during review.</div>
-              </div>
+              {/* Language selector moved to the top header — see intel-header__right */}
 
               {/* Intel text — OPTIONAL if a screenshot is attached */}
               <div className="intel-field">
